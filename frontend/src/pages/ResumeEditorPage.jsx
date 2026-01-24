@@ -11,6 +11,7 @@ const ResumeEditorPage = () => {
 
     const [resumeData, setResumeData] = useState({
         fontFamily: 'Inter',
+        profileImage: null,
         personalInfo: { fullName: '', email: '', phone: '', location: '', website: '', title: '', links: [] },
         summary: '',
         experiences: [],
@@ -89,9 +90,9 @@ const ResumeEditorPage = () => {
             <div className="flex flex-1 overflow-hidden gap-0">
                 {/* Left: Input Form */}
                 <div className="w-1/2 overflow-y-auto p-6 border-r bg-white">
-                    <ResumeForm data={resumeData} updateData={setResumeData} />
+                    <ResumeForm data={resumeData} updateData={setResumeData} template={templateId} />
                 </div>
-
+                
                 {/* Right: Preview - Full Height with Scrolling */}
                 <div className="w-1/2 overflow-y-auto bg-gray-300 flex items-start justify-center pt-4">
                     <div style={{ width: '8.5in', flexShrink: 0 }}>

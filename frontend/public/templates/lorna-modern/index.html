@@ -22,11 +22,11 @@
     <div class="columns">
       <aside class="left">
         <section>
-          <h3>EDUCATION</h3>
+          <h3 id="education-heading">Education</h3>
           <div id="education-section"></div>
         </section>
         <section>
-          <h3>SKILLS</h3>
+          <h3 id="skills-heading">Skills</h3>
           <ul id="skills-list"></ul>
         </section>
         <section>
@@ -37,15 +37,15 @@
 
       <main class="right">
         <section>
-          <h3>PROFILE</h3>
+          <h3 id="profile-heading">Profile</h3>
           <p id="summary">Professional summary</p>
         </section>
         <section>
-          <h3>WORK EXPERIENCE</h3>
+          <h3 id="experience-heading">Experience</h3>
           <div id="experience-section"></div>
         </section>
         <section>
-          <h3>PROJECTS</h3>
+          <h3 id="projects-heading">Projects</h3>
           <div id="projects-section"></div>
         </section>
         <section id="custom-container">
@@ -66,6 +66,39 @@
       document.body.style.fontFamily = fontValue;
       const resume = document.getElementById('resume');
       if (resume) resume.style.fontFamily = fontValue;
+
+      // Update section headings and visibility from sectionSettings
+      const settings = data.sectionSettings || {};
+
+      // Profile/About section
+      const profileHeading = document.getElementById("profile-heading") || document.getElementById("about-heading");
+      const profileSection = profileHeading?.closest('section');
+      if (profileHeading && settings.about?.heading) profileHeading.innerText = settings.about.heading;
+      if (profileSection) profileSection.style.display = settings.about?.visible !== false ? "block" : "none";
+
+      // Education section
+      const eduHeading = document.getElementById("education-heading");
+      const eduSection = eduHeading?.closest('section');
+      if (eduHeading && settings.education?.heading) eduHeading.innerText = settings.education.heading;
+      if (eduSection) eduSection.style.display = settings.education?.visible !== false ? "block" : "none";
+
+      // Skills section
+      const skillsHeading = document.getElementById("skills-heading");
+      const skillsSection = skillsHeading?.closest('section');
+      if (skillsHeading && settings.skills?.heading) skillsHeading.innerText = settings.skills.heading;
+      if (skillsSection) skillsSection.style.display = settings.skills?.visible !== false ? "block" : "none";
+
+      // Experience section
+      const expHeading = document.getElementById("experience-heading");
+      const expSection = expHeading?.closest('section');
+      if (expHeading && settings.experience?.heading) expHeading.innerText = settings.experience.heading;
+      if (expSection) expSection.style.display = settings.experience?.visible !== false ? "block" : "none";
+
+      // Projects section  
+      const projHeading = document.getElementById("projects-heading");
+      const projSection = projHeading?.closest('section');
+      if (projHeading && settings.projects?.heading) projHeading.innerText = settings.projects.heading;
+      if (projSection) projSection.style.display = settings.projects?.visible !== false ? "block" : "none";
 
       if (data.name) document.getElementById("name").innerText = data.name;
       if (data.title) document.getElementById("title").innerText = data.title;

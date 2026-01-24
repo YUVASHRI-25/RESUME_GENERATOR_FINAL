@@ -25,26 +25,26 @@
 
     <main class="grid">
       <aside class="left">
-        <section class="section">
+        <section class="section" id="education-block">
           <h3 id="education-heading" contenteditable="true" data-field="educationHeading">Education</h3>
           <ul id="education-list"></ul>
         </section>
-        <section class="section">
+        <section class="section" id="skills-block">
           <h3 id="skills-heading" contenteditable="true" data-field="skillsHeading">Skills</h3>
           <ul id="skills-list"></ul>
         </section>
       </aside>
 
       <section class="right">
-        <section class="section">
+        <section class="section" id="profile-block">
           <h3 id="profile-heading" contenteditable="true" data-field="profileHeading">Profile</h3>
           <p id="summary" contenteditable="true" data-field="summary">Lorem ipsum dolor sit amet.</p>
         </section>
-        <section class="section">
+        <section class="section" id="experience-block">
           <h3 id="experience-heading" contenteditable="true" data-field="experienceHeading">Work Experience</h3>
           <div id="experience-section" contenteditable="true" data-field="experiences"></div>
         </section>
-        <section class="section">
+        <section class="section" id="projects-block">
           <h3 id="projects-heading" contenteditable="true" data-field="projectsHeading">Projects</h3>
           <div id="projects-section" contenteditable="true" data-field="projects"></div>
         </section>
@@ -73,6 +73,39 @@
       if (data.phone) document.getElementById("phone").innerText = data.phone;
       if (data.location) document.getElementById("location").innerText = data.location;
       if (data.summary) document.getElementById("summary").innerText = data.summary;
+
+      // Update section headings and visibility from sectionSettings
+      const settings = data.sectionSettings || {};
+      
+      // Profile/About section
+      const profileHeading = document.getElementById("profile-heading");
+      const profileSection = profileHeading?.closest('.section');
+      if (profileHeading && settings.about?.heading) profileHeading.innerText = settings.about.heading;
+      if (profileSection) profileSection.style.display = settings.about?.visible !== false ? "block" : "none";
+      
+      // Education section
+      const eduHeading = document.getElementById("education-heading");
+      const eduSection = eduHeading?.closest('.section');
+      if (eduHeading && settings.education?.heading) eduHeading.innerText = settings.education.heading;
+      if (eduSection) eduSection.style.display = settings.education?.visible !== false ? "block" : "none";
+      
+      // Skills section
+      const skillsHeading = document.getElementById("skills-heading");
+      const skillsSection = skillsHeading?.closest('.section');
+      if (skillsHeading && settings.skills?.heading) skillsHeading.innerText = settings.skills.heading;
+      if (skillsSection) skillsSection.style.display = settings.skills?.visible !== false ? "block" : "none";
+      
+      // Experience section
+      const expHeading = document.getElementById("experience-heading");
+      const expSection = expHeading?.closest('.section');
+      if (expHeading && settings.experience?.heading) expHeading.innerText = settings.experience.heading;
+      if (expSection) expSection.style.display = settings.experience?.visible !== false ? "block" : "none";
+      
+      // Projects section
+      const projHeading = document.getElementById("projects-heading");
+      const projSection = projHeading?.closest('.section');
+      if (projHeading && settings.projects?.heading) projHeading.innerText = settings.projects.heading;
+      if (projSection) projSection.style.display = settings.projects?.visible !== false ? "block" : "none";
 
       // Education list
       if (Array.isArray(data.education)) {
@@ -158,6 +191,23 @@
           if (desc.textContent) div.appendChild(desc);
           wrap.appendChild(div);
         });
+      }
+
+      // Column placement (move sections between left/right based on settings)
+      const leftCol = document.querySelector('.left');
+      const rightCol = document.querySelector('.right');
+      if (leftCol && rightCol) {
+        const s = data.sectionSettings || {};
+        const move = (id, col) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          (col === 'left' ? leftCol : rightCol).appendChild(el);
+        };
+        move('education-block', s.education?.column === 'left' ? 'left' : 'right');
+        move('skills-block', s.skills?.column === 'left' ? 'left' : 'right');
+        move('profile-block', s.about?.column === 'left' ? 'left' : 'right');
+        move('experience-block', s.experience?.column === 'left' ? 'left' : 'right');
+        move('projects-block', s.projects?.column === 'left' ? 'left' : 'right');
       }
 
       // Custom sections

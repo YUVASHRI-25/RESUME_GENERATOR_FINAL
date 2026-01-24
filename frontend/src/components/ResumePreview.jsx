@@ -16,6 +16,7 @@ const ResumePreview = forwardRef(({ data, template }, downloadRef) => {
 
             const payload = {
                 fontFamily: data?.fontFamily || 'Inter',
+                profileImage: data?.profileImage || null,
                 name: data?.personalInfo?.fullName || '',
                 title: data?.personalInfo?.title || '',
                 email: data?.personalInfo?.email || '',

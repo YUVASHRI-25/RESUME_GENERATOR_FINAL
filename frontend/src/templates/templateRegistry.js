@@ -8,45 +8,52 @@ export const templates = [
     id: "modern-two-column",
     name: "Modern Two Column",
     preview: "/templates/modern-two-column/preview.png",
-    html: "/templates/modern-two-column/index.html"
+    html: "/templates/modern-two-column/index.html",
+    supportsColumnPlacement: true
   },
   {
     id: "drew-feig",
     name: "Drew Feig",
     preview: "/templates/drew-feig/preview.png",
-    html: "/templates/drew-feig/index.html"
+    html: "/templates/drew-feig/index.html",
+    supportsColumnPlacement: false
   },
   {
     id: "lorna-modern",
     name: "Lorna Alvarado",
     preview: "/templates/lorna-modern/preview.png",
-    html: "/templates/lorna-modern/index.html"
+    html: "/templates/lorna-modern/index.html",
+    supportsColumnPlacement: true
   },
   {
     id: "riaan-marketing",
     name: "Riaan Marketing",
     preview: "/templates/riaan-marketing/preview.png",
-    html: "/templates/riaan-marketing/index.html"
+    html: "/templates/riaan-marketing/index.html",
+    supportsColumnPlacement: false
   },
   {
     id: "jyoti-sidebar-cream",
     name: "Jyoti Sidebar",
     preview: "/templates/jyoti-sidebar-cream/preview.png",
-    html: "/templates/jyoti-sidebar-cream/index.html"
+    html: "/templates/jyoti-sidebar-cream/index.html",
+    supportsColumnPlacement: true
   }
   ,
   {
     id: "jonathan-writer",
     name: "Jonathan Writer",
     preview: "/templates/jonathan-writer/preview.png",
-    html: "/templates/jonathan-writer/index.html"
+    html: "/templates/jonathan-writer/index.html",
+    supportsColumnPlacement: false
   }
   ,
   {
     id: "creative-profile",
     name: "Creative Profile",
     preview: "/templates/creative-profile/preview.png",
-    html: "/templates/creative-profile/index.html"
+    html: "/templates/creative-profile/index.html",
+    supportsProfileImage: true
   }
 ];
 

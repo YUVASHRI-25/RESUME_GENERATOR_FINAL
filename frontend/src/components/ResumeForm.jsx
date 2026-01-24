@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { Plus, Trash, Wand2 } from 'lucide-react';
+import { Plus, Trash, Wand2, Image as ImageIcon, Upload, X } from 'lucide-react';
 import axios from 'axios';
+import { getTemplateById } from '../templates/templateRegistry';
 
-const ResumeForm = ({ data, updateData }) => {
+const ResumeForm = ({ data, updateData, template }) => {
+    const templateInfo = getTemplateById(template);
+    const supportsImage = templateInfo?.supportsProfileImage || false;
+    const supportsColumns = templateInfo?.supportsColumnPlacement || false;
 
     const fonts = [
         { name: 'Inter', family: 'Inter' },
@@ -114,17 +118,19 @@ const ResumeForm = ({ data, updateData }) => {
                                 onChange={(e) => updateSectionSetting('about', 'heading', e.target.value)}
                             />
                         </div>
-                        <div className="mx-4">
-                            <label className="block text-xs font-semibold text-gray-600 mb-1">Column</label>
-                            <select
-                                className="border p-2 rounded w-28 focus:ring-2 focus:ring-indigo-300 outline-none bg-white"
-                                value={data.sectionSettings?.about?.column || 'right'}
-                                onChange={(e) => updateSectionSetting('about', 'column', e.target.value)}
-                            >
-                                <option value="left">Left</option>
-                                <option value="right">Right</option>
-                            </select>
-                        </div>
+                        {supportsColumns && (
+                          <div className="mx-4">
+                              <label className="block text-xs font-semibold text-gray-600 mb-1">Column</label>
+                              <select
+                                  className="border p-2 rounded w-28 focus:ring-2 focus:ring-indigo-300 outline-none bg-white"
+                                  value={data.sectionSettings?.about?.column || 'right'}
+                                  onChange={(e) => updateSectionSetting('about', 'column', e.target.value)}
+                              >
+                                  <option value="left">Left</option>
+                                  <option value="right">Right</option>
+                              </select>
+                          </div>
+                        )}
                         <div className="ml-4 flex items-center">
                             <input
                                 type="checkbox"
@@ -148,17 +154,19 @@ const ResumeForm = ({ data, updateData }) => {
                                 onChange={(e) => updateSectionSetting('education', 'heading', e.target.value)}
                             />
                         </div>
-                        <div className="mx-4">
-                            <label className="block text-xs font-semibold text-gray-600 mb-1">Column</label>
-                            <select
-                                className="border p-2 rounded w-28 focus:ring-2 focus:ring-indigo-300 outline-none bg-white"
-                                value={data.sectionSettings?.education?.column || 'right'}
-                                onChange={(e) => updateSectionSetting('education', 'column', e.target.value)}
-                            >
-                                <option value="left">Left</option>
-                                <option value="right">Right</option>
-                            </select>
-                        </div>
+                        {supportsColumns && (
+                          <div className="mx-4">
+                              <label className="block text-xs font-semibold text-gray-600 mb-1">Column</label>
+                              <select
+                                  className="border p-2 rounded w-28 focus:ring-2 focus:ring-indigo-300 outline-none bg-white"
+                                  value={data.sectionSettings?.education?.column || 'right'}
+                                  onChange={(e) => updateSectionSetting('education', 'column', e.target.value)}
+                              >
+                                  <option value="left">Left</option>
+                                  <option value="right">Right</option>
+                              </select>
+                          </div>
+                        )}
                         <div className="ml-4 flex items-center">
                             <input
                                 type="checkbox"
@@ -182,17 +190,19 @@ const ResumeForm = ({ data, updateData }) => {
                                 onChange={(e) => updateSectionSetting('skills', 'heading', e.target.value)}
                             />
                         </div>
-                        <div className="mx-4">
-                            <label className="block text-xs font-semibold text-gray-600 mb-1">Column</label>
-                            <select
-                                className="border p-2 rounded w-28 focus:ring-2 focus:ring-indigo-300 outline-none bg-white"
-                                value={data.sectionSettings?.skills?.column || 'left'}
-                                onChange={(e) => updateSectionSetting('skills', 'column', e.target.value)}
-                            >
-                                <option value="left">Left</option>
-                                <option value="right">Right</option>
-                            </select>
-                        </div>
+                        {supportsColumns && (
+                          <div className="mx-4">
+                              <label className="block text-xs font-semibold text-gray-600 mb-1">Column</label>
+                              <select
+                                  className="border p-2 rounded w-28 focus:ring-2 focus:ring-indigo-300 outline-none bg-white"
+                                  value={data.sectionSettings?.skills?.column || 'left'}
+                                  onChange={(e) => updateSectionSetting('skills', 'column', e.target.value)}
+                              >
+                                  <option value="left">Left</option>
+                                  <option value="right">Right</option>
+                              </select>
+                          </div>
+                        )}
                         <div className="ml-4 flex items-center">
                             <input
                                 type="checkbox"
@@ -216,6 +226,7 @@ const ResumeForm = ({ data, updateData }) => {
                                 onChange={(e) => updateSectionSetting('experience', 'heading', e.target.value)}
                             />
                         </div>
+                        {supportsColumns && (
                         <div className="mx-4">
                             <label className="block text-xs font-semibold text-gray-600 mb-1">Column</label>
                             <select
@@ -227,6 +238,7 @@ const ResumeForm = ({ data, updateData }) => {
                                 <option value="right">Right</option>
                             </select>
                         </div>
+                        )}
                         <div className="ml-4 flex items-center">
                             <input
                                 type="checkbox"
@@ -250,6 +262,7 @@ const ResumeForm = ({ data, updateData }) => {
                                 onChange={(e) => updateSectionSetting('projects', 'heading', e.target.value)}
                             />
                         </div>
+                        {supportsColumns && (
                         <div className="mx-4">
                             <label className="block text-xs font-semibold text-gray-600 mb-1">Column</label>
                             <select
@@ -261,6 +274,7 @@ const ResumeForm = ({ data, updateData }) => {
                                 <option value="right">Right</option>
                             </select>
                         </div>
+                        )}
                         <div className="ml-4 flex items-center">
                             <input
                                 type="checkbox"
@@ -284,6 +298,7 @@ const ResumeForm = ({ data, updateData }) => {
                                 onChange={(e) => updateSectionSetting('languages', 'heading', e.target.value)}
                             />
                         </div>
+                        {supportsColumns && (
                         <div className="mx-4">
                             <label className="block text-xs font-semibold text-gray-600 mb-1">Column</label>
                             <select
@@ -295,6 +310,7 @@ const ResumeForm = ({ data, updateData }) => {
                                 <option value="right">Right</option>
                             </select>
                         </div>
+                        )}
                         <div className="ml-4 flex items-center">
                             <input
                                 type="checkbox"
@@ -318,6 +334,7 @@ const ResumeForm = ({ data, updateData }) => {
                                 onChange={(e) => updateSectionSetting('awards', 'heading', e.target.value)}
                             />
                         </div>
+                        {supportsColumns && (
                         <div className="mx-4">
                             <label className="block text-xs font-semibold text-gray-600 mb-1">Column</label>
                             <select
@@ -329,6 +346,7 @@ const ResumeForm = ({ data, updateData }) => {
                                 <option value="right">Right</option>
                             </select>
                         </div>
+                        )}
                         <div className="ml-4 flex items-center">
                             <input
                                 type="checkbox"
@@ -352,6 +370,7 @@ const ResumeForm = ({ data, updateData }) => {
                                 onChange={(e) => updateSectionSetting('references', 'heading', e.target.value)}
                             />
                         </div>
+                        {supportsColumns && (
                         <div className="mx-4">
                             <label className="block text-xs font-semibold text-gray-600 mb-1">Column</label>
                             <select
@@ -363,6 +382,7 @@ const ResumeForm = ({ data, updateData }) => {
                                 <option value="right">Right</option>
                             </select>
                         </div>
+                        )}
                         <div className="ml-4 flex items-center">
                             <input
                                 type="checkbox"
@@ -386,6 +406,7 @@ const ResumeForm = ({ data, updateData }) => {
                                 onChange={(e) => updateSectionSetting('custom', 'heading', e.target.value)}
                             />
                         </div>
+                        {supportsColumns && (
                         <div className="mx-4">
                             <label className="block text-xs font-semibold text-gray-600 mb-1">Column</label>
                             <select
@@ -397,6 +418,7 @@ const ResumeForm = ({ data, updateData }) => {
                                 <option value="right">Right</option>
                             </select>
                         </div>
+                        )}
                         <div className="ml-4 flex items-center">
                             <input
                                 type="checkbox"
@@ -447,6 +469,76 @@ const ResumeForm = ({ data, updateData }) => {
                     />
                 </div>
             </section>
+
+            {/* Profile Image (conditional) */}
+            {supportsImage && (
+                <section className="space-y-4">
+                    <h2 className="text-xl font-semibold border-b pb-2 text-indigo-700">Profile Image</h2>
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg border-2 border-purple-200">
+                        {data.profileImage ? (
+                            <div className="space-y-4">
+                                <div className="flex justify-center">
+                                    <img 
+                                        src={data.profileImage} 
+                                        alt="Profile" 
+                                        className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
+                                    />
+                                </div>
+                                <div className="flex gap-2 justify-center">
+                                    <label className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-indigo-700 transition">
+                                        <Upload size={16} /> Replace Image
+                                        <input 
+                                            type="file" 
+                                            accept="image/jpeg,image/jpg,image/png" 
+                                            className="hidden"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0];
+                                                if (file) {
+                                                    const reader = new FileReader();
+                                                    reader.onloadend = () => {
+                                                        updateData(prev => ({ ...prev, profileImage: reader.result }));
+                                                    };
+                                                    reader.readAsDataURL(file);
+                                                }
+                                            }}
+                                        />
+                                    </label>
+                                    <button 
+                                        onClick={() => updateData(prev => ({ ...prev, profileImage: null }))}
+                                        className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                                    >
+                                        <X size={16} /> Remove
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <label className="flex flex-col items-center justify-center py-8 border-2 border-dashed border-purple-300 rounded-lg cursor-pointer hover:bg-purple-100 transition">
+                                <ImageIcon size={48} className="text-purple-400 mb-3" />
+                                <p className="text-sm font-semibold text-gray-700 mb-1">Upload Profile Image</p>
+                                <p className="text-xs text-gray-500 mb-3">JPG or PNG (recommended: square image)</p>
+                                <div className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">
+                                    <Upload size={16} /> Choose File
+                                </div>
+                                <input 
+                                    type="file" 
+                                    accept="image/jpeg,image/jpg,image/png" 
+                                    className="hidden"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            const reader = new FileReader();
+                                            reader.onloadend = () => {
+                                                updateData(prev => ({ ...prev, profileImage: reader.result }));
+                                            };
+                                            reader.readAsDataURL(file);
+                                        }
+                                    }}
+                                />
+                            </label>
+                        )}
+                    </div>
+                </section>
+            )}
 
             {/* Summary */}
             <section className="space-y-4">

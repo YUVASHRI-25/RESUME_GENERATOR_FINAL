@@ -99,6 +99,12 @@
         const resume = document.getElementById('resume');
         if (resume) resume.style.fontFamily = fontValue;
 
+        // Update profile image
+        const profileImg = document.getElementById("profile-image");
+        if (profileImg && data.profileImage) {
+            profileImg.src = data.profileImage;
+        }
+
         // Update personal info
         if (data.name) document.getElementById("name").innerText = data.name;
         if (data.title) document.getElementById("title").innerText = data.title;
