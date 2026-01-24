@@ -1,0 +1,193 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: #f6efe8;
+  color: #333;
+  font-family: var(--resume-font, "Georgia", "Garamond", serif);
+}
+
+.template-root {
+  font-family: var(--resume-font, "Georgia", "Garamond", serif);
+}
+
+.resume {
+  display: flex;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  min-height: 1123px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* LEFT SIDEBAR */
+.sidebar {
+  width: 35%;
+  background: #f3ebe3;
+  padding: 40px 30px;
+  color: #6b2f1a;
+  border-right: 3px solid #e0d5ca;
+}
+
+.sidebar h1 {
+  font-size: 42px;
+  margin: 0 0 8px 0;
+  font-weight: normal;
+  letter-spacing: -1px;
+  color: #6b2f1a;
+}
+
+.sidebar h2 {
+  font-size: 20px;
+  margin: 0 0 25px 0;
+  font-weight: normal;
+  color: #8b4513;
+  letter-spacing: 0.5px;
+}
+
+.contact {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+  font-size: 13px;
+}
+
+.contact li {
+  margin: 8px 0;
+  line-height: 1.5;
+  color: #6b2f1a;
+}
+
+.sidebar section {
+  margin-bottom: 35px;
+  page-break-inside: avoid;
+}
+
+.sidebar h3 {
+  font-size: 16px;
+  margin: 0 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #6b2f1a;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #6b2f1a;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin: 10px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #6b2f1a;
+}
+
+/* RIGHT CONTENT */
+.content {
+  width: 65%;
+  padding: 50px 40px;
+  background: #fff;
+}
+
+.content section {
+  margin-bottom: 40px;
+  page-break-inside: avoid;
+}
+
+.content h3 {
+  font-size: 18px;
+  margin: 0 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #6b2f1a;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #6b2f1a;
+}
+
+.content p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #444;
+  margin: 0 0 12px 0;
+}
+
+/* JOB ENTRY */
+.job {
+  margin-bottom: 20px;
+  page-break-inside: avoid;
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.job-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+}
+
+.job-date {
+  font-size: 12px;
+  color: #888;
+  flex-shrink: 0;
+  margin-left: 20px;
+}
+
+.job p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 6px 0;
+  color: #555;
+}
+
+/* REFERENCE ENTRY */
+.reference {
+  margin-bottom: 18px;
+  page-break-inside: avoid;
+}
+
+.reference-name {
+  font-weight: bold;
+  font-size: 13px;
+  margin: 0 0 3px 0;
+  color: #333;
+}
+
+.reference-info {
+  font-size: 12px;
+  margin: 0 0 2px 0;
+  color: #666;
+}
+
+.reference-contact {
+  font-size: 12px;
+  margin: 0;
+  color: #888;
+}
+
+/* PRINT STYLES */
+@media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+  
+  .resume {
+    box-shadow: none;
+    max-width: 100%;
+  }
+}

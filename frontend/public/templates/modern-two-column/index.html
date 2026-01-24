@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Montserrat:wght@300;400;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <title>Modern Two Column</title>
+</head>
+<body>
+  <div id="resume" class="resume template-root">
+    <header class="header">
+      <h1 id="name" class="name" contenteditable="true" data-field="name">YOUR NAME</h1>
+      <h2 id="title" class="role" contenteditable="true" data-field="title">YOUR TITLE</h2>
+      <div class="contact" contenteditable="true" data-field="contact">
+        <span id="email">email@example.com</span>
+        <span id="phone">+123-456-7890</span>
+        <span id="location">City, Country</span>
+      </div>
+    </header>
+
+    <main class="grid">
+      <aside class="left">
+        <section class="section">
+          <h3 id="education-heading" contenteditable="true" data-field="educationHeading">Education</h3>
+          <ul id="education-list"></ul>
+        </section>
+        <section class="section">
+          <h3 id="skills-heading" contenteditable="true" data-field="skillsHeading">Skills</h3>
+          <ul id="skills-list"></ul>
+        </section>
+      </aside>
+
+      <section class="right">
+        <section class="section">
+          <h3 id="profile-heading" contenteditable="true" data-field="profileHeading">Profile</h3>
+          <p id="summary" contenteditable="true" data-field="summary">Lorem ipsum dolor sit amet.</p>
+        </section>
+        <section class="section">
+          <h3 id="experience-heading" contenteditable="true" data-field="experienceHeading">Work Experience</h3>
+          <div id="experience-section" contenteditable="true" data-field="experiences"></div>
+        </section>
+        <section class="section">
+          <h3 id="projects-heading" contenteditable="true" data-field="projectsHeading">Projects</h3>
+          <div id="projects-section" contenteditable="true" data-field="projects"></div>
+        </section>
+        <section class="section" id="custom-container">
+          <h3 id="custom-heading" contenteditable="true" data-field="customHeading">{{section.custom.heading}}</h3>
+          <div id="custom-section" contenteditable="true" data-field="customSections"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function updateContent(data) {
+      if (!data || typeof data !== "object") return;
+
+      const font = data.fontFamily || 'Inter';
+      const fontValue = `'${font}', sans-serif`;
+      document.documentElement.style.setProperty('--resume-font', fontValue);
+      document.body.style.fontFamily = fontValue;
+      const resume = document.getElementById('resume');
+      if (resume) resume.style.fontFamily = fontValue;
+
+      if (data.name) document.getElementById("name").innerText = data.name;
+      if (data.title) document.getElementById("title").innerText = data.title;
+      if (data.email) document.getElementById("email").innerText = data.email;
+      if (data.phone) document.getElementById("phone").innerText = data.phone;
+      if (data.location) document.getElementById("location").innerText = data.location;
+      if (data.summary) document.getElementById("summary").innerText = data.summary;
+
+      // Education list
+      if (Array.isArray(data.education)) {
+        const list = document.getElementById("education-list");
+        list.innerHTML = "";
+        data.education.forEach(item => {
+          const li = document.createElement("li");
+          const degree = item.degree || item.title || "";
+          const school = item.school || item.institution || "";
+          const year = item.year || item.duration || "";
+          const grade = item.percentage || item.gpa || item.score || "";
+
+          li.textContent = [degree, school, year].filter(Boolean).join(" – ");
+          if (grade) {
+            const span = document.createElement("span");
+            span.style.display = "block";
+            span.style.fontSize = "12px";
+            span.textContent = grade;
+            li.appendChild(span);
+          }
+          list.appendChild(li);
+        });
+      }
+
+      // Skills list
+      if (Array.isArray(data.skills)) {
+        const list = document.getElementById("skills-list");
+        list.innerHTML = "";
+        data.skills.forEach(skill => {
+          const li = document.createElement("li");
+          li.textContent = skill;
+          list.appendChild(li);
+        });
+      }
+
+      // Experience entries
+      if (Array.isArray(data.experiences)) {
+        const wrap = document.getElementById("experience-section");
+        wrap.innerHTML = "";
+        data.experiences.forEach(exp => {
+          const div = document.createElement("div");
+          const title = document.createElement("p");
+          title.style.fontWeight = "600";
+          title.style.margin = "0 0 4px";
+          title.textContent = [exp.company, exp.title].filter(Boolean).join(" – ");
+
+          const meta = document.createElement("p");
+          meta.style.margin = "0 0 6px";
+          meta.textContent = exp.duration || "";
+
+          const desc = document.createElement("p");
+          desc.style.margin = "0 0 10px";
+          desc.textContent = exp.description || "";
+
+          div.appendChild(title);
+          if (meta.textContent) div.appendChild(meta);
+          if (desc.textContent) div.appendChild(desc);
+          wrap.appendChild(div);
+        });
+      }
+
+      // Projects entries
+      if (Array.isArray(data.projects)) {
+        const wrap = document.getElementById("projects-section");
+        wrap.innerHTML = "";
+        data.projects.forEach(proj => {
+          const div = document.createElement("div");
+          const title = document.createElement("p");
+          title.style.fontWeight = "600";
+          title.style.margin = "0 0 4px";
+          title.textContent = proj.name || proj.title || "";
+
+          const meta = document.createElement("p");
+          meta.style.margin = "0 0 6px";
+          meta.textContent = proj.tech || proj.stack || "";
+
+          const desc = document.createElement("p");
+          desc.style.margin = "0 0 10px";
+          desc.textContent = proj.description || "";
+
+          if (title.textContent) div.appendChild(title);
+          if (meta.textContent) div.appendChild(meta);
+          if (desc.textContent) div.appendChild(desc);
+          wrap.appendChild(div);
+        });
+      }
+
+      // Custom sections
+      const customWrap = document.getElementById("custom-section");
+      if (customWrap) {
+        customWrap.innerHTML = "";
+        const heading = (data.sectionSettings?.custom?.heading ?? "Custom Sections") || "";
+        const visible = data.sectionSettings?.custom?.visible !== false;
+        const headingEl = document.getElementById("custom-heading");
+        if (headingEl) headingEl.textContent = heading;
+        const container = document.getElementById("custom-container");
+        if (container) container.style.display = visible ? "block" : "none";
+
+        if (visible && Array.isArray(data.customSections)) {
+          data.customSections.forEach(sec => {
+            if (!sec || (!sec.title && !sec.content)) return;
+            const block = document.createElement("div");
+            const title = document.createElement("p");
+            title.style.fontWeight = "700";
+            title.style.margin = "0 0 4px";
+            title.textContent = sec.title || "";
+
+            const body = document.createElement("p");
+            body.style.margin = "0 0 10px";
+            body.textContent = sec.content || "";
+
+            if (title.textContent) block.appendChild(title);
+            if (body.textContent) block.appendChild(body);
+            customWrap.appendChild(block);
+          });
+        }
+      }
+    }
+
+    window.addEventListener("message", (event) => {
+      if (event.data === 'DOWNLOAD_PDF') {
+        const resume = document.getElementById('resume');
+        const opt = {
+          margin: 0,
+          filename: 'resume.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(resume).save();
+        return;
+      }
+      updateContent(event.data);
+    });
+
+    // Signal that the iframe is ready
+    window.parent.postMessage({ type: 'template-ready' }, '*');
+  </script>
+</body>
+</html>

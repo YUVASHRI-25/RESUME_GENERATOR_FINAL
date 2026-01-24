@@ -1,0 +1,8 @@
+body{background:#fff;margin:0;font-family:var(--resume-font, Calibri, Arial, sans-serif)}
+.template-root{font-family:var(--resume-font, Calibri, Arial, sans-serif)}
+.resume{width:794px;min-height:1123px;margin:0 auto;padding:32px;box-sizing:border-box}
+header h1{color:#1aa6a6;letter-spacing:2px;margin:0}
+header h2{text-align:right;margin:6px 0 12px}
+.contact{display:flex;justify-content:space-between;border-top:2px solid #1aa6a6;padding-top:10px}
+section h3{color:#1aa6a6;border-bottom:2px solid #1aa6a6;margin-top:25px}
+.two-col{display:flex;gap:40px}

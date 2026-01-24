@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jyoti Sidebar Resume</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+<div id="resume" class="resume template-root">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+
+    <h1 id="name">{{name}}</h1>
+    <h2 id="title">{{title}}</h2>
+
+    <ul class="contact">
+      <li id="phone">{{phone}}</li>
+      <li id="email">{{email}}</li>
+      <li id="location">{{location}}</li>
+      <li id="website">{{website}}</li>
+    </ul>
+
+    <div id="sidebar-sections">
+      <section id="skills-section">
+        <h3 id="skills-heading">{{section.skills.heading}}</h3>
+        <ul id="skills-list"></ul>
+      </section>
+
+      <section id="languages-section">
+        <h3 id="languages-heading">{{section.languages.heading}}</h3>
+        <ul id="languages-list"></ul>
+      </section>
+
+      <section id="awards-section">
+        <h3 id="awards-heading">{{section.awards.heading}}</h3>
+        <ul id="awards-list"></ul>
+      </section>
+
+      <section id="custom-section">
+        <h3 id="custom-heading">{{section.custom.heading}}</h3>
+        <div id="custom-list"></div>
+      </section>
+    </div>
+
+  </aside>
+
+  <!-- RIGHT CONTENT -->
+  <main class="content">
+
+    <div id="content-sections">
+      <section id="about-section">
+        <h3 id="about-heading">{{section.about.heading}}</h3>
+        <p id="summary">{{section.about.content}}</p>
+      </section>
+
+      <section id="education-section">
+        <h3 id="education-heading">{{section.education.heading}}</h3>
+        <div id="education-list"></div>
+      </section>
+
+      <section id="experience-section">
+        <h3 id="experience-heading">{{section.experience.heading}}</h3>
+        <div id="experience-list"></div>
+      </section>
+
+      <section id="references-section">
+        <h3 id="references-heading">{{section.references.heading}}</h3>
+        <div id="references-list"></div>
+      </section>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+  function updateContent(data) {
+    if (!data || typeof data !== "object") return;
+
+    const font = data.fontFamily || 'Inter';
+    const fontValue = `'${font}', sans-serif`;
+    document.documentElement.style.setProperty('--resume-font', fontValue);
+    document.body.style.fontFamily = fontValue;
+    const resume = document.getElementById('resume');
+    if (resume) resume.style.fontFamily = fontValue;
+
+    const defaults = {
+      about: { heading: "About Me", visible: true, column: "right" },
+      education: { heading: "Education", visible: true, column: "right" },
+      experience: { heading: "Experience", visible: true, column: "right" },
+      skills: { heading: "Skill", visible: true, column: "left" },
+      languages: { heading: "Language", visible: true, column: "left" },
+      awards: { heading: "Awards", visible: true, column: "left" },
+      references: { heading: "References", visible: true, column: "right" },
+      custom: { heading: "Custom", visible: true, column: "right" }
+    };
+
+    const setText = (id, value = "") => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value || "";
+    };
+
+    const setDisplay = (id, visible = true) => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = visible ? "block" : "none";
+    };
+
+    const sectionConfig = Object.fromEntries(
+      Object.keys(defaults).map((key) => [
+        key,
+        {
+          heading: (data.sectionSettings?.[key]?.heading ?? defaults[key].heading) || "",
+          visible: data.sectionSettings?.[key]?.visible !== false,
+          column: data.sectionSettings?.[key]?.column || defaults[key].column
+        }
+      ])
+    );
+
+    // Personal Info
+    setText("name", data.name || "");
+    setText("title", data.title || "");
+    setText("email", data.email || "");
+    setText("phone", data.phone || "");
+    setText("location", data.location || "");
+    setText("website", data.website || "");
+    setText("summary", data.summary || "");
+
+    // Section headings and visibility
+    setText("about-heading", sectionConfig.about.heading);
+    setDisplay("about-section", sectionConfig.about.visible);
+
+    setText("education-heading", sectionConfig.education.heading);
+    setDisplay("education-section", sectionConfig.education.visible);
+
+    setText("experience-heading", sectionConfig.experience.heading);
+    setDisplay("experience-section", sectionConfig.experience.visible);
+
+    setText("skills-heading", sectionConfig.skills.heading);
+    setDisplay("skills-section", sectionConfig.skills.visible);
+
+    setText("languages-heading", sectionConfig.languages.heading);
+    setDisplay("languages-section", sectionConfig.languages.visible);
+
+    setText("awards-heading", sectionConfig.awards.heading);
+    setDisplay("awards-section", sectionConfig.awards.visible);
+
+    setText("references-heading", sectionConfig.references.heading);
+    setDisplay("references-section", sectionConfig.references.visible);
+
+    setText("custom-heading", sectionConfig.custom.heading);
+    setDisplay("custom-section", sectionConfig.custom.visible);
+
+    // Column placement control
+    const sidebar = document.getElementById("sidebar-sections") || document.querySelector(".sidebar");
+    const content = document.getElementById("content-sections") || document.querySelector(".content");
+    const renderOrder = ["about", "education", "experience", "references", "skills", "languages", "awards", "custom"];
+    const columns = { left: sidebar, right: content };
+
+    renderOrder.forEach((key) => {
+      const sectionEl = document.getElementById(`${key}-section`);
+      const target = columns[sectionConfig[key].column === "left" ? "left" : "right"];
+      if (sectionEl && target && sectionEl.parentElement !== target) {
+        target.appendChild(sectionEl);
+      }
+    });
+
+    // Education
+    const eduList = document.getElementById("education-list");
+    if (eduList) {
+      eduList.innerHTML = "";
+      if (Array.isArray(data.education)) {
+        data.education.forEach((edu) => {
+          const div = document.createElement("p");
+          const parts = [edu.degree, edu.school, edu.year].filter(Boolean);
+          div.innerHTML = `<strong>${parts[0] || ""}</strong>${parts[1] ? " — " + parts[1] : ""}${parts[2] ? " (" + parts[2] + ")" : ""}`;
+          if (edu.percentage) {
+            const grade = document.createElement("small");
+            grade.style.display = "block";
+            grade.textContent = edu.percentage;
+            div.appendChild(grade);
+          }
+          eduList.appendChild(div);
+        });
+      }
+    }
+
+    // Skills
+    const skillsList = document.getElementById("skills-list");
+    if (skillsList) {
+      skillsList.innerHTML = "";
+      if (Array.isArray(data.skills)) {
+        data.skills.forEach((skill) => {
+          const li = document.createElement("li");
+          li.textContent = skill || "";
+          skillsList.appendChild(li);
+        });
+      }
+    }
+
+    // Languages
+    const languageList = document.getElementById("languages-list");
+    if (languageList) {
+      languageList.innerHTML = "";
+      if (Array.isArray(data.languages)) {
+        data.languages.forEach((lang) => {
+          const li = document.createElement("li");
+          li.textContent = lang || "";
+          languageList.appendChild(li);
+        });
+      }
+    }
+
+    // Awards
+    const awardsList = document.getElementById("awards-list");
+    if (awardsList) {
+      awardsList.innerHTML = "";
+      if (Array.isArray(data.awards)) {
+        data.awards.forEach((award) => {
+          const li = document.createElement("li");
+          li.textContent = award || "";
+          awardsList.appendChild(li);
+        });
+      }
+    }
+
+    // Experience
+    const expList = document.getElementById("experience-list");
+    if (expList) {
+      expList.innerHTML = "";
+      if (Array.isArray(data.experiences)) {
+        data.experiences.forEach((exp) => {
+          const div = document.createElement("div");
+          div.className = "job";
+          
+          const titleDiv = document.createElement("div");
+          titleDiv.className = "job-header";
+          const titleSpan = document.createElement("span");
+          titleSpan.className = "job-title";
+          titleSpan.textContent = [exp.title, exp.company].filter(Boolean).join(" - ");
+          const dateSpan = document.createElement("span");
+          dateSpan.className = "job-date";
+          dateSpan.textContent = exp.duration || "";
+          titleDiv.appendChild(titleSpan);
+          titleDiv.appendChild(dateSpan);
+          
+          const desc = document.createElement("p");
+          desc.textContent = exp.description || "";
+          
+          div.appendChild(titleDiv);
+          div.appendChild(desc);
+          expList.appendChild(div);
+        });
+      }
+    }
+
+    // References
+    const refList = document.getElementById("references-list");
+    if (refList) {
+      refList.innerHTML = "";
+      if (Array.isArray(data.references)) {
+        data.references.forEach((ref) => {
+          const div = document.createElement("div");
+          div.className = "reference";
+          
+          const nameP = document.createElement("p");
+          nameP.className = "reference-name";
+          nameP.innerHTML = `<strong>${ref.name || ""}</strong>`;
+          
+          const infoP = document.createElement("p");
+          infoP.className = "reference-info";
+          infoP.textContent = `${ref.title || ""} ${ref.company ? "at " + ref.company : ""}`;
+          
+          const contactP = document.createElement("p");
+          contactP.className = "reference-contact";
+          contactP.textContent = ref.email || ref.phone || "";
+          
+          div.appendChild(nameP);
+          if (ref.title || ref.company) div.appendChild(infoP);
+          if (ref.email || ref.phone) div.appendChild(contactP);
+          refList.appendChild(div);
+        });
+      }
+    }
+
+    // Custom Sections
+    const customList = document.getElementById("custom-list");
+    if (customList) {
+      customList.innerHTML = "";
+      if (Array.isArray(data.customSections)) {
+        data.customSections.forEach((sec) => {
+          if (!sec || (!sec.title && !sec.content)) return;
+          const block = document.createElement("div");
+          block.className = "custom-block";
+
+          const title = document.createElement("p");
+          title.style.fontWeight = "bold";
+          title.style.margin = "0 0 4px";
+          title.textContent = sec.title || "";
+
+          const body = document.createElement("p");
+          body.style.margin = "0 0 10px";
+          body.textContent = sec.content || "";
+
+          if (title.textContent) block.appendChild(title);
+          if (body.textContent) block.appendChild(body);
+          customList.appendChild(block);
+        });
+      }
+    }
+  }
+
+  window.addEventListener("message", (event) => {
+    if (event.data === 'DOWNLOAD_PDF') {
+      const resume = document.getElementById('resume');
+      const opt = {
+        margin: 0,
+        filename: 'resume.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(resume).save();
+      return;
+    }
+    updateContent(event.data);
+  });
+
+  window.parent.postMessage({ type: 'template-ready' }, '*');
+</script>
+
+</body>
+</html>

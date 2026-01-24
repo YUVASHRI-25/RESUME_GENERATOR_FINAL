@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <title>Lorna Modern</title>
+</head>
+<body>
+  <div id="resume" class="resume template-root">
+    <header class="top">
+      <h1 id="name">Lorna Alvarado</h1>
+      <h2 id="title">Marketing Manager</h2>
+    </header>
+    <div class="bar">
+      <span id="phone">+123-456-7890</span>
+      <span id="email">hello@reallygreatsite.com</span>
+      <span id="location">Any City</span>
+    </div>
+
+    <div class="columns">
+      <aside class="left">
+        <section>
+          <h3>EDUCATION</h3>
+          <div id="education-section"></div>
+        </section>
+        <section>
+          <h3>SKILLS</h3>
+          <ul id="skills-list"></ul>
+        </section>
+        <section>
+          <h3>LANGUAGE</h3>
+          <ul id="languages-list"></ul>
+        </section>
+      </aside>
+
+      <main class="right">
+        <section>
+          <h3>PROFILE</h3>
+          <p id="summary">Professional summary</p>
+        </section>
+        <section>
+          <h3>WORK EXPERIENCE</h3>
+          <div id="experience-section"></div>
+        </section>
+        <section>
+          <h3>PROJECTS</h3>
+          <div id="projects-section"></div>
+        </section>
+        <section id="custom-container">
+          <h3 id="custom-heading">{{section.custom.heading}}</h3>
+          <div id="custom-section"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    function updateContent(data) {
+      if (!data || typeof data !== "object") return;
+
+      const font = data.fontFamily || 'Inter';
+      const fontValue = `'${font}', sans-serif`;
+      document.documentElement.style.setProperty('--resume-font', fontValue);
+      document.body.style.fontFamily = fontValue;
+      const resume = document.getElementById('resume');
+      if (resume) resume.style.fontFamily = fontValue;
+
+      if (data.name) document.getElementById("name").innerText = data.name;
+      if (data.title) document.getElementById("title").innerText = data.title;
+      if (data.email) document.getElementById("email").innerText = data.email;
+      if (data.phone) document.getElementById("phone").innerText = data.phone;
+      if (data.location) document.getElementById("location").innerText = data.location;
+      if (data.summary) document.getElementById("summary").innerText = data.summary;
+
+      // Education
+      if (Array.isArray(data.education)) {
+        const wrap = document.getElementById("education-section");
+        wrap.innerHTML = "";
+        data.education.forEach(item => {
+          const div = document.createElement("div");
+          div.style.marginBottom = "10px";
+          
+          const degree = document.createElement("p");
+          degree.style.fontWeight = "bold";
+          degree.style.margin = "0";
+          degree.textContent = item.degree || "";
+          
+          const school = document.createElement("p");
+          school.style.margin = "0";
+          school.textContent = item.school || "";
+          
+          const year = document.createElement("p");
+          year.style.fontSize = "12px";
+          year.style.margin = "0";
+          year.textContent = item.year || "";
+          
+          if (degree.textContent) div.appendChild(degree);
+          if (school.textContent) div.appendChild(school);
+          if (year.textContent) div.appendChild(year);
+          wrap.appendChild(div);
+        });
+      }
+
+      // Skills
+      if (Array.isArray(data.skills)) {
+        const list = document.getElementById("skills-list");
+        list.innerHTML = "";
+        data.skills.forEach(skill => {
+          const li = document.createElement("li");
+          li.textContent = skill;
+          list.appendChild(li);
+        });
+      }
+
+      // Languages
+      if (Array.isArray(data.languages)) {
+        const list = document.getElementById("languages-list");
+        list.innerHTML = "";
+        data.languages.forEach(lang => {
+          const li = document.createElement("li");
+          li.textContent = lang;
+          list.appendChild(li);
+        });
+      }
+
+      // Experience
+      if (Array.isArray(data.experiences)) {
+        const wrap = document.getElementById("experience-section");
+        wrap.innerHTML = "";
+        data.experiences.forEach(exp => {
+          const div = document.createElement("div");
+          div.style.marginBottom = "12px";
+          
+          const title = document.createElement("p");
+          title.style.fontWeight = "bold";
+          title.style.margin = "0 0 4px";
+          title.textContent = exp.company || "";
+          
+          const role = document.createElement("p");
+          role.style.margin = "0 0 4px";
+          role.style.fontStyle = "italic";
+          role.textContent = exp.title || "";
+          
+          const meta = document.createElement("p");
+          meta.style.margin = "0 0 6px";
+          meta.style.fontSize = "12px";
+          meta.textContent = exp.duration || "";
+          
+          const desc = document.createElement("p");
+          desc.style.margin = "0";
+          desc.textContent = exp.description || "";
+          
+          if (title.textContent) div.appendChild(title);
+          if (role.textContent) div.appendChild(role);
+          if (meta.textContent) div.appendChild(meta);
+          if (desc.textContent) div.appendChild(desc);
+          wrap.appendChild(div);
+        });
+      }
+
+      // Projects
+      if (Array.isArray(data.projects)) {
+        const wrap = document.getElementById("projects-section");
+        wrap.innerHTML = "";
+        data.projects.forEach(proj => {
+          const div = document.createElement("div");
+          div.style.marginBottom = "12px";
+          
+          const title = document.createElement("p");
+          title.style.fontWeight = "bold";
+          title.style.margin = "0 0 4px";
+          title.textContent = proj.name || proj.title || "";
+          
+          const desc = document.createElement("p");
+          desc.style.margin = "0";
+          desc.textContent = proj.description || "";
+          
+          if (title.textContent) div.appendChild(title);
+          if (desc.textContent) div.appendChild(desc);
+          wrap.appendChild(div);
+        });
+      }
+
+      // Custom sections
+      const customWrap = document.getElementById("custom-section");
+      if (customWrap) {
+        customWrap.innerHTML = "";
+        const heading = (data.sectionSettings?.custom?.heading ?? "Custom") || "";
+        const visible = data.sectionSettings?.custom?.visible !== false;
+        const headingEl = document.getElementById("custom-heading");
+        if (headingEl) headingEl.textContent = heading;
+        const container = document.getElementById("custom-container");
+        if (container) container.style.display = visible ? "block" : "none";
+
+        if (visible && Array.isArray(data.customSections)) {
+          data.customSections.forEach(sec => {
+            if (!sec || (!sec.title && !sec.content)) return;
+            const block = document.createElement("div");
+            block.style.marginBottom = "12px";
+            
+            const title = document.createElement("p");
+            title.style.fontWeight = "bold";
+            title.style.margin = "0 0 4px";
+            title.textContent = sec.title || "";
+            
+            const body = document.createElement("p");
+            body.style.margin = "0";
+            body.textContent = sec.content || "";
+            
+            if (title.textContent) block.appendChild(title);
+            if (body.textContent) block.appendChild(body);
+            customWrap.appendChild(block);
+          });
+        }
+      }
+    }
+
+    window.addEventListener("message", (event) => {
+      if (event.data === 'DOWNLOAD_PDF') {
+        const resume = document.getElementById('resume');
+        const opt = {
+          margin: 0,
+          filename: 'resume.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(resume).save();
+        return;
+      }
+      updateContent(event.data);
+    });
+
+    window.parent.postMessage({ type: 'template-ready' }, '*');
+  </script>
+</body>
+</html>

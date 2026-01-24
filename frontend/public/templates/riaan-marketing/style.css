@@ -1,0 +1,150 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #f5efe9;
+  margin: 0;
+  padding: 40px 20px;
+  color: #333;
+  font-family: var(--resume-font, "Segoe UI", "Helvetica Neue", sans-serif);
+}
+
+.template-root {
+  font-family: var(--resume-font, "Segoe UI", "Helvetica Neue", sans-serif);
+}
+
+.resume {
+  background: white;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #d0d0d0;
+  padding-bottom: 25px;
+  margin-bottom: 30px;
+}
+
+.header .left {
+  flex: 1;
+}
+
+.header h1 {
+  color: #a04a00;
+  font-size: 36px;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.header h2 {
+  color: #666;
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.header .right {
+  text-align: right;
+  font-size: 13px;
+}
+
+.header .right p {
+  margin: 4px 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* SECTIONS */
+section {
+  margin-bottom: 30px;
+  page-break-inside: avoid;
+}
+
+section h3 {
+  color: #a04a00;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #d0d0d0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+section p {
+  margin: 0 0 12px 0;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* SKILLS */
+.skills {
+  columns: 2;
+  column-gap: 30px;
+  list-style: disc;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.skills li {
+  margin-bottom: 6px;
+  color: #444;
+}
+
+/* EXPERIENCE & PROJECTS */
+.job,
+.project {
+  margin-bottom: 20px;
+  page-break-inside: avoid;
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.job-title,
+.project-title {
+  font-weight: 700;
+  color: #333;
+  font-size: 14px;
+}
+
+.job-date {
+  font-size: 12px;
+  color: #888;
+  flex-shrink: 0;
+  margin-left: 20px;
+}
+
+.job p,
+.project p {
+  margin: 6px 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* PRINT STYLES */
+@media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+  
+  .resume {
+    box-shadow: none;
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,186 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+
+.lorna-container {
+  width: 794px;
+  min-height: 1123px;
+  background: #ffffff;
+  font-family: "Montserrat", sans-serif;
+  color: #2e2e2e;
+  display: flex;
+  flex-direction: column;
+}
+
+.lorna-header {
+  background: #f1f1f1;
+  padding: 44px 52px 30px;
+}
+
+.lorna-name {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.lorna-title {
+  margin: 6px 0 0;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+}
+
+.lorna-contact-bar {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  padding: 14px 52px;
+  background: #e4e4e4;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  box-sizing: border-box;
+}
+
+.contact-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.contact-icon {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #4a4a4a;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.contact-icon::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border: 1px solid #4a4a4a;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+}
+
+.contact-text {
+  display: inline-block;
+}
+
+.lorna-body {
+  display: grid;
+  grid-template-columns: 36% 64%;
+  padding: 38px 52px 46px;
+  column-gap: 42px;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.lorna-left {
+  border-right: 1px solid #c8c8c8;
+  padding-right: 28px;
+}
+
+.lorna-right {
+  padding-left: 28px;
+}
+
+.lorna-section {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  margin: 0 0 14px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #2d2d2d;
+}
+
+.section-body {
+  display: grid;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #3a3a3a;
+}
+
+.item-block {
+  display: grid;
+  gap: 4px;
+}
+
+.item-title {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #2f2f2f;
+}
+
+.item-subtitle,
+.item-meta {
+  font-size: 12.6px;
+  color: #3b3b3b;
+}
+
+.item-meta {
+  letter-spacing: 0.4px;
+}
+
+.text-line {
+  margin: 0;
+  color: #3a3a3a;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.bullet-list {
+  padding: 0;
+  margin: 0;
+  list-style: disc inside;
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  color: #3a3a3a;
+}
+
+.lorna-right .lorna-section {
+  margin-bottom: 32px;
+}
+
+.references-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px 26px;
+}
+
+.reference-card {
+  display: grid;
+  gap: 4px;
+  font-size: 12.6px;
+  color: #3a3a3a;
+}
+
+.ref-name {
+  font-weight: 700;
+}
+
+.ref-position {
+  margin: 0;
+}
+
+.ref-contact {
+  margin: 0;
+}
+
+.ref-label {
+  font-weight: 600;
+  margin-right: 4px;
+}

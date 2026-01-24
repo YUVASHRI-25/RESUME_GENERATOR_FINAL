@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jonathan Writer</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Montserrat:wght@300;400;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div id="resume" class="template-root">
+
+    <!-- HEADER -->
+    <header class="header">
+      <h1 id="name" contenteditable="true">JONATHAN PATTERSON</h1>
+      <h2 id="title" contenteditable="true">CONTENT WRITER</h2>
+
+      <div class="contact" id="contact" contenteditable="true">
+        +123-456-7890 &nbsp; | &nbsp; @reallygreatsite &nbsp; | &nbsp;
+        hello@reallygreatsite.com &nbsp; | &nbsp;
+        123 Anywhere St., Any City, ST 12345
+      </div>
+    </header>
+
+    <!-- SUMMARY -->
+    <section>
+      <h3 id="summary-heading" contenteditable="true">SUMMARY</h3>
+      <p id="summary" contenteditable="true">
+        As a content writer with 3 years of experience, I have a passion for crafting compelling and creative content...
+      </p>
+    </section>
+
+    <!-- SKILLS -->
+    <section>
+      <h3 id="skills-heading" contenteditable="true">PROFESSIONAL SKILLS</h3>
+      <div class="skills" id="skills-list">
+        <span contenteditable="true">Strong writing skills</span>
+        <span contenteditable="true">Excellent research abilities</span>
+        <span contenteditable="true">Fact-checking skills</span>
+        <span contenteditable="true">Creativity and innovation</span>
+        <span contenteditable="true">SEO knowledge</span>
+        <span contenteditable="true">Time management</span>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section>
+      <h3 id="experience-heading" contenteditable="true">WORK EXPERIENCE</h3>
+      <div id="experience-section">
+        <div class="job">
+          <h4 contenteditable="true">CONTENT WRITER</h4>
+          <span contenteditable="true">(2019 – Present)</span>
+          <p contenteditable="true">Giggling Platypus Co.</p>
+          <ul contenteditable="true">
+            <li>Write and edit articles and blog posts</li>
+            <li>Conduct research on different topics</li>
+            <li>Optimize content using SEO techniques</li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <h4 contenteditable="true">COPYWRITER</h4>
+          <span contenteditable="true">(2017 – 2019)</span>
+          <p contenteditable="true">Thynk Unlimited</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section>
+      <h3 id="education-heading" contenteditable="true">EDUCATION AND CERTIFICATION</h3>
+      <div id="education-section">
+        <div class="edu">
+          <strong contenteditable="true">Bachelor of Arts in English</strong>
+          <span contenteditable="true">(2019 – 2022)</span>
+          <p contenteditable="true">Ginyard International University</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOM SECTIONS -->
+    <section id="custom-container">
+      <h3 id="custom-heading" contenteditable="true">Custom Section</h3>
+      <div id="custom-section"></div>
+    </section>
+
+  </div>
+
+  <script>
+    function updateContent(data) {
+      if (!data || typeof data !== "object") return;
+
+      const font = data.fontFamily || 'Inter';
+      const fontValue = `'${font}', sans-serif`;
+      document.documentElement.style.setProperty('--resume-font', fontValue);
+      document.body.style.fontFamily = fontValue;
+      const resume = document.getElementById('resume');
+      if (resume) resume.style.fontFamily = fontValue;
+
+      // Update personal info
+      if (data.name) document.getElementById("name").innerText = data.name;
+      if (data.title) document.getElementById("title").innerText = data.title;
+      if (data.email || data.phone || data.location) {
+        const contact = document.getElementById("contact");
+        const parts = [];
+        if (data.phone) parts.push(data.phone);
+        if (data.email) parts.push(data.email);
+        if (data.location) parts.push(data.location);
+        if (data.website) parts.push(data.website);
+        contact.innerHTML = parts.join(' &nbsp; | &nbsp; ');
+      }
+
+      // Update section headings from sectionSettings
+      const settings = data.sectionSettings || {};
+      if (settings.about?.heading) document.getElementById("summary-heading").innerText = settings.about.heading;
+      if (settings.skills?.heading) document.getElementById("skills-heading").innerText = settings.skills.heading;
+      if (settings.experience?.heading) document.getElementById("experience-heading").innerText = settings.experience.heading;
+      if (settings.education?.heading) document.getElementById("education-heading").innerText = settings.education.heading;
+
+      // Update summary
+      if (data.summary) document.getElementById("summary").innerText = data.summary;
+
+      // Update skills
+      if (Array.isArray(data.skills)) {
+        const skillsList = document.getElementById("skills-list");
+        skillsList.innerHTML = "";
+        data.skills.forEach(skill => {
+          const span = document.createElement("span");
+          span.textContent = skill;
+          skillsList.appendChild(span);
+        });
+      }
+
+      // Update education
+      if (Array.isArray(data.education)) {
+        const eduSection = document.getElementById("education-section");
+        eduSection.innerHTML = "";
+        data.education.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "edu";
+
+          const degree = document.createElement("strong");
+          degree.textContent = item.degree || item.title || "";
+          div.appendChild(degree);
+
+          if (item.year || item.duration) {
+            const year = document.createElement("span");
+            year.textContent = item.year || item.duration || "";
+            div.appendChild(year);
+          }
+
+          const school = document.createElement("p");
+          school.textContent = item.school || item.institution || "";
+          div.appendChild(school);
+
+          eduSection.appendChild(div);
+        });
+      }
+
+      // Update experience
+      if (Array.isArray(data.experiences)) {
+        const expSection = document.getElementById("experience-section");
+        expSection.innerHTML = "";
+        data.experiences.forEach(exp => {
+          const div = document.createElement("div");
+          div.className = "job";
+
+          const title = document.createElement("h4");
+          title.textContent = exp.title || "";
+          div.appendChild(title);
+
+          const duration = document.createElement("span");
+          duration.textContent = exp.duration || "";
+          div.appendChild(duration);
+
+          const company = document.createElement("p");
+          company.textContent = exp.company || "";
+          div.appendChild(company);
+
+          if (exp.description) {
+            const ul = document.createElement("ul");
+            const lines = exp.description.split('\n').filter(l => l.trim());
+            lines.forEach(line => {
+              const li = document.createElement("li");
+              li.textContent = line.trim();
+              ul.appendChild(li);
+            });
+            div.appendChild(ul);
+          }
+
+          expSection.appendChild(div);
+        });
+      }
+
+      // Update custom sections
+      const customWrap = document.getElementById("custom-section");
+      const customContainer = document.getElementById("custom-container");
+      if (customWrap && customContainer) {
+        const heading = (data.sectionSettings?.custom?.heading ?? "Custom Section") || "";
+        const visible = data.sectionSettings?.custom?.visible !== false;
+        const headingEl = document.getElementById("custom-heading");
+        if (headingEl) headingEl.textContent = heading;
+        customContainer.style.display = visible ? "block" : "none";
+
+        customWrap.innerHTML = "";
+        if (visible && Array.isArray(data.customSections)) {
+          data.customSections.forEach(sec => {
+            if (!sec || (!sec.title && !sec.content)) return;
+            const block = document.createElement("div");
+            const title = document.createElement("p");
+            title.style.fontWeight = "700";
+            title.style.margin = "0 0 4px";
+            title.textContent = sec.title || "";
+
+            const body = document.createElement("p");
+            body.style.margin = "0 0 10px";
+            body.textContent = sec.content || "";
+
+            if (title.textContent) block.appendChild(title);
+            if (body.textContent) block.appendChild(body);
+            customWrap.appendChild(block);
+          });
+        }
+      }
+    }
+
+    window.addEventListener("message", (event) => {
+      if (event.data === 'DOWNLOAD_PDF') {
+        const resume = document.getElementById('resume');
+        const opt = {
+          margin: 0.5,
+          filename: 'resume.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(resume).save();
+        return;
+      }
+      updateContent(event.data);
+    });
+
+    // Signal that the iframe is ready
+    window.parent.postMessage({ type: 'template-ready' }, '*');
+  </script>
+</body>
+</html>

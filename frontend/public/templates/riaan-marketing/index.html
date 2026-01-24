@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Riaan Marketing Template</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+<div id="resume" class="resume template-root">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="left">
+      <h1 id="fullName">{{name}}</h1>
+      <h2 id="title">{{title}}</h2>
+    </div>
+    <div class="right">
+      <p id="phone">{{phone}}</p>
+      <p id="location">{{location}}</p>
+      <p id="website">{{website}}</p>
+      <p id="email">{{email}}</p>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about-section">
+    <h3 id="about-heading">{{section.about.heading}}</h3>
+    <p id="summary">{{section.about.content}}</p>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education-section">
+    <h3 id="education-heading">{{section.education.heading}}</h3>
+    <div id="education-list"></div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills-section">
+    <h3 id="skills-heading">{{section.skills.heading}}</h3>
+    <ul class="skills" id="skills-list"></ul>
+  </section>
+
+  <!-- WORK EXPERIENCE -->
+  <section id="experience-section">
+    <h3 id="experience-heading">{{section.experience.heading}}</h3>
+    <div id="experience-list"></div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects-section">
+    <h3 id="projects-heading">{{section.projects.heading}}</h3>
+    <div id="projects-list"></div>
+  </section>
+
+  <!-- CUSTOM SECTIONS -->
+  <section id="custom-section">
+    <h3 id="custom-heading">{{section.custom.heading}}</h3>
+    <div id="custom-sections"></div>
+  </section>
+
+</div>
+
+<script>
+  function updateContent(data) {
+    if (!data || typeof data !== "object") return;
+
+    const font = data.fontFamily || 'Inter';
+    const fontValue = `'${font}', sans-serif`;
+    document.documentElement.style.setProperty('--resume-font', fontValue);
+    document.body.style.fontFamily = fontValue;
+    const resume = document.getElementById('resume');
+    if (resume) resume.style.fontFamily = fontValue;
+
+    const defaults = {
+      about: { heading: "About Me", visible: true },
+      education: { heading: "Education", visible: true },
+      skills: { heading: "Skill", visible: true },
+      experience: { heading: "Experience", visible: true },
+      projects: { heading: "Projects", visible: true },
+      custom: { heading: "Custom", visible: true }
+    };
+
+    const setText = (id, value = "") => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value || "";
+    };
+
+    const setDisplay = (id, visible = true) => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = visible ? "block" : "none";
+    };
+
+    const sectionConfig = Object.fromEntries(
+      Object.keys(defaults).map((key) => [
+        key,
+        {
+          heading: (data.sectionSettings?.[key]?.heading ?? defaults[key].heading) || "",
+          visible: data.sectionSettings?.[key]?.visible !== false
+        }
+      ])
+    );
+
+    // Personal Info
+    setText("fullName", data.name || "");
+    setText("title", data.title || "");
+    setText("email", data.email || "");
+    setText("phone", data.phone || "");
+    setText("location", data.location || "");
+    setText("website", data.website || "");
+    setText("summary", data.summary || "");
+
+    // Section headings and visibility
+    setText("about-heading", sectionConfig.about.heading);
+    setDisplay("about-section", sectionConfig.about.visible);
+
+    setText("education-heading", sectionConfig.education.heading);
+    setDisplay("education-section", sectionConfig.education.visible);
+
+    setText("skills-heading", sectionConfig.skills.heading);
+    setDisplay("skills-section", sectionConfig.skills.visible);
+
+    setText("experience-heading", sectionConfig.experience.heading);
+    setDisplay("experience-section", sectionConfig.experience.visible);
+
+    setText("projects-heading", sectionConfig.projects.heading);
+    setDisplay("projects-section", sectionConfig.projects.visible);
+
+    setText("custom-heading", sectionConfig.custom.heading);
+    setDisplay("custom-section", sectionConfig.custom.visible);
+
+    // Education
+    const eduList = document.getElementById("education-list");
+    if (eduList) {
+      eduList.innerHTML = "";
+      if (Array.isArray(data.education)) {
+        data.education.forEach((edu) => {
+          const div = document.createElement("p");
+          const parts = [edu.degree, edu.school, edu.year].filter(Boolean);
+          div.innerHTML = `<strong>${parts[0] || ""}</strong>${parts[1] ? " — " + parts[1] : ""}${parts[2] ? " (" + parts[2] + ")" : ""}`;
+          if (edu.percentage) {
+            const grade = document.createElement("small");
+            grade.textContent = edu.percentage;
+            div.appendChild(grade);
+          }
+          eduList.appendChild(div);
+        });
+      }
+    }
+
+    // Skills
+    const skillsList = document.getElementById("skills-list");
+    if (skillsList) {
+      skillsList.innerHTML = "";
+      if (Array.isArray(data.skills)) {
+        data.skills.forEach((skill) => {
+          const li = document.createElement("li");
+          li.textContent = skill || "";
+          skillsList.appendChild(li);
+        });
+      }
+    }
+
+    // Experience
+    const expList = document.getElementById("experience-list");
+    if (expList) {
+      expList.innerHTML = "";
+      if (Array.isArray(data.experiences)) {
+        data.experiences.forEach((exp) => {
+          const div = document.createElement("div");
+          div.className = "job";
+
+          const titleDiv = document.createElement("div");
+          titleDiv.className = "job-header";
+          const titleSpan = document.createElement("span");
+          titleSpan.className = "job-title";
+          titleSpan.textContent = [exp.title, exp.company].filter(Boolean).join(" - ");
+          const dateSpan = document.createElement("span");
+          dateSpan.className = "job-date";
+          dateSpan.textContent = exp.duration || "";
+          titleDiv.appendChild(titleSpan);
+          titleDiv.appendChild(dateSpan);
+
+          const desc = document.createElement("p");
+          desc.textContent = exp.description || "";
+
+          div.appendChild(titleDiv);
+          div.appendChild(desc);
+          expList.appendChild(div);
+        });
+      }
+    }
+
+    // Projects
+    const projectsList = document.getElementById("projects-list");
+    if (projectsList) {
+      projectsList.innerHTML = "";
+      if (Array.isArray(data.projects)) {
+        data.projects.forEach((proj) => {
+          const div = document.createElement("div");
+          div.className = "project";
+
+          const titleDiv = document.createElement("p");
+          titleDiv.className = "project-title";
+          titleDiv.textContent = proj.name || proj.title || "";
+
+          const desc = document.createElement("p");
+          desc.textContent = proj.description || "";
+
+          div.appendChild(titleDiv);
+          div.appendChild(desc);
+          projectsList.appendChild(div);
+        });
+      }
+    }
+
+    // Custom Sections
+    const customDiv = document.getElementById("custom-sections");
+    if (customDiv) {
+      customDiv.innerHTML = "";
+      if (Array.isArray(data.customSections)) {
+        data.customSections.forEach((section) => {
+          if (!section || (!section.title && !section.content)) return;
+          const div = document.createElement("div");
+          div.className = "custom-block";
+          const heading = document.createElement("p");
+          heading.style.fontWeight = "bold";
+          heading.style.margin = "0 0 4px";
+          heading.textContent = section.title || "";
+          const content = document.createElement("p");
+          content.style.margin = "0 0 10px";
+          content.textContent = section.content || "";
+          if (heading.textContent) div.appendChild(heading);
+          if (content.textContent) div.appendChild(content);
+          customDiv.appendChild(div);
+        });
+      }
+    }
+  }
+
+  window.addEventListener("message", (event) => {
+    if (event.data === 'DOWNLOAD_PDF') {
+      const resume = document.getElementById('resume');
+      const opt = {
+        margin: 0,
+        filename: 'resume.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(resume).save();
+      return;
+    }
+    updateContent(event.data);
+  });
+
+  window.parent.postMessage({ type: 'template-ready' }, '*');
+</script>
+
+</body>
+</html>

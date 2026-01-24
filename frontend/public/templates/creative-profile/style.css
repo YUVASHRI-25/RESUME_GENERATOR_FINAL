@@ -1,0 +1,116 @@
+:root {
+  --resume-font: 'Montserrat', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--resume-font, 'Montserrat', sans-serif);
+  background: #ffffff;
+  color: #333;
+}
+
+.template-root {
+  font-family: var(--resume-font, 'Montserrat', sans-serif);
+}
+
+.container {
+  width: 900px;
+  margin: auto;
+  padding: 40px;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.profile-pic img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.header-info h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.header-info h2 {
+  margin: 5px 0 15px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #666;
+}
+
+.contact {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* SECTION */
+.section {
+  margin-top: 40px;
+}
+
+.section-title {
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 4px;
+  background: #f4f4f4;
+  padding: 12px;
+  margin-bottom: 25px;
+}
+
+/* ABOUT */
+.about-text {
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #555;
+}
+
+/* TWO COLUMN ROW */
+.row {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 25px;
+}
+
+.row .date {
+  width: 150px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.row .content h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.row .content p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* SKILLS */
+.skills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  font-size: 14px;
+}
+
+.skills li {
+  list-style: disc;
+  margin-left: 20px;
+}
