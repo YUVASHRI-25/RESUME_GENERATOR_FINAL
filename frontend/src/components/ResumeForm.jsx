@@ -540,51 +540,104 @@ const ResumeForm = ({ data, updateData, template }) => {
                 </section>
             )}
 
-            {/* Summary */}
+            {/* About Section Content */}
             <section className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
-                    <h2 className="text-xl font-semibold text-indigo-700">Profile Summary</h2>
-                    <button
-                        onClick={() => enhanceText(data.summary, 'summary', (val) => updateData(p => ({ ...p, summary: val })))}
-                        className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 font-medium"
-                    >
-                        <Wand2 size={16} /> AI Enhance
-                    </button>
+                    <h2 className="text-xl font-semibold text-indigo-700">About / Professional Summary</h2>
                 </div>
-                <textarea
-                    className="w-full border p-2 rounded h-32 focus:ring-2 focus:ring-indigo-300 outline-none"
-                    placeholder="Briefly describe your professional background..."
-                    value={data.summary}
-                    onChange={(e) => updateData(prev => ({ ...prev, summary: e.target.value }))}
-                />
+                <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-700">Section Heading</label>
+                    <input
+                        className="w-full border p-2 rounded focus:ring-2 focus:ring-indigo-300 outline-none"
+                        placeholder="About Me"
+                        value={data.about?.heading || 'About Me'}
+                        onChange={(e) => updateData(prev => ({
+                            ...prev,
+                            about: { ...prev.about, heading: e.target.value }
+                        }))}
+                    />
+                </div>
+                <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-700">Professional Summary</label>
+                    <div className="relative">
+                        <textarea
+                            className="w-full border p-2 rounded h-32 focus:ring-2 focus:ring-indigo-300 outline-none"
+                            placeholder="Briefly describe your professional background, key achievements, and career goals..."
+                            value={data.about?.content || ''}
+                            onChange={(e) => updateData(prev => ({
+                                ...prev,
+                                about: { ...prev.about, content: e.target.value }
+                            }))}
+                        />
+                        <button
+                            onClick={() => enhanceText(data.about?.content || '', 'summary', (val) => 
+                                updateData(prev => ({
+                                    ...prev,
+                                    about: { ...prev.about, content: val }
+                                }))
+                            )}
+                            className="absolute bottom-2 right-2 text-indigo-600 hover:text-indigo-800 text-xs flex items-center gap-1 bg-white px-2 py-1 rounded shadow"
+                        >
+                            <Wand2 size={12} /> AI Enhance
+                        </button>
+                    </div>
+                </div>
             </section>
 
             {/* Experience */}
             <section className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
                     <h2 className="text-xl font-semibold text-indigo-700">Work Experience</h2>
-                    <button onClick={() => addItem('experiences', { title: '', company: '', duration: '', description: '' })} className="text-indigo-600 hover:text-indigo-800">
+                    <button onClick={() => addItem('experiences', { id: Date.now(), position: '', company: '', startDate: '', endDate: '', currentlyWorking: false, description: '', bullets: [] })} className="text-indigo-600 hover:text-indigo-800">
                         <Plus size={20} />
                     </button>
                 </div>
                 {data.experiences.map((exp, index) => (
-                    <div key={index} className="bg-gray-50 p-4 rounded border relative">
+                    <div key={exp.id || index} className="bg-gray-50 p-4 rounded border relative space-y-2">
                         <button onClick={() => removeItem('experiences', index)} className="absolute top-2 right-2 text-red-500">
                             <Trash size={16} />
                         </button>
                         <div className="grid grid-cols-2 gap-2 mb-2">
-                            <input className="border p-2 rounded" placeholder="Job Title" value={exp.title} onChange={(e) => updateItem('experiences', index, 'title', e.target.value)} />
-                            <input className="border p-2 rounded" placeholder="Company" value={exp.company} onChange={(e) => updateItem('experiences', index, 'company', e.target.value)} />
+                            <input className="border p-2 rounded" placeholder="Job Title / Position" value={exp.position || ''} onChange={(e) => updateItem('experiences', index, 'position', e.target.value)} />
+                            <input className="border p-2 rounded" placeholder="Company" value={exp.company || ''} onChange={(e) => updateItem('experiences', index, 'company', e.target.value)} />
                         </div>
-                        <input className="border p-2 rounded w-full mb-2" placeholder="Duration (e.g. 2020 - Present)" value={exp.duration} onChange={(e) => updateItem('experiences', index, 'duration', e.target.value)} />
+                        <div className="grid grid-cols-3 gap-2 mb-2">
+                            <input className="border p-2 rounded" placeholder="Start Date" value={exp.startDate || ''} onChange={(e) => updateItem('experiences', index, 'startDate', e.target.value)} />
+                            <input className="border p-2 rounded" placeholder="End Date" disabled={exp.currentlyWorking} value={exp.endDate || ''} onChange={(e) => updateItem('experiences', index, 'endDate', e.target.value)} />
+                            <label className="flex items-center gap-2 border p-2 rounded">
+                                <input type="checkbox" checked={exp.currentlyWorking || false} onChange={(e) => updateItem('experiences', index, 'currentlyWorking', e.target.checked)} className="w-4 h-4" />
+                                <span className="text-sm">Currently Working</span>
+                            </label>
+                        </div>
                         <div className="relative">
-                            <textarea className="w-full border p-2 rounded h-24" placeholder="Description of responsibilities" value={exp.description} onChange={(e) => updateItem('experiences', index, 'description', e.target.value)} />
+                            <textarea className="w-full border p-2 rounded h-20" placeholder="Job description and responsibilities" value={exp.description || ''} onChange={(e) => updateItem('experiences', index, 'description', e.target.value)} />
                             <button
-                                onClick={() => enhanceText(exp.description, 'experience', (val) => updateItem('experiences', index, 'description', val))}
+                                onClick={() => enhanceText(exp.description || '', 'experience', (val) => updateItem('experiences', index, 'description', val))}
                                 className="absolute bottom-2 right-2 text-indigo-600 hover:text-indigo-800 text-xs flex items-center gap-1 bg-white px-2 py-1 rounded shadow"
                             >
                                 <Wand2 size={12} /> Enhance
                             </button>
+                        </div>
+                        <div className="space-y-1">
+                            <label className="block text-xs font-semibold text-gray-600">Key Achievements (Bullet Points)</label>
+                            <div className="space-y-1">
+                                {Array.isArray(exp.bullets) && exp.bullets.map((bullet, bulletIdx) => (
+                                    <div key={bulletIdx} className="flex gap-2">
+                                        <input className="flex-1 border p-2 rounded text-sm" placeholder="• Achievement..." value={bullet} onChange={(e) => {
+                                            const newBullets = [...(exp.bullets || [])];
+                                            newBullets[bulletIdx] = e.target.value;
+                                            updateItem('experiences', index, 'bullets', newBullets);
+                                        }} />
+                                        <button onClick={() => {
+                                            const newBullets = (exp.bullets || []).filter((_, i) => i !== bulletIdx);
+                                            updateItem('experiences', index, 'bullets', newBullets);
+                                        }} className="text-red-500"><Trash size={14} /></button>
+                                    </div>
+                                ))}
+                                <button onClick={() => updateItem('experiences', index, 'bullets', [...(exp.bullets || []), ''])} className="text-indigo-600 text-sm flex items-center gap-1">
+                                    <Plus size={14} /> Add Bullet Point
+                                </button>
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -594,24 +647,27 @@ const ResumeForm = ({ data, updateData, template }) => {
             <section className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
                     <h2 className="text-xl font-semibold text-indigo-700">Education</h2>
-                    <button onClick={() => addItem('education', { degree: '', school: '', year: '', percentage: '' })} className="text-indigo-600 hover:text-indigo-800">
+                    <button onClick={() => addItem('education', { id: Date.now(), school: '', degree: '', field: '', startDate: '', endDate: '', description: '' })} className="text-indigo-600 hover:text-indigo-800">
                         <Plus size={20} />
                     </button>
                 </div>
                 {data.education.map((edu, index) => (
-                    <div key={index} className="bg-gray-50 p-4 rounded border relative">
+                    <div key={edu.id || index} className="bg-gray-50 p-4 rounded border relative space-y-2">
                         <button onClick={() => removeItem('education', index)} className="absolute top-2 right-2 text-red-500">
                             <Trash size={16} />
                         </button>
                         <div className="grid grid-cols-2 gap-2 mb-2">
-                            <input className="border p-2 rounded" placeholder="Degree / Major" value={edu.degree} onChange={(e) => updateItem('education', index, 'degree', e.target.value)} />
-                            <input className="border p-2 rounded" placeholder="Institution" value={edu.school} onChange={(e) => updateItem('education', index, 'school', e.target.value)} />
+                            <input className="border p-2 rounded" placeholder="Degree / Qualification" value={edu.degree || ''} onChange={(e) => updateItem('education', index, 'degree', e.target.value)} />
+                            <input className="border p-2 rounded" placeholder="Field of Study" value={edu.field || ''} onChange={(e) => updateItem('education', index, 'field', e.target.value)} />
                         </div>
-
-                        <div className="grid grid-cols-2 gap-2">
-                            <input className="border p-2 rounded w-full" placeholder="Year" value={edu.year} onChange={(e) => updateItem('education', index, 'year', e.target.value)} />
-                            <input className="border p-2 rounded w-full" placeholder="Percentage / GPA" value={edu.percentage || ''} onChange={(e) => updateItem('education', index, 'percentage', e.target.value)} />
+                        <div className="grid grid-cols-1 gap-2 mb-2">
+                            <input className="border p-2 rounded w-full" placeholder="School / University Name" value={edu.school || ''} onChange={(e) => updateItem('education', index, 'school', e.target.value)} />
                         </div>
+                        <div className="grid grid-cols-2 gap-2 mb-2">
+                            <input className="border p-2 rounded w-full" placeholder="Start Date" value={edu.startDate || ''} onChange={(e) => updateItem('education', index, 'startDate', e.target.value)} />
+                            <input className="border p-2 rounded w-full" placeholder="End Date" value={edu.endDate || ''} onChange={(e) => updateItem('education', index, 'endDate', e.target.value)} />
+                        </div>
+                        <textarea className="w-full border p-2 rounded h-16" placeholder="Additional details (e.g., honors, relevant coursework)" value={edu.description || ''} onChange={(e) => updateItem('education', index, 'description', e.target.value)} />
                     </div>
                 ))
                 }
@@ -621,21 +677,24 @@ const ResumeForm = ({ data, updateData, template }) => {
             <section className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
                     <h2 className="text-xl font-semibold text-indigo-700">Skills</h2>
-                    <button onClick={() => addItem('skills', '')} className="text-indigo-600 hover:text-indigo-800">
+                    <button onClick={() => addItem('skills', { id: Date.now(), name: '', level: '' })} className="text-indigo-600 hover:text-indigo-800">
                         <Plus size={20} />
                     </button>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="space-y-2">
                     {data.skills.map((skill, index) => (
-                        <div key={index} className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full border">
+                        <div key={skill.id || index} className="flex gap-2 items-center">
                             <input
-                                className="bg-transparent outline-none w-32"
-                                value={skill}
-                                onChange={(e) => {
-                                    const newSkills = [...data.skills];
-                                    newSkills[index] = e.target.value;
-                                    updateData(p => ({ ...p, skills: newSkills }));
-                                }}
+                                className="flex-1 border p-2 rounded focus:ring-2 focus:ring-indigo-300 outline-none"
+                                placeholder="Skill name"
+                                value={skill.name || skill}
+                                onChange={(e) => updateItem('skills', index, 'name', e.target.value)}
+                            />
+                            <input
+                                className="w-24 border p-2 rounded focus:ring-2 focus:ring-indigo-300 outline-none"
+                                placeholder="Level"
+                                value={skill.level || ''}
+                                onChange={(e) => updateItem('skills', index, 'level', e.target.value)}
                             />
                             <button onClick={() => removeItem('skills', index)} className="text-red-500"><Trash size={14} /></button>
                         </div>
@@ -644,46 +703,48 @@ const ResumeForm = ({ data, updateData, template }) => {
             </section >
 
             {/* Projects */}
-            < section className="space-y-4" >
+            <section className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
                     <h2 className="text-xl font-semibold text-indigo-700">Projects</h2>
-                    <button onClick={() => addItem('projects', { name: '', description: '', tech: '' })} className="text-indigo-600 hover:text-indigo-800">
+                    <button onClick={() => addItem('projects', { id: Date.now(), title: '', description: '' })} className="text-indigo-600 hover:text-indigo-800">
                         <Plus size={20} />
                     </button>
                 </div>
                 {
                     data.projects.map((proj, index) => (
-                        <div key={index} className="bg-gray-50 p-4 rounded border relative">
+                        <div key={proj.id || index} className="bg-gray-50 p-4 rounded border relative space-y-2">
                             <button onClick={() => removeItem('projects', index)} className="absolute top-2 right-2 text-red-500">
                                 <Trash size={16} />
                             </button>
-                            <input className="border p-2 rounded w-full mb-2" placeholder="Project Name" value={proj.name} onChange={(e) => updateItem('projects', index, 'name', e.target.value)} />
-                            <textarea className="w-full border p-2 rounded h-20 mb-2" placeholder="Project Description" value={proj.description} onChange={(e) => updateItem('projects', index, 'description', e.target.value)} />
-                            <input className="border p-2 rounded w-full" placeholder="Technologies Used" value={proj.tech} onChange={(e) => updateItem('projects', index, 'tech', e.target.value)} />
+                            <input className="border p-2 rounded w-full" placeholder="Project Title" value={proj.title || ''} onChange={(e) => updateItem('projects', index, 'title', e.target.value)} />
+                            <textarea className="w-full border p-2 rounded h-16" placeholder="Project Description" value={proj.description || ''} onChange={(e) => updateItem('projects', index, 'description', e.target.value)} />
                         </div>
                     ))
                 }
-            </section >
+            </section>
 
             {/* Languages */}
             <section className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
                     <h2 className="text-xl font-semibold text-indigo-700">Languages</h2>
-                    <button onClick={() => addItem('languages', '')} className="text-indigo-600 hover:text-indigo-800">
+                    <button onClick={() => addItem('languages', { id: Date.now(), name: '', level: '' })} className="text-indigo-600 hover:text-indigo-800">
                         <Plus size={20} />
                     </button>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="space-y-2">
                     {data.languages && data.languages.map((lang, index) => (
-                        <div key={index} className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full border">
+                        <div key={lang.id || index} className="flex gap-2 items-center">
                             <input
-                                className="bg-transparent outline-none w-32"
-                                value={lang}
-                                onChange={(e) => {
-                                    const newLangs = [...(data.languages || [])];
-                                    newLangs[index] = e.target.value;
-                                    updateData(p => ({ ...p, languages: newLangs }));
-                                }}
+                                className="flex-1 border p-2 rounded focus:ring-2 focus:ring-indigo-300 outline-none"
+                                placeholder="Language name"
+                                value={lang.name || lang}
+                                onChange={(e) => updateItem('languages', index, 'name', e.target.value)}
+                            />
+                            <input
+                                className="w-24 border p-2 rounded focus:ring-2 focus:ring-indigo-300 outline-none"
+                                placeholder="Level"
+                                value={lang.level || ''}
+                                onChange={(e) => updateItem('languages', index, 'level', e.target.value)}
                             />
                             <button onClick={() => removeItem('languages', index)} className="text-red-500"><Trash size={14} /></button>
                         </div>
@@ -695,23 +756,20 @@ const ResumeForm = ({ data, updateData, template }) => {
             <section className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
                     <h2 className="text-xl font-semibold text-indigo-700">Awards & Certifications</h2>
-                    <button onClick={() => addItem('awards', '')} className="text-indigo-600 hover:text-indigo-800">
+                    <button onClick={() => addItem('awards', { id: Date.now(), title: '', issuer: '', date: '', description: '' })} className="text-indigo-600 hover:text-indigo-800">
                         <Plus size={20} />
                     </button>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="space-y-2">
                     {data.awards && data.awards.map((award, index) => (
-                        <div key={index} className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full border">
-                            <input
-                                className="bg-transparent outline-none w-40"
-                                value={award}
-                                onChange={(e) => {
-                                    const newAwards = [...(data.awards || [])];
-                                    newAwards[index] = e.target.value;
-                                    updateData(p => ({ ...p, awards: newAwards }));
-                                }}
-                            />
-                            <button onClick={() => removeItem('awards', index)} className="text-red-500"><Trash size={14} /></button>
+                        <div key={award.id || index} className="bg-gray-50 p-3 rounded border relative space-y-2">
+                            <button onClick={() => removeItem('awards', index)} className="absolute top-2 right-2 text-red-500"><Trash size={14} /></button>
+                            <div className="grid grid-cols-2 gap-2">
+                                <input className="border p-2 rounded" placeholder="Award Title" value={award.title || ''} onChange={(e) => updateItem('awards', index, 'title', e.target.value)} />
+                                <input className="border p-2 rounded" placeholder="Issuer" value={award.issuer || ''} onChange={(e) => updateItem('awards', index, 'issuer', e.target.value)} />
+                            </div>
+                            <input className="border p-2 rounded w-full" placeholder="Date" value={award.date || ''} onChange={(e) => updateItem('awards', index, 'date', e.target.value)} />
+                            <textarea className="w-full border p-2 rounded h-12" placeholder="Description" value={award.description || ''} onChange={(e) => updateItem('awards', index, 'description', e.target.value)} />
                         </div>
                     ))}
                 </div>
@@ -744,35 +802,35 @@ const ResumeForm = ({ data, updateData, template }) => {
             </section>
 
             {/* Custom Sections */}
-            < section className="space-y-4" >
+            <section className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
                     <h2 className="text-xl font-semibold text-indigo-700">Custom Sections</h2>
-                    <button onClick={() => addItem('customSections', { title: '', content: '' })} className="text-indigo-600 hover:text-indigo-800">
+                    <button onClick={() => addItem('customSections', { id: Date.now(), heading: '', content: '' })} className="text-indigo-600 hover:text-indigo-800">
                         <Plus size={20} />
                     </button>
                 </div>
                 {
                     data.customSections && data.customSections.map((section, index) => (
-                        <div key={index} className="bg-gray-50 p-4 rounded border relative">
+                        <div key={section.id || index} className="bg-gray-50 p-4 rounded border relative space-y-2">
                             <button onClick={() => removeItem('customSections', index)} className="absolute top-2 right-2 text-red-500">
                                 <Trash size={16} />
                             </button>
                             <input
-                                className="border p-2 rounded w-full mb-2 font-bold"
-                                placeholder="Section Title (e.g. Achievements)"
-                                value={section.title}
-                                onChange={(e) => updateItem('customSections', index, 'title', e.target.value)}
+                                className="border p-2 rounded w-full font-bold"
+                                placeholder="Section Heading (e.g. Achievements)"
+                                value={section.heading || ''}
+                                onChange={(e) => updateItem('customSections', index, 'heading', e.target.value)}
                             />
                             <textarea
                                 className="w-full border p-2 rounded h-24"
-                                placeholder="Content (e.g. List of awards...)"
-                                value={section.content}
+                                placeholder="Content (e.g. List of achievements...)"
+                                value={section.content || ''}
                                 onChange={(e) => updateItem('customSections', index, 'content', e.target.value)}
                             />
                         </div>
                     ))
                 }
-            </section >
+            </section>
         </div >
     );
 };

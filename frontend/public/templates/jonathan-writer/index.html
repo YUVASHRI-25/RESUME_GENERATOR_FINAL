@@ -92,172 +92,190 @@
 
   <script>
     function updateContent(data) {
-      if (!data || typeof data !== "object") return;
+      if (!data || !data.payload) return;
 
-      const font = data.fontFamily || 'Inter';
+      const payload = data.payload;
+      const settings = payload.sectionSettings || {};
+
+      // Apply font
+      const font = payload.fontFamily || 'Inter';
       const fontValue = `'${font}', sans-serif`;
       document.documentElement.style.setProperty('--resume-font', fontValue);
       document.body.style.fontFamily = fontValue;
       const resume = document.getElementById('resume');
       if (resume) resume.style.fontFamily = fontValue;
 
-      // Update section headings and visibility from sectionSettings
-      const settings = data.sectionSettings || {};
-
-      // Profile/About section
-      const profileHeading = document.getElementById("profile-heading") || document.getElementById("about-heading") || document.getElementById("summary-heading");
-      const profileSection = profileHeading?.closest('section');
-      if (profileHeading && settings.about?.heading) profileHeading.innerText = settings.about.heading;
-      if (profileSection) profileSection.style.display = settings.about?.visible !== false ? "block" : "none";
-
-      // Education section
-      const eduHeading = document.getElementById("education-heading");
-      const eduSection = eduHeading?.closest('section');
-      if (eduHeading && settings.education?.heading) eduHeading.innerText = settings.education.heading;
-      if (eduSection) eduSection.style.display = settings.education?.visible !== false ? "block" : "none";
-
-      // Skills section
-      const skillsHeading = document.getElementById("skills-heading");
-      const skillsSection = skillsHeading?.closest('section');
-      if (skillsHeading && settings.skills?.heading) skillsHeading.innerText = settings.skills.heading;
-      if (skillsSection) skillsSection.style.display = settings.skills?.visible !== false ? "block" : "none";
-
-      // Experience section
-      const expHeading = document.getElementById("experience-heading");
-      const expSection = expHeading?.closest('section');
-      if (expHeading && settings.experience?.heading) expHeading.innerText = settings.experience.heading;
-      if (expSection) expSection.style.display = settings.experience?.visible !== false ? "block" : "none";
-
-      // Projects section  
-      const projHeading = document.getElementById("projects-heading");
-      const projSection = projHeading?.closest('section');
-      if (projHeading && settings.projects?.heading) projHeading.innerText = settings.projects.heading;
-      if (projSection) projSection.style.display = settings.projects?.visible !== false ? "block" : "none";
-
-      // Update personal info
-      if (data.name) document.getElementById("name").innerText = data.name;
-      if (data.title) document.getElementById("title").innerText = data.title;
-      if (data.email || data.phone || data.location) {
-        const contact = document.getElementById("contact");
+      // Personal Info Header
+      if (payload.personalInfo) {
+        const { fullName, title, email, phone, location, website } = payload.personalInfo;
+        if (fullName) document.getElementById('name').textContent = fullName;
+        if (title) document.getElementById('title').textContent = title;
+        
+        // Build contact info
+        const contact = document.getElementById('contact');
         const parts = [];
-        if (data.phone) parts.push(data.phone);
-        if (data.email) parts.push(data.email);
-        if (data.location) parts.push(data.location);
-        if (data.website) parts.push(data.website);
-        contact.innerHTML = parts.join(' &nbsp; | &nbsp; ');
+        if (phone) parts.push(phone);
+        if (email) parts.push(email);
+        if (location) parts.push(location);
+        if (website) parts.push(website);
+        if (parts.length > 0) {
+          contact.innerHTML = parts.join(' &nbsp; | &nbsp; ');
+        }
       }
 
-      // Update section headings from sectionSettings
-      const settings = data.sectionSettings || {};
-      if (settings.about?.heading) document.getElementById("summary-heading").innerText = settings.about.heading;
-      if (settings.skills?.heading) document.getElementById("skills-heading").innerText = settings.skills.heading;
-      if (settings.experience?.heading) document.getElementById("experience-heading").innerText = settings.experience.heading;
-      if (settings.education?.heading) document.getElementById("education-heading").innerText = settings.education.heading;
+      // About Section
+      const aboutHeading = document.getElementById('summary-heading');
+      if (aboutHeading && settings.about?.heading) {
+        aboutHeading.textContent = settings.about.heading;
+      }
+      const aboutSection = aboutHeading?.closest('section');
+      if (aboutSection) {
+        aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
+      }
+      if (payload.about?.content) {
+        document.getElementById('summary').textContent = payload.about.content;
+      }
 
-      // Update summary
-      if (data.summary) document.getElementById("summary").innerText = data.summary;
-
-      // Update skills
-      if (Array.isArray(data.skills)) {
-        const skillsList = document.getElementById("skills-list");
-        skillsList.innerHTML = "";
-        data.skills.forEach(skill => {
-          const span = document.createElement("span");
-          span.textContent = skill;
-          skillsList.appendChild(span);
+      // Skills Section
+      const skillsHeading = document.getElementById('skills-heading');
+      const skillsSection = skillsHeading?.closest('section');
+      if (skillsHeading && settings.skills?.heading) {
+        skillsHeading.textContent = settings.skills.heading;
+      }
+      if (skillsSection) {
+        skillsSection.style.display = settings.skills?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.skills)) {
+        const list = document.getElementById('skills-list');
+        list.innerHTML = '';
+        payload.skills.forEach(skill => {
+          const span = document.createElement('span');
+          span.textContent = skill.name || skill;
+          list.appendChild(span);
         });
       }
 
-      // Update education
-      if (Array.isArray(data.education)) {
-        const eduSection = document.getElementById("education-section");
-        eduSection.innerHTML = "";
-        data.education.forEach(item => {
-          const div = document.createElement("div");
-          div.className = "edu";
-
-          const degree = document.createElement("strong");
-          degree.textContent = item.degree || item.title || "";
-          div.appendChild(degree);
-
-          if (item.year || item.duration) {
-            const year = document.createElement("span");
-            year.textContent = item.year || item.duration || "";
-            div.appendChild(year);
+      // Education Section
+      const eduHeading = document.getElementById('education-heading');
+      const eduSection = eduHeading?.closest('section');
+      if (eduHeading && settings.education?.heading) {
+        eduHeading.textContent = settings.education.heading;
+      }
+      if (eduSection) {
+        eduSection.style.display = settings.education?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.education)) {
+        const content = document.getElementById('education-section');
+        content.innerHTML = '';
+        payload.education.forEach(edu => {
+          const div = document.createElement('div');
+          div.className = 'edu';
+          
+          const degree = document.createElement('strong');
+          degree.textContent = edu.degree || '';
+          if (edu.field) {
+            degree.textContent += edu.degree ? ` in ${edu.field}` : edu.field;
           }
-
-          const school = document.createElement("p");
-          school.textContent = item.school || item.institution || "";
-          div.appendChild(school);
-
-          eduSection.appendChild(div);
+          if (degree.textContent) div.appendChild(degree);
+          
+          if (edu.startDate || edu.endDate) {
+            const dates = document.createElement('span');
+            dates.textContent = `${edu.startDate || ''} ${edu.endDate ? `– ${edu.endDate}` : ''}`.trim();
+            if (dates.textContent) div.appendChild(dates);
+          }
+          
+          const school = document.createElement('p');
+          school.textContent = edu.school || '';
+          if (school.textContent) div.appendChild(school);
+          
+          if (edu.description) {
+            const desc = document.createElement('p');
+            desc.textContent = edu.description;
+            div.appendChild(desc);
+          }
+          
+          content.appendChild(div);
         });
       }
 
-      // Update experience
-      if (Array.isArray(data.experiences)) {
-        const expSection = document.getElementById("experience-section");
-        expSection.innerHTML = "";
-        data.experiences.forEach(exp => {
-          const div = document.createElement("div");
-          div.className = "job";
-
-          const title = document.createElement("h4");
-          title.textContent = exp.title || "";
+      // Experience Section
+      const expHeading = document.getElementById('experience-heading');
+      const expSection = expHeading?.closest('section');
+      if (expHeading && settings.experience?.heading) {
+        expHeading.textContent = settings.experience.heading;
+      }
+      if (expSection) {
+        expSection.style.display = settings.experience?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.experiences)) {
+        const content = document.getElementById('experience-section');
+        content.innerHTML = '';
+        payload.experiences.forEach(exp => {
+          const div = document.createElement('div');
+          div.className = 'job';
+          
+          const title = document.createElement('h4');
+          title.textContent = exp.position || '';
           div.appendChild(title);
-
-          const duration = document.createElement("span");
-          duration.textContent = exp.duration || "";
-          div.appendChild(duration);
-
-          const company = document.createElement("p");
-          company.textContent = exp.company || "";
+          
+          if (exp.startDate || exp.endDate || exp.currentlyWorking) {
+            const duration = document.createElement('span');
+            duration.textContent = `${exp.startDate || ''} ${exp.endDate ? `– ${exp.endDate}` : exp.currentlyWorking ? '– Present' : ''}`.trim();
+            if (duration.textContent) div.appendChild(duration);
+          }
+          
+          const company = document.createElement('p');
+          company.textContent = exp.company || '';
           div.appendChild(company);
-
+          
           if (exp.description) {
-            const ul = document.createElement("ul");
-            const lines = exp.description.split('\n').filter(l => l.trim());
-            lines.forEach(line => {
-              const li = document.createElement("li");
-              li.textContent = line.trim();
+            const desc = document.createElement('p');
+            desc.textContent = exp.description;
+            div.appendChild(desc);
+          }
+          
+          if (Array.isArray(exp.bullets) && exp.bullets.length > 0) {
+            const ul = document.createElement('ul');
+            exp.bullets.forEach(bullet => {
+              const li = document.createElement('li');
+              li.textContent = bullet;
               ul.appendChild(li);
             });
             div.appendChild(ul);
           }
-
-          expSection.appendChild(div);
+          
+          content.appendChild(div);
         });
       }
 
-      // Update custom sections
-      const customWrap = document.getElementById("custom-section");
-      const customContainer = document.getElementById("custom-container");
-      if (customWrap && customContainer) {
-        const heading = (data.sectionSettings?.custom?.heading ?? "Custom Section") || "";
-        const visible = data.sectionSettings?.custom?.visible !== false;
-        const headingEl = document.getElementById("custom-heading");
-        if (headingEl) headingEl.textContent = heading;
-        customContainer.style.display = visible ? "block" : "none";
-
-        customWrap.innerHTML = "";
-        if (visible && Array.isArray(data.customSections)) {
-          data.customSections.forEach(sec => {
-            if (!sec || (!sec.title && !sec.content)) return;
-            const block = document.createElement("div");
-            const title = document.createElement("p");
-            title.style.fontWeight = "700";
-            title.style.margin = "0 0 4px";
-            title.textContent = sec.title || "";
-
-            const body = document.createElement("p");
-            body.style.margin = "0 0 10px";
-            body.textContent = sec.content || "";
-
-            if (title.textContent) block.appendChild(title);
-            if (body.textContent) block.appendChild(body);
-            customWrap.appendChild(block);
-          });
-        }
+      // Custom Sections
+      const customHeading = document.getElementById('custom-heading');
+      const customContainer = customHeading?.closest('section');
+      if (customHeading && settings.custom?.heading) {
+        customHeading.textContent = settings.custom.heading;
+      }
+      if (customContainer) {
+        customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
+      }
+      const customContent = document.getElementById('custom-section');
+      customContent.innerHTML = '';
+      if (Array.isArray(payload.customSections)) {
+        payload.customSections.forEach(section => {
+          const wrapper = document.createElement('div');
+          
+          const heading = document.createElement('p');
+          heading.style.fontWeight = 'bold';
+          heading.style.margin = '0 0 4px';
+          heading.textContent = section.heading || '';
+          if (heading.textContent) wrapper.appendChild(heading);
+          
+          const content = document.createElement('p');
+          content.style.margin = '0';
+          content.textContent = section.content || '';
+          if (content.textContent) wrapper.appendChild(content);
+          
+          customContent.appendChild(wrapper);
+        });
       }
     }
 

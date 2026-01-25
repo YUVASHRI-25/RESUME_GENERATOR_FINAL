@@ -1,5 +1,7 @@
 * {
   box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 body {
@@ -8,10 +10,15 @@ body {
   background: #f6efe8;
   color: #333;
   font-family: var(--resume-font, "Georgia", "Garamond", serif);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .template-root {
   font-family: var(--resume-font, "Georgia", "Garamond", serif);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .resume {

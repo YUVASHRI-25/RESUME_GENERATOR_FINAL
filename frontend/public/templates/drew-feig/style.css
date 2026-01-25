@@ -1,8 +1,8 @@
-body{background:#fff;margin:0;font-family:var(--resume-font, Calibri, Arial, sans-serif)}
-.template-root{font-family:var(--resume-font, Calibri, Arial, sans-serif)}
-.resume{width:794px;min-height:1123px;margin:0 auto;padding:32px;box-sizing:border-box}
-header h1{color:#1aa6a6;letter-spacing:2px;margin:0}
-header h2{text-align:right;margin:6px 0 12px}
-.contact{display:flex;justify-content:space-between;border-top:2px solid #1aa6a6;padding-top:10px}
-section h3{color:#1aa6a6;border-bottom:2px solid #1aa6a6;margin-top:25px}
-.two-col{display:flex;gap:40px}
+body{background:#fff;margin:0;font-family:var(--resume-font, Calibri, Arial, sans-serif);word-wrap:break-word;overflow-wrap:break-word}
+.template-root{font-family:var(--resume-font, Calibri, Arial, sans-serif);word-wrap:break-word;overflow-wrap:break-word}
+.resume{width:794px;min-height:1123px;margin:0 auto;padding:32px;box-sizing:border-box;word-wrap:break-word;overflow-wrap:break-word;word-break:break-word}
+header h1{color:#1aa6a6;letter-spacing:2px;margin:0;word-wrap:break-word;overflow-wrap:break-word}
+header h2{text-align:right;margin:6px 0 12px;word-wrap:break-word;overflow-wrap:break-word}
+.contact{display:flex;justify-content:space-between;border-top:2px solid #1aa6a6;padding-top:10px;word-wrap:break-word;overflow-wrap:break-word;flex-wrap:wrap}
+section h3{color:#1aa6a6;border-bottom:2px solid #1aa6a6;margin-top:25px;word-wrap:break-word;overflow-wrap:break-word}
+.two-col{display:flex;gap:40px;word-wrap:break-word;overflow-wrap:break-word}

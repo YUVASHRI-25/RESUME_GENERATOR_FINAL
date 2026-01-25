@@ -89,10 +89,13 @@
 
 <script>
     function updateContent(data) {
-        if (!data || typeof data !== "object") return;
+        if (!data || !data.payload) return;
+
+        const payload = data.payload;
+        const settings = payload.sectionSettings || {};
 
         // Apply font
-        const font = data.fontFamily || 'Montserrat';
+        const font = payload.fontFamily || 'Montserrat';
         const fontValue = `'${font}', sans-serif`;
         document.documentElement.style.setProperty('--resume-font', fontValue);
         document.body.style.fontFamily = fontValue;
@@ -101,67 +104,99 @@
 
         // Update profile image
         const profileImg = document.getElementById("profile-image");
-        if (profileImg && data.profileImage) {
-            profileImg.src = data.profileImage;
+        if (profileImg && payload.profileImage) {
+            profileImg.src = payload.profileImage;
         }
 
         // Update personal info
-        if (data.name) document.getElementById("name").innerText = data.name;
-        if (data.title) document.getElementById("title").innerText = data.title;
-
-        // Update contact info
-        const contactInfo = document.getElementById("contact-info");
-        if (contactInfo) {
-            let contactHtml = '';
-            if (data.phone) contactHtml += `<span id="contact-phone">📞 ${data.phone}</span>`;
-            if (data.email) contactHtml += `<span id="contact-email">✉ ${data.email}</span>`;
-            if (data.location) contactHtml += `<span id="contact-location">📍 ${data.location}</span>`;
-            if (contactHtml) contactInfo.innerHTML = contactHtml;
+        if (payload.personalInfo) {
+            const { fullName, title, email, phone, location, website } = payload.personalInfo;
+            if (fullName) document.getElementById("name").textContent = fullName;
+            if (title) document.getElementById("title").textContent = title;
+            
+            // Update contact info
+            const contactInfo = document.getElementById("contact-info");
+            if (contactInfo) {
+                let contactHtml = '';
+                if (phone) contactHtml += `<span id="contact-phone">📞 ${phone}</span>`;
+                if (email) contactHtml += `<span id="contact-email">✉ ${email}</span>`;
+                if (location) contactHtml += `<span id="contact-location">📍 ${location}</span>`;
+                if (website) contactHtml += `<span id="contact-website">🌐 ${website}</span>`;
+                if (contactHtml) contactInfo.innerHTML = contactHtml;
+            }
         }
 
         // Update section headings from sectionSettings
-        const settings = data.sectionSettings || {};
-        if (settings.about?.heading) document.getElementById("about-heading").innerText = settings.about.heading;
-        if (settings.education?.heading) document.getElementById("education-heading").innerText = settings.education.heading;
-        if (settings.experience?.heading) document.getElementById("experience-heading").innerText = settings.experience.heading;
-        if (settings.skills?.heading) document.getElementById("skills-heading").innerText = settings.skills.heading;
-
-        // Update visibility
+        const aboutHeading = document.getElementById("about-heading");
         const aboutContainer = document.getElementById("about-container");
-        if (aboutContainer) aboutContainer.style.display = settings.about?.visible !== false ? "block" : "none";
-        const educationContainer = document.getElementById("education-container");
-        if (educationContainer) educationContainer.style.display = settings.education?.visible !== false ? "block" : "none";
-        const experienceContainer = document.getElementById("experience-container");
-        if (experienceContainer) experienceContainer.style.display = settings.experience?.visible !== false ? "block" : "none";
-        const skillsContainer = document.getElementById("skills-container");
-        if (skillsContainer) skillsContainer.style.display = settings.skills?.visible !== false ? "block" : "none";
+        if (aboutHeading && settings.about?.heading) {
+            aboutHeading.textContent = settings.about.heading;
+        }
+        if (aboutContainer) {
+            aboutContainer.style.display = settings.about?.visible !== false ? "block" : "none";
+        }
 
-        // Update summary (About)
-        if (data.summary) document.getElementById("about-text").innerText = data.summary;
+        const educationHeading = document.getElementById("education-heading");
+        const educationContainer = document.getElementById("education-container");
+        if (educationHeading && settings.education?.heading) {
+            educationHeading.textContent = settings.education.heading;
+        }
+        if (educationContainer) {
+            educationContainer.style.display = settings.education?.visible !== false ? "block" : "none";
+        }
+
+        const experienceHeading = document.getElementById("experience-heading");
+        const experienceContainer = document.getElementById("experience-container");
+        if (experienceHeading && settings.experience?.heading) {
+            experienceHeading.textContent = settings.experience.heading;
+        }
+        if (experienceContainer) {
+            experienceContainer.style.display = settings.experience?.visible !== false ? "block" : "none";
+        }
+
+        const skillsHeading = document.getElementById("skills-heading");
+        const skillsContainer = document.getElementById("skills-container");
+        if (skillsHeading && settings.skills?.heading) {
+            skillsHeading.textContent = settings.skills.heading;
+        }
+        if (skillsContainer) {
+            skillsContainer.style.display = settings.skills?.visible !== false ? "block" : "none";
+        }
+
+        // Update about/summary
+        if (payload.about?.content) {
+            document.getElementById("about-text").textContent = payload.about.content;
+        }
 
         // Update education
-        if (Array.isArray(data.education)) {
+        if (Array.isArray(payload.education)) {
             const eduList = document.getElementById("education-list");
             eduList.innerHTML = "";
-            data.education.forEach(item => {
+            payload.education.forEach(edu => {
                 const row = document.createElement("div");
                 row.className = "row";
 
                 const dateDiv = document.createElement("div");
                 dateDiv.className = "date";
-                dateDiv.textContent = item.year || item.duration || "";
+                if (edu.startDate || edu.endDate) {
+                    dateDiv.textContent = `${edu.startDate || ''} ${edu.endDate ? `– ${edu.endDate}` : ''}`.trim();
+                }
                 row.appendChild(dateDiv);
 
                 const contentDiv = document.createElement("div");
                 contentDiv.className = "content";
 
                 const title = document.createElement("h4");
-                title.textContent = [item.school || item.institution, item.degree || item.title].filter(Boolean).join(" | ");
+                const parts = [];
+                if (edu.school) parts.push(edu.school);
+                if (edu.degree) parts.push(edu.degree);
+                if (edu.field) parts.push(`${edu.field}`);
+                title.textContent = parts.join(" | ");
                 contentDiv.appendChild(title);
 
-                if (item.description || item.grade || item.percentage) {
+                if (edu.description) {
                     const p = document.createElement("p");
-                    p.textContent = item.description || `Grade: ${item.grade || item.percentage}` || "";
+                    p.textContent = edu.description;
                     contentDiv.appendChild(p);
                 }
 
@@ -171,29 +206,44 @@
         }
 
         // Update experience
-        if (Array.isArray(data.experiences)) {
+        if (Array.isArray(payload.experiences)) {
             const expList = document.getElementById("experience-list");
             expList.innerHTML = "";
-            data.experiences.forEach(item => {
+            payload.experiences.forEach(exp => {
                 const row = document.createElement("div");
                 row.className = "row";
 
                 const dateDiv = document.createElement("div");
                 dateDiv.className = "date";
-                dateDiv.textContent = item.duration || "";
+                if (exp.startDate || exp.endDate || exp.currentlyWorking) {
+                    dateDiv.textContent = `${exp.startDate || ''} ${exp.endDate ? `– ${exp.endDate}` : exp.currentlyWorking ? '– Present' : ''}`.trim();
+                }
                 row.appendChild(dateDiv);
 
                 const contentDiv = document.createElement("div");
                 contentDiv.className = "content";
 
                 const title = document.createElement("h4");
-                title.textContent = [item.company, item.title].filter(Boolean).join(" | ");
+                const parts = [];
+                if (exp.company) parts.push(exp.company);
+                if (exp.position) parts.push(exp.position);
+                title.textContent = parts.join(" | ");
                 contentDiv.appendChild(title);
 
-                if (item.description) {
+                if (exp.description) {
                     const p = document.createElement("p");
-                    p.textContent = item.description;
+                    p.textContent = exp.description;
                     contentDiv.appendChild(p);
+                }
+
+                if (Array.isArray(exp.bullets) && exp.bullets.length > 0) {
+                    const ul = document.createElement("ul");
+                    exp.bullets.forEach(bullet => {
+                        const li = document.createElement("li");
+                        li.textContent = bullet;
+                        ul.appendChild(li);
+                    });
+                    contentDiv.appendChild(ul);
                 }
 
                 row.appendChild(contentDiv);
@@ -202,45 +252,45 @@
         }
 
         // Update skills
-        if (Array.isArray(data.skills)) {
+        if (Array.isArray(payload.skills)) {
             const skillsList = document.getElementById("skills-list");
             skillsList.innerHTML = "";
-            data.skills.forEach(skill => {
+            payload.skills.forEach(skill => {
                 const li = document.createElement("li");
-                li.textContent = skill;
+                li.textContent = skill.name || skill;
                 skillsList.appendChild(li);
             });
         }
 
         // Update custom sections
-        const customWrap = document.getElementById("custom-section");
+        const customHeading = document.getElementById("custom-heading");
         const customContainer = document.getElementById("custom-container");
-        if (customWrap && customContainer) {
-            const heading = (data.sectionSettings?.custom?.heading ?? "Custom Section") || "";
-            const visible = data.sectionSettings?.custom?.visible !== false;
-            const headingEl = document.getElementById("custom-heading");
-            if (headingEl) headingEl.textContent = heading;
-            customContainer.style.display = visible ? "block" : "none";
+        if (customHeading && settings.custom?.heading) {
+            customHeading.textContent = settings.custom.heading;
+        }
+        if (customContainer) {
+            customContainer.style.display = settings.custom?.visible !== false ? "block" : "none";
+        }
 
-            customWrap.innerHTML = "";
-            if (visible && Array.isArray(data.customSections)) {
-                data.customSections.forEach(sec => {
-                    if (!sec || (!sec.title && !sec.content)) return;
-                    const block = document.createElement("div");
-                    const title = document.createElement("p");
-                    title.style.fontWeight = "700";
-                    title.style.margin = "0 0 4px";
-                    title.textContent = sec.title || "";
+        const customWrap = document.getElementById("custom-section");
+        customWrap.innerHTML = "";
+        if (Array.isArray(payload.customSections)) {
+            payload.customSections.forEach(sec => {
+                if (!sec || (!sec.heading && !sec.content)) return;
+                const block = document.createElement("div");
+                const heading = document.createElement("p");
+                heading.style.fontWeight = "700";
+                heading.style.margin = "0 0 4px";
+                heading.textContent = sec.heading || "";
 
-                    const body = document.createElement("p");
-                    body.style.margin = "0 0 10px";
-                    body.textContent = sec.content || "";
+                const body = document.createElement("p");
+                body.style.margin = "0 0 10px";
+                body.textContent = sec.content || "";
 
-                    if (title.textContent) block.appendChild(title);
-                    if (body.textContent) block.appendChild(body);
-                    customWrap.appendChild(block);
-                });
-            }
+                if (heading.textContent) block.appendChild(heading);
+                if (body.textContent) block.appendChild(body);
+                customWrap.appendChild(block);
+            });
         }
     }
 

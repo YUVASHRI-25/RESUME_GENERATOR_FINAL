@@ -7,6 +7,16 @@ const TemplateSelectionPage = () => {
     const navigate = useNavigate();
     const [hoveredId, setHoveredId] = useState(null);
     const [selectedId, setSelectedId] = useState(null);
+    const [activeTab, setActiveTab] = useState('one-column');
+
+    const oneColumnTemplates = templates.filter(t => t.id !== 'creative-profile' && t.id !== 'richard-image-two-column' && t.id !== 'jyoti-sidebar-cream' && t.id !== 'modern-two-column' && t.id !== 'lorna-modern' && t.id !== 'anaisha-timeline' && t.id !== 'pedro-classic' && t.id !== 'olivia-minimal');
+    const imageColumnTemplates = templates.filter(t => t.id === 'creative-profile' || t.id === 'richard-image-two-column' || t.id === 'anaisha-timeline' || t.id === 'pedro-classic');
+    const twoColumnTemplates = templates.filter(t => t.id === 'jyoti-sidebar-cream' || t.id === 'modern-two-column' || t.id === 'lorna-modern' || t.id === 'olivia-minimal');
+    
+    const displayTemplates = 
+        activeTab === 'one-column' ? oneColumnTemplates :
+        activeTab === 'image-two-column' ? imageColumnTemplates :
+        twoColumnTemplates;
 
     const selectTemplate = (id) => {
         setSelectedId(id);
@@ -40,9 +50,54 @@ const TemplateSelectionPage = () => {
                     </p>
                 </div>
 
+                {/* Tabs */}
+                <div className="mb-12 max-w-7xl w-full">
+                    <div className="flex gap-4 border-b border-cyan-200/50">
+                        <button
+                            onClick={() => setActiveTab('one-column')}
+                            className={`px-6 py-3 font-semibold text-lg transition-all duration-300 relative ${
+                                activeTab === 'one-column'
+                                    ? 'text-cyan-600'
+                                    : 'text-slate-600 hover:text-slate-800'
+                            }`}
+                        >
+                            One Column Templates
+                            {activeTab === 'one-column' && (
+                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-t"></div>
+                            )}
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('two-column')}
+                            className={`px-6 py-3 font-semibold text-lg transition-all duration-300 relative ${
+                                activeTab === 'two-column'
+                                    ? 'text-cyan-600'
+                                    : 'text-slate-600 hover:text-slate-800'
+                            }`}
+                        >
+                            Two Column Templates
+                            {activeTab === 'two-column' && (
+                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-t"></div>
+                            )}
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('image-two-column')}
+                            className={`px-6 py-3 font-semibold text-lg transition-all duration-300 relative ${
+                                activeTab === 'image-two-column'
+                                    ? 'text-cyan-600'
+                                    : 'text-slate-600 hover:text-slate-800'
+                            }`}
+                        >
+                            Image Two Column Templates
+                            {activeTab === 'image-two-column' && (
+                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-t"></div>
+                            )}
+                        </button>
+                    </div>
+                </div>
+
                 {/* Templates Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl w-full">
-                    {templates.map((t, index) => (
+                    {displayTemplates.map((t, index) => (
                         <button
                             key={t.id}
                             type="button"

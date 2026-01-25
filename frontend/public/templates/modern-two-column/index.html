@@ -58,181 +58,172 @@
 
   <script>
     function updateContent(data) {
-      if (!data || typeof data !== "object") return;
+      if (!data || !data.payload) return;
 
-      const font = data.fontFamily || 'Inter';
+      const payload = data.payload;
+      const settings = payload.sectionSettings || {};
+
+      // Apply font
+      const font = payload.fontFamily || 'Inter';
       const fontValue = `'${font}', sans-serif`;
       document.documentElement.style.setProperty('--resume-font', fontValue);
       document.body.style.fontFamily = fontValue;
-      const resume = document.getElementById('resume');
-      if (resume) resume.style.fontFamily = fontValue;
 
-      if (data.name) document.getElementById("name").innerText = data.name;
-      if (data.title) document.getElementById("title").innerText = data.title;
-      if (data.email) document.getElementById("email").innerText = data.email;
-      if (data.phone) document.getElementById("phone").innerText = data.phone;
-      if (data.location) document.getElementById("location").innerText = data.location;
-      if (data.summary) document.getElementById("summary").innerText = data.summary;
+      // Personal Info Header
+      if (payload.personalInfo) {
+        const { fullName, title, email, phone, location } = payload.personalInfo;
+        if (fullName) document.getElementById('name').textContent = fullName;
+        if (title) document.getElementById('title').textContent = title;
+        if (email) document.getElementById('email').textContent = email;
+        if (phone) document.getElementById('phone').textContent = phone;
+        if (location) document.getElementById('location').textContent = location;
+      }
 
-      // Update section headings and visibility from sectionSettings
-      const settings = data.sectionSettings || {};
-      
       // Profile/About section
-      const profileHeading = document.getElementById("profile-heading");
+      const profileHeading = document.getElementById('profile-heading');
       const profileSection = profileHeading?.closest('.section');
-      if (profileHeading && settings.about?.heading) profileHeading.innerText = settings.about.heading;
-      if (profileSection) profileSection.style.display = settings.about?.visible !== false ? "block" : "none";
-      
+      if (profileHeading && settings.about?.heading) profileHeading.textContent = settings.about.heading;
+      if (profileSection) profileSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
+      if (payload.about?.content) {
+        document.getElementById('summary').textContent = payload.about.content;
+      }
+
       // Education section
-      const eduHeading = document.getElementById("education-heading");
+      const eduHeading = document.getElementById('education-heading');
       const eduSection = eduHeading?.closest('.section');
-      if (eduHeading && settings.education?.heading) eduHeading.innerText = settings.education.heading;
-      if (eduSection) eduSection.style.display = settings.education?.visible !== false ? "block" : "none";
-      
-      // Skills section
-      const skillsHeading = document.getElementById("skills-heading");
-      const skillsSection = skillsHeading?.closest('.section');
-      if (skillsHeading && settings.skills?.heading) skillsHeading.innerText = settings.skills.heading;
-      if (skillsSection) skillsSection.style.display = settings.skills?.visible !== false ? "block" : "none";
-      
-      // Experience section
-      const expHeading = document.getElementById("experience-heading");
-      const expSection = expHeading?.closest('.section');
-      if (expHeading && settings.experience?.heading) expHeading.innerText = settings.experience.heading;
-      if (expSection) expSection.style.display = settings.experience?.visible !== false ? "block" : "none";
-      
-      // Projects section
-      const projHeading = document.getElementById("projects-heading");
-      const projSection = projHeading?.closest('.section');
-      if (projHeading && settings.projects?.heading) projHeading.innerText = settings.projects.heading;
-      if (projSection) projSection.style.display = settings.projects?.visible !== false ? "block" : "none";
-
-      // Education list
-      if (Array.isArray(data.education)) {
-        const list = document.getElementById("education-list");
-        list.innerHTML = "";
-        data.education.forEach(item => {
-          const li = document.createElement("li");
-          const degree = item.degree || item.title || "";
-          const school = item.school || item.institution || "";
-          const year = item.year || item.duration || "";
-          const grade = item.percentage || item.gpa || item.score || "";
-
-          li.textContent = [degree, school, year].filter(Boolean).join(" – ");
-          if (grade) {
-            const span = document.createElement("span");
-            span.style.display = "block";
-            span.style.fontSize = "12px";
-            span.textContent = grade;
-            li.appendChild(span);
+      if (eduHeading && settings.education?.heading) eduHeading.textContent = settings.education.heading;
+      if (eduSection) eduSection.style.display = settings.education?.visible !== false ? 'block' : 'none';
+      if (Array.isArray(payload.education)) {
+        const list = document.getElementById('education-list');
+        list.innerHTML = '';
+        payload.education.forEach(item => {
+          const li = document.createElement('li');
+          const degree = `${item.degree || ''}${item.field ? ` in ${item.field}` : ''}`.trim();
+          const school = item.school || '';
+          const dates = `${item.startDate || ''}${item.endDate ? ` - ${item.endDate}` : ''}`.trim();
+          
+          li.textContent = [degree, school, dates].filter(Boolean).join(' – ');
+          if (item.description) {
+            const desc = document.createElement('span');
+            desc.style.display = 'block';
+            desc.style.fontSize = '12px';
+            desc.style.marginTop = '4px';
+            desc.textContent = item.description;
+            li.appendChild(desc);
           }
           list.appendChild(li);
         });
       }
 
-      // Skills list
-      if (Array.isArray(data.skills)) {
-        const list = document.getElementById("skills-list");
-        list.innerHTML = "";
-        data.skills.forEach(skill => {
-          const li = document.createElement("li");
-          li.textContent = skill;
+      // Skills section
+      const skillsHeading = document.getElementById('skills-heading');
+      const skillsSection = skillsHeading?.closest('.section');
+      if (skillsHeading && settings.skills?.heading) skillsHeading.textContent = settings.skills.heading;
+      if (skillsSection) skillsSection.style.display = settings.skills?.visible !== false ? 'block' : 'none';
+      if (Array.isArray(payload.skills)) {
+        const list = document.getElementById('skills-list');
+        list.innerHTML = '';
+        payload.skills.forEach(skill => {
+          const li = document.createElement('li');
+          li.textContent = skill.name || skill;
           list.appendChild(li);
         });
       }
 
-      // Experience entries
-      if (Array.isArray(data.experiences)) {
-        const wrap = document.getElementById("experience-section");
-        wrap.innerHTML = "";
-        data.experiences.forEach(exp => {
-          const div = document.createElement("div");
-          const title = document.createElement("p");
-          title.style.fontWeight = "600";
-          title.style.margin = "0 0 4px";
-          title.textContent = [exp.company, exp.title].filter(Boolean).join(" – ");
+      // Experience section
+      const expHeading = document.getElementById('experience-heading');
+      const expSection = expHeading?.closest('.section');
+      if (expHeading && settings.experience?.heading) expHeading.textContent = settings.experience.heading;
+      if (expSection) expSection.style.display = settings.experience?.visible !== false ? 'block' : 'none';
+      if (Array.isArray(payload.experiences)) {
+        const wrap = document.getElementById('experience-section');
+        wrap.innerHTML = '';
+        payload.experiences.forEach(exp => {
+          const div = document.createElement('div');
+          
+          const title = document.createElement('p');
+          title.style.fontWeight = '600';
+          title.style.margin = '0 0 4px';
+          title.textContent = `${exp.position || ''} at ${exp.company || ''}`.trim() || 'Position';
 
-          const meta = document.createElement("p");
-          meta.style.margin = "0 0 6px";
-          meta.textContent = exp.duration || "";
+          const dates = document.createElement('p');
+          dates.style.margin = '0 0 6px';
+          dates.textContent = `${exp.startDate || ''}${exp.endDate ? ` - ${exp.endDate}` : exp.currentlyWorking ? ' - Present' : ''}`.trim();
 
-          const desc = document.createElement("p");
-          desc.style.margin = "0 0 10px";
-          desc.textContent = exp.description || "";
-
-          div.appendChild(title);
-          if (meta.textContent) div.appendChild(meta);
-          if (desc.textContent) div.appendChild(desc);
-          wrap.appendChild(div);
-        });
-      }
-
-      // Projects entries
-      if (Array.isArray(data.projects)) {
-        const wrap = document.getElementById("projects-section");
-        wrap.innerHTML = "";
-        data.projects.forEach(proj => {
-          const div = document.createElement("div");
-          const title = document.createElement("p");
-          title.style.fontWeight = "600";
-          title.style.margin = "0 0 4px";
-          title.textContent = proj.name || proj.title || "";
-
-          const meta = document.createElement("p");
-          meta.style.margin = "0 0 6px";
-          meta.textContent = proj.tech || proj.stack || "";
-
-          const desc = document.createElement("p");
-          desc.style.margin = "0 0 10px";
-          desc.textContent = proj.description || "";
+          const desc = document.createElement('p');
+          desc.style.margin = '0 0 10px';
+          desc.textContent = exp.description || '';
 
           if (title.textContent) div.appendChild(title);
-          if (meta.textContent) div.appendChild(meta);
+          if (dates.textContent) div.appendChild(dates);
           if (desc.textContent) div.appendChild(desc);
+          
+          if (Array.isArray(exp.bullets)) {
+            const ul = document.createElement('ul');
+            ul.style.margin = '4px 0 0 0';
+            ul.style.paddingLeft = '20px';
+            exp.bullets.forEach(bullet => {
+              const li = document.createElement('li');
+              li.textContent = bullet;
+              ul.appendChild(li);
+            });
+            div.appendChild(ul);
+          }
+          
           wrap.appendChild(div);
         });
       }
 
-      // Column placement (move sections between left/right based on settings)
-      const leftCol = document.querySelector('.left');
-      const rightCol = document.querySelector('.right');
-      if (leftCol && rightCol) {
-        const s = data.sectionSettings || {};
-        const move = (id, col) => {
-          const el = document.getElementById(id);
-          if (!el) return;
-          (col === 'left' ? leftCol : rightCol).appendChild(el);
-        };
-        move('education-block', s.education?.column === 'left' ? 'left' : 'right');
-        move('skills-block', s.skills?.column === 'left' ? 'left' : 'right');
-        move('profile-block', s.about?.column === 'left' ? 'left' : 'right');
-        move('experience-block', s.experience?.column === 'left' ? 'left' : 'right');
-        move('projects-block', s.projects?.column === 'left' ? 'left' : 'right');
+      // Projects section
+      const projHeading = document.getElementById('projects-heading');
+      const projSection = projHeading?.closest('.section');
+      if (projHeading && settings.projects?.heading) projHeading.textContent = settings.projects.heading;
+      if (projSection) projSection.style.display = settings.projects?.visible !== false ? 'block' : 'none';
+      if (Array.isArray(payload.projects)) {
+        const wrap = document.getElementById('projects-section');
+        wrap.innerHTML = '';
+        payload.projects.forEach(proj => {
+          const div = document.createElement('div');
+          
+          const title = document.createElement('p');
+          title.style.fontWeight = '600';
+          title.style.margin = '0 0 4px';
+          title.textContent = proj.title || 'Project';
+
+          const desc = document.createElement('p');
+          desc.style.margin = '0 0 10px';
+          desc.textContent = proj.description || '';
+
+          if (title.textContent) div.appendChild(title);
+          if (desc.textContent) div.appendChild(desc);
+          wrap.appendChild(div);
+        });
       }
 
       // Custom sections
-      const customWrap = document.getElementById("custom-section");
+      const customWrap = document.getElementById('custom-section');
+      const customContainer = customWrap?.closest('.section');
+      const customHeading = document.getElementById('custom-heading');
+      if (customHeading && settings.custom?.heading) {
+        customHeading.textContent = settings.custom.heading;
+      }
+      if (customContainer) {
+        customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
+      }
       if (customWrap) {
-        customWrap.innerHTML = "";
-        const heading = (data.sectionSettings?.custom?.heading ?? "Custom Sections") || "";
-        const visible = data.sectionSettings?.custom?.visible !== false;
-        const headingEl = document.getElementById("custom-heading");
-        if (headingEl) headingEl.textContent = heading;
-        const container = document.getElementById("custom-container");
-        if (container) container.style.display = visible ? "block" : "none";
+        customWrap.innerHTML = '';
+        if (Array.isArray(payload.customSections)) {
+          payload.customSections.forEach(sec => {
+            const block = document.createElement('div');
+            
+            const title = document.createElement('p');
+            title.style.fontWeight = '700';
+            title.style.margin = '0 0 4px';
+            title.textContent = sec.heading || 'Custom Section';
 
-        if (visible && Array.isArray(data.customSections)) {
-          data.customSections.forEach(sec => {
-            if (!sec || (!sec.title && !sec.content)) return;
-            const block = document.createElement("div");
-            const title = document.createElement("p");
-            title.style.fontWeight = "700";
-            title.style.margin = "0 0 4px";
-            title.textContent = sec.title || "";
-
-            const body = document.createElement("p");
-            body.style.margin = "0 0 10px";
-            body.textContent = sec.content || "";
+            const body = document.createElement('p');
+            body.style.margin = '0 0 10px';
+            body.textContent = sec.content || '';
 
             if (title.textContent) block.appendChild(title);
             if (body.textContent) block.appendChild(body);
@@ -240,9 +231,26 @@
           });
         }
       }
+
+      // Column placement for two-column templates
+      const leftCol = document.querySelector('.left');
+      const rightCol = document.querySelector('.right');
+      if (leftCol && rightCol) {
+        const moveBlock = (id, col) => {
+          const el = document.getElementById(id);
+          if (!el || !el.closest('.section')) return;
+          const section = el.closest('.section');
+          (col === 'left' ? leftCol : rightCol).appendChild(section);
+        };
+        moveBlock('education-heading', settings.education?.column === 'left' ? 'left' : 'right');
+        moveBlock('skills-heading', settings.skills?.column === 'left' ? 'left' : 'right');
+        moveBlock('profile-heading', settings.about?.column === 'left' ? 'left' : 'right');
+        moveBlock('experience-heading', settings.experience?.column === 'left' ? 'left' : 'right');
+        moveBlock('projects-heading', settings.projects?.column === 'left' ? 'left' : 'right');
+      }
     }
 
-    window.addEventListener("message", (event) => {
+    window.addEventListener('message', (event) => {
       if (event.data === 'DOWNLOAD_PDF') {
         const resume = document.getElementById('resume');
         const opt = {
@@ -258,7 +266,6 @@
       updateContent(event.data);
     });
 
-    // Signal that the iframe is ready
     window.parent.postMessage({ type: 'template-ready' }, '*');
   </script>
 </body>

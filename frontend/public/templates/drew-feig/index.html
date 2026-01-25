@@ -10,238 +10,385 @@
 <body>
   <div id="resume" class="resume template-root">
     <header>
-      <h1 id="name">DREW FEIG</h1>
-      <h2 id="title">MARKETING SPECIALIST</h2>
-      <div class="contact">
-        <span id="email">hello@reallygreatsite.com</span>
-        <span id="phone">+123-456-7890</span>
-        <span id="location">Any City</span>
+      <h1 id="name">Your Name</h1>
+      <h2 id="title">Your Title</h2>
+      <div class="contact" id="contact">
+        <span id="email"></span>
+        <span id="phone"></span>
+        <span id="location"></span>
       </div>
     </header>
 
-    <section>
-      <h3 id="profile-heading">Profile Summary</h3>
-      <p id="summary">Brief professional summary</p>
+    <section id="about-section">
+      <h3 id="about-heading">About Me</h3>
+      <p id="about-content"></p>
     </section>
 
-    <section class="two-col">
+    <section class="two-col" id="skills-section">
       <div>
-        <h3 id="skills-heading">Professional Skill</h3>
-        <ul id="skills-left"></ul>
-      </div>
-      <div>
-        <h3>Relevant Skill</h3>
-        <ul id="skills-right"></ul>
+        <h3 id="skills-heading">Skills</h3>
+        <ul id="skills-list"></ul>
       </div>
     </section>
 
-    <section>
+    <section id="education-section">
       <h3 id="education-heading">Education</h3>
-      <div id="education-section"></div>
+      <div id="education-content"></div>
     </section>
 
-    <section>
+    <section id="experience-section">
       <h3 id="experience-heading">Work Experience</h3>
-      <div id="experience-section"></div>
+      <div id="experience-content"></div>
     </section>
 
-    <section>
-      <h3>Interest</h3>
-      <p id="interests">Your interests</p>
-    </section>
-
-    <section>
+    <section id="projects-section">
       <h3 id="projects-heading">Projects</h3>
-      <div id="projects-section"></div>
+      <div id="projects-content"></div>
     </section>
 
-    <section id="custom-container">
-      <h3 id="custom-heading">{{section.custom.heading}}</h3>
-      <div id="custom-section"></div>
+    <section id="languages-section">
+      <h3 id="languages-heading">Languages</h3>
+      <div id="languages-content"></div>
     </section>
+
+    <section id="awards-section">
+      <h3 id="awards-heading">Awards</h3>
+      <div id="awards-content"></div>
+    </section>
+
+    <section id="references-section">
+      <h3 id="references-heading">References</h3>
+      <div id="references-content"></div>
+    </section>
+
+    <div id="custom-sections-container"></div>
   </div>
 
   <script>
     function updateContent(data) {
-      if (!data || typeof data !== "object") return;
+      if (!data || !data.payload) return;
+      
+      const payload = data.payload;
+      const settings = payload.sectionSettings || {};
 
-      const font = data.fontFamily || 'Inter';
+      // Apply font
+      const font = payload.fontFamily || 'Inter';
       const fontValue = `'${font}', sans-serif`;
       document.documentElement.style.setProperty('--resume-font', fontValue);
       document.body.style.fontFamily = fontValue;
-      const resume = document.getElementById('resume');
-      if (resume) resume.style.fontFamily = fontValue;
 
-      // Update section headings and visibility from sectionSettings
-      const settings = data.sectionSettings || {};
-
-      // Profile/About section
-      const profileHeading = document.getElementById("profile-heading") || document.getElementById("about-heading");
-      const profileSection = profileHeading?.closest('section');
-      if (profileHeading && settings.about?.heading) profileHeading.innerText = settings.about.heading;
-      if (profileSection) profileSection.style.display = settings.about?.visible !== false ? "block" : "none";
-
-      // Education section
-      const eduHeading = document.getElementById("education-heading");
-      const eduSection = eduHeading?.closest('section');
-      if (eduHeading && settings.education?.heading) eduHeading.innerText = settings.education.heading;
-      if (eduSection) eduSection.style.display = settings.education?.visible !== false ? "block" : "none";
-
-      // Skills section
-      const skillsHeading = document.getElementById("skills-heading");
-      const skillsSection = skillsHeading?.closest('section');
-      if (skillsHeading && settings.skills?.heading) skillsHeading.innerText = settings.skills.heading;
-      if (skillsSection) skillsSection.style.display = settings.skills?.visible !== false ? "block" : "none";
-
-      // Experience section
-      const expHeading = document.getElementById("experience-heading");
-      const expSection = expHeading?.closest('section');
-      if (expHeading && settings.experience?.heading) expHeading.innerText = settings.experience.heading;
-      if (expSection) expSection.style.display = settings.experience?.visible !== false ? "block" : "none";
-
-      // Projects section  
-      const projHeading = document.getElementById("projects-heading");
-      const projSection = projHeading?.closest('section');
-      if (projHeading && settings.projects?.heading) projHeading.innerText = settings.projects.heading;
-      if (projSection) projSection.style.display = settings.projects?.visible !== false ? "block" : "none";
-
-      if (data.name) document.getElementById("name").innerText = data.name.toUpperCase();
-      if (data.title) document.getElementById("title").innerText = data.title.toUpperCase();
-      if (data.email) document.getElementById("email").innerText = data.email;
-      if (data.phone) document.getElementById("phone").innerText = data.phone;
-      if (data.location) document.getElementById("location").innerText = data.location;
-      if (data.summary) document.getElementById("summary").innerText = data.summary;
-
-      // Split skills into two columns
-      if (Array.isArray(data.skills)) {
-        const left = document.getElementById("skills-left");
-        const right = document.getElementById("skills-right");
-        left.innerHTML = "";
-        right.innerHTML = "";
+      // Personal Info Header
+      if (payload.personalInfo) {
+        const { fullName, title, email, phone, location, website } = payload.personalInfo;
+        if (fullName) document.getElementById('name').textContent = fullName.toUpperCase();
+        if (title) document.getElementById('title').textContent = title.toUpperCase();
         
-        const mid = Math.ceil(data.skills.length / 2);
-        data.skills.forEach((skill, idx) => {
-          const li = document.createElement("li");
-          li.textContent = skill;
-          if (idx < mid) {
-            left.appendChild(li);
-          } else {
-            right.appendChild(li);
-          }
+        const contactDiv = document.getElementById('contact');
+        contactDiv.innerHTML = '';
+        if (email) {
+          const span = document.createElement('span');
+          span.textContent = email;
+          span.id = 'email';
+          contactDiv.appendChild(span);
+        }
+        if (phone) {
+          const span = document.createElement('span');
+          span.textContent = phone;
+          span.id = 'phone';
+          contactDiv.appendChild(span);
+        }
+        if (location) {
+          const span = document.createElement('span');
+          span.textContent = location;
+          span.id = 'location';
+          contactDiv.appendChild(span);
+        }
+        if (website) {
+          const span = document.createElement('span');
+          span.textContent = website;
+          contactDiv.appendChild(span);
+        }
+      }
+
+      // About Section
+      const aboutSection = document.getElementById('about-section');
+      const aboutHeading = document.getElementById('about-heading');
+      if (aboutHeading && settings.about?.heading) {
+        aboutHeading.textContent = settings.about.heading;
+      }
+      if (payload.about?.content) {
+        document.getElementById('about-content').textContent = payload.about.content;
+      }
+      if (aboutSection) {
+        aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
+      }
+
+      // Skills Section
+      const skillsSection = document.getElementById('skills-section');
+      const skillsHeading = document.getElementById('skills-heading');
+      if (skillsHeading && settings.skills?.heading) {
+        skillsHeading.textContent = settings.skills.heading;
+      }
+      if (skillsSection) {
+        skillsSection.style.display = settings.skills?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.skills)) {
+        const list = document.getElementById('skills-list');
+        list.innerHTML = '';
+        payload.skills.forEach(skill => {
+          const li = document.createElement('li');
+          li.textContent = skill.name || skill;
+          list.appendChild(li);
         });
       }
 
-      // Education
-      if (Array.isArray(data.education)) {
-        const wrap = document.getElementById("education-section");
-        wrap.innerHTML = "";
-        data.education.forEach(item => {
-          const div = document.createElement("div");
-          div.style.marginBottom = "10px";
-          const text = [item.degree, item.school, item.year].filter(Boolean).join(" – ");
-          div.textContent = text;
-          if (item.percentage) {
-            const grade = document.createElement("div");
-            grade.style.fontSize = "12px";
-            grade.textContent = item.percentage;
-            div.appendChild(grade);
-          }
-          wrap.appendChild(div);
-        });
+      // Education Section
+      const eduSection = document.getElementById('education-section');
+      const eduHeading = document.getElementById('education-heading');
+      if (eduHeading && settings.education?.heading) {
+        eduHeading.textContent = settings.education.heading;
       }
-
-      // Experience
-      if (Array.isArray(data.experiences)) {
-        const wrap = document.getElementById("experience-section");
-        wrap.innerHTML = "";
-        data.experiences.forEach(exp => {
-          const div = document.createElement("div");
-          div.style.marginBottom = "12px";
+      if (eduSection) {
+        eduSection.style.display = settings.education?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.education)) {
+        const content = document.getElementById('education-content');
+        content.innerHTML = '';
+        payload.education.forEach(edu => {
+          const div = document.createElement('div');
+          div.style.marginBottom = '12px';
           
-          const title = document.createElement("p");
-          title.style.fontWeight = "bold";
-          title.style.margin = "0 0 4px";
-          title.textContent = [exp.company, exp.title].filter(Boolean).join(" – ");
+          const title = document.createElement('p');
+          title.style.fontWeight = 'bold';
+          title.style.margin = '0 0 4px 0';
+          title.textContent = `${edu.degree || ''} ${edu.field ? `in ${edu.field}` : ''}`.trim() || 'Education';
           
-          const meta = document.createElement("p");
-          meta.style.margin = "0 0 6px";
-          meta.textContent = exp.duration || "";
+          const school = document.createElement('p');
+          school.style.margin = '0 0 4px 0';
+          school.textContent = edu.school || '';
           
-          const desc = document.createElement("p");
-          desc.style.margin = "0";
-          desc.textContent = exp.description || "";
+          const dates = document.createElement('p');
+          dates.style.fontSize = '12px';
+          dates.style.margin = '0';
+          dates.textContent = `${edu.startDate || ''} ${edu.endDate ? `- ${edu.endDate}` : ''}`.trim();
           
           div.appendChild(title);
-          if (meta.textContent) div.appendChild(meta);
-          if (desc.textContent) div.appendChild(desc);
-          wrap.appendChild(div);
+          if (school.textContent) div.appendChild(school);
+          if (dates.textContent) div.appendChild(dates);
+          if (edu.description) {
+            const desc = document.createElement('p');
+            desc.style.margin = '4px 0 0 0';
+            desc.textContent = edu.description;
+            div.appendChild(desc);
+          }
+          content.appendChild(div);
         });
       }
 
-      // Projects
-      if (Array.isArray(data.projects)) {
-        const wrap = document.getElementById("projects-section");
-        wrap.innerHTML = "";
-        data.projects.forEach(proj => {
-          const div = document.createElement("div");
-          div.style.marginBottom = "12px";
+      // Experience Section
+      const expSection = document.getElementById('experience-section');
+      const expHeading = document.getElementById('experience-heading');
+      if (expHeading && settings.experience?.heading) {
+        expHeading.textContent = settings.experience.heading;
+      }
+      if (expSection) {
+        expSection.style.display = settings.experience?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.experiences)) {
+        const content = document.getElementById('experience-content');
+        content.innerHTML = '';
+        payload.experiences.forEach(exp => {
+          const div = document.createElement('div');
+          div.style.marginBottom = '14px';
           
-          const title = document.createElement("p");
-          title.style.fontWeight = "bold";
-          title.style.margin = "0 0 4px";
-          title.textContent = proj.name || proj.title || "";
+          const title = document.createElement('p');
+          title.style.fontWeight = 'bold';
+          title.style.margin = '0 0 4px 0';
+          title.textContent = `${exp.position || ''} at ${exp.company || ''}`.trim() || 'Position';
           
-          const desc = document.createElement("p");
-          desc.style.margin = "0 0 4px";
-          desc.textContent = proj.description || "";
+          const dates = document.createElement('p');
+          dates.style.fontSize = '12px';
+          dates.style.margin = '0 0 6px 0';
+          dates.textContent = `${exp.startDate || ''} ${exp.endDate ? `- ${exp.endDate}` : exp.currentlyWorking ? '- Present' : ''}`.trim();
           
-          const tech = document.createElement("p");
-          tech.style.fontSize = "12px";
-          tech.style.margin = "0";
-          tech.textContent = proj.tech ? `Tech: ${proj.tech}` : "";
+          div.appendChild(title);
+          if (dates.textContent) div.appendChild(dates);
           
-          if (title.textContent) div.appendChild(title);
-          if (desc.textContent) div.appendChild(desc);
-          if (tech.textContent) div.appendChild(tech);
-          wrap.appendChild(div);
+          if (exp.description) {
+            const desc = document.createElement('p');
+            desc.style.margin = '0 0 4px 0';
+            desc.textContent = exp.description;
+            div.appendChild(desc);
+          }
+          
+          if (Array.isArray(exp.bullets)) {
+            const ul = document.createElement('ul');
+            ul.style.margin = '4px 0 0 0';
+            ul.style.paddingLeft = '20px';
+            exp.bullets.forEach(bullet => {
+              const li = document.createElement('li');
+              li.textContent = bullet;
+              ul.appendChild(li);
+            });
+            div.appendChild(ul);
+          }
+          
+          content.appendChild(div);
         });
       }
 
-      // Custom sections
-      const customWrap = document.getElementById("custom-section");
-      if (customWrap) {
-        customWrap.innerHTML = "";
-        const heading = (data.sectionSettings?.custom?.heading ?? "Custom Sections") || "";
-        const visible = data.sectionSettings?.custom?.visible !== false;
-        const headingEl = document.getElementById("custom-heading");
-        if (headingEl) headingEl.textContent = heading;
-        const container = document.getElementById("custom-container");
-        if (container) container.style.display = visible ? "block" : "none";
+      // Projects Section
+      const projSection = document.getElementById('projects-section');
+      const projHeading = document.getElementById('projects-heading');
+      if (projHeading && settings.projects?.heading) {
+        projHeading.textContent = settings.projects.heading;
+      }
+      if (projSection) {
+        projSection.style.display = settings.projects?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.projects)) {
+        const content = document.getElementById('projects-content');
+        content.innerHTML = '';
+        payload.projects.forEach(proj => {
+          const div = document.createElement('div');
+          div.style.marginBottom = '12px';
+          
+          const title = document.createElement('p');
+          title.style.fontWeight = 'bold';
+          title.style.margin = '0 0 4px 0';
+          title.textContent = proj.title || 'Project';
+          
+          const desc = document.createElement('p');
+          desc.style.margin = '0';
+          desc.textContent = proj.description || '';
+          
+          div.appendChild(title);
+          if (desc.textContent) div.appendChild(desc);
+          content.appendChild(div);
+        });
+      }
 
-        if (visible && Array.isArray(data.customSections)) {
-          data.customSections.forEach(sec => {
-            if (!sec || (!sec.title && !sec.content)) return;
-            const block = document.createElement("div");
-            block.style.marginBottom = "12px";
-            
-            const title = document.createElement("p");
-            title.style.fontWeight = "bold";
-            title.style.margin = "0 0 4px";
-            title.textContent = sec.title || "";
-            
-            const body = document.createElement("p");
-            body.style.margin = "0";
-            body.textContent = sec.content || "";
-            
-            if (title.textContent) block.appendChild(title);
-            if (body.textContent) block.appendChild(body);
-            customWrap.appendChild(block);
-          });
-        }
+      // Languages Section
+      const langSection = document.getElementById('languages-section');
+      const langHeading = document.getElementById('languages-heading');
+      if (langHeading && settings.languages?.heading) {
+        langHeading.textContent = settings.languages.heading;
+      }
+      if (langSection) {
+        langSection.style.display = settings.languages?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.languages)) {
+        const content = document.getElementById('languages-content');
+        content.innerHTML = '';
+        payload.languages.forEach(lang => {
+          const div = document.createElement('div');
+          div.style.marginBottom = '6px';
+          div.textContent = `${lang.name || 'Language'} – ${lang.level || 'Fluent'}`;
+          content.appendChild(div);
+        });
+      }
+
+      // Awards Section
+      const awardSection = document.getElementById('awards-section');
+      const awardHeading = document.getElementById('awards-heading');
+      if (awardHeading && settings.awards?.heading) {
+        awardHeading.textContent = settings.awards.heading;
+      }
+      if (awardSection) {
+        awardSection.style.display = settings.awards?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.awards)) {
+        const content = document.getElementById('awards-content');
+        content.innerHTML = '';
+        payload.awards.forEach(award => {
+          const div = document.createElement('div');
+          div.style.marginBottom = '10px';
+          
+          const title = document.createElement('p');
+          title.style.fontWeight = 'bold';
+          title.style.margin = '0 0 2px 0';
+          title.textContent = award.title || 'Award';
+          
+          const issuer = document.createElement('p');
+          issuer.style.margin = '0';
+          issuer.textContent = `${award.issuer || ''} ${award.date ? `- ${award.date}` : ''}`.trim();
+          
+          div.appendChild(title);
+          if (issuer.textContent) div.appendChild(issuer);
+          if (award.description) {
+            const desc = document.createElement('p');
+            desc.style.margin = '4px 0 0 0';
+            desc.style.fontSize = '12px';
+            desc.textContent = award.description;
+            div.appendChild(desc);
+          }
+          content.appendChild(div);
+        });
+      }
+
+      // References Section
+      const refSection = document.getElementById('references-section');
+      const refHeading = document.getElementById('references-heading');
+      if (refHeading && settings.references?.heading) {
+        refHeading.textContent = settings.references.heading;
+      }
+      if (refSection) {
+        refSection.style.display = settings.references?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.references)) {
+        const content = document.getElementById('references-content');
+        content.innerHTML = '';
+        payload.references.forEach(ref => {
+          const div = document.createElement('div');
+          div.style.marginBottom = '10px';
+          
+          const name = document.createElement('p');
+          name.style.fontWeight = 'bold';
+          name.style.margin = '0 0 2px 0';
+          name.textContent = ref.name || 'Reference';
+          
+          const info = document.createElement('p');
+          info.style.margin = '0';
+          info.textContent = `${ref.title || ''} ${ref.company ? `at ${ref.company}` : ''}`.trim();
+          
+          const contact = document.createElement('p');
+          contact.style.fontSize = '12px';
+          contact.style.margin = '2px 0 0 0';
+          const contactItems = [];
+          if (ref.email) contactItems.push(ref.email);
+          if (ref.phone) contactItems.push(ref.phone);
+          contact.textContent = contactItems.join(' • ');
+          
+          div.appendChild(name);
+          if (info.textContent) div.appendChild(info);
+          if (contact.textContent) div.appendChild(contact);
+          content.appendChild(div);
+        });
+      }
+
+      // Custom Sections
+      const customContainer = document.getElementById('custom-sections-container');
+      customContainer.innerHTML = '';
+      if (Array.isArray(payload.customSections)) {
+        payload.customSections.forEach(section => {
+          const wrapper = document.createElement('section');
+          wrapper.style.marginTop = '16px';
+          
+          const heading = document.createElement('h3');
+          heading.textContent = section.heading || 'Custom Section';
+          heading.style.margin = '0 0 10px 0';
+          
+          const content = document.createElement('div');
+          content.textContent = section.content || '';
+          
+          wrapper.appendChild(heading);
+          wrapper.appendChild(content);
+          customContainer.appendChild(wrapper);
+        });
       }
     }
 
-    window.addEventListener("message", (event) => {
+    window.addEventListener('message', (event) => {
       if (event.data === 'DOWNLOAD_PDF') {
         const resume = document.getElementById('resume');
         const opt = {

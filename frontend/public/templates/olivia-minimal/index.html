@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Olivia Minimal</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="resume">
+
+  <!-- TOP -->
+  <div class="top">
+    <div class="line"></div>
+
+    <div class="name-wrap">
+      <h1 id="name">OLIVIA WILSON</h1>
+      <div class="signature" id="signature">Olivia</div>
+      <h2 id="title">MARKETING MANAGER</h2>
+    </div>
+
+    <div class="line"></div>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid">
+
+    <!-- LEFT -->
+    <aside>
+
+      <section>
+        <span class="pill">CONTACT</span>
+        <ul class="icon-list">
+          <li><i class="fa-solid fa-phone"></i><span id="phone"></span></li>
+          <li><i class="fa-solid fa-envelope"></i><span id="email"></span></li>
+          <li><i class="fa-solid fa-location-dot"></i><span id="address"></span></li>
+          <li><i class="fa-solid fa-globe"></i><span id="website"></span></li>
+        </ul>
+      </section>
+
+      <section>
+        <span class="pill">EDUCATION</span>
+
+        <div id="educationContainer"></div>
+      </section>
+
+      <section>
+        <span class="pill">SKILLS</span>
+        <ul id="skillsContainer"></ul>
+      </section>
+
+      <section>
+        <span class="pill">LANGUAGES</span>
+        <ul id="languagesContainer"></ul>
+      </section>
+
+    </aside>
+
+    <!-- RIGHT -->
+    <main>
+
+      <section>
+        <span class="pill">PROFILE SUMMARY</span>
+        <p id="summary"></p>
+      </section>
+
+      <section>
+        <span class="pill">WORK EXPERIENCE</span>
+
+        <div id="experienceContainer"></div>
+      </section>
+
+      <!-- CUSTOM SECTIONS -->
+      <div id="customSectionsContainer"></div>
+
+    </main>
+  </div>
+
+</div>
+
+<script>
+  function updateContent(payload) {
+    // Personal info
+    if (payload.personalInfo) {
+      document.getElementById('name').textContent = payload.personalInfo.name || '';
+      document.getElementById('signature').textContent = payload.personalInfo.signature || payload.personalInfo.name || '';
+      document.getElementById('title').textContent = payload.personalInfo.title || '';
+      document.getElementById('phone').textContent = payload.personalInfo.phone || '';
+      document.getElementById('email').textContent = payload.personalInfo.email || '';
+      document.getElementById('address').textContent = payload.personalInfo.address || '';
+      document.getElementById('website').textContent = payload.personalInfo.website || '';
+      document.getElementById('summary').textContent = payload.personalInfo.summary || '';
+    }
+
+    // Education
+    if (payload.education && Array.isArray(payload.education)) {
+      const container = document.getElementById('educationContainer');
+      container.innerHTML = '';
+      payload.education.forEach(edu => {
+        const block = document.createElement('div');
+        block.innerHTML = `
+          <p class="year">${edu.startDate || ''}${edu.endDate ? ' - ' + edu.endDate : ''}</p>
+          <strong>${edu.school || edu.institution || ''}</strong>
+          ${edu.bullets && Array.isArray(edu.bullets) ? '<ul>' + edu.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>' : ''}
+        `;
+        container.appendChild(block);
+      });
+    }
+
+    // Skills
+    if (payload.skills && Array.isArray(payload.skills)) {
+      const container = document.getElementById('skillsContainer');
+      container.innerHTML = '';
+      payload.skills.forEach(skill => {
+        const li = document.createElement('li');
+        li.textContent = typeof skill === 'string' ? skill : (skill.name || '');
+        container.appendChild(li);
+      });
+    }
+
+    // Languages
+    if (payload.languages && Array.isArray(payload.languages)) {
+      const container = document.getElementById('languagesContainer');
+      container.innerHTML = '';
+      payload.languages.forEach(lang => {
+        const li = document.createElement('li');
+        li.textContent = typeof lang === 'string' ? lang : (lang.name || '');
+        container.appendChild(li);
+      });
+    }
+
+    // Experience
+    if (payload.experiences && Array.isArray(payload.experiences)) {
+      const container = document.getElementById('experienceContainer');
+      container.innerHTML = '';
+      payload.experiences.forEach(exp => {
+        const job = document.createElement('div');
+        job.className = 'job';
+        const duration = exp.startDate ? exp.startDate + (exp.endDate ? ' - ' + exp.endDate : '') : '';
+        const bullets = exp.bullets && Array.isArray(exp.bullets) ? '<ul>' + exp.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>' : '';
+        job.innerHTML = `
+          <div class="job-head">
+            <strong>${exp.company || ''}</strong>
+            <span>${duration}</span>
+          </div>
+          <em>${exp.position || exp.role || ''}</em>
+          ${bullets}
+        `;
+        container.appendChild(job);
+      });
+    }
+
+    // Custom Sections
+    if (payload.customSections && Array.isArray(payload.customSections)) {
+      const container = document.getElementById('customSectionsContainer');
+      container.innerHTML = '';
+      payload.customSections.forEach(section => {
+        const sec = document.createElement('section');
+        let html = `<span class="pill">${section.heading || ''}</span>`;
+        if (section.items && Array.isArray(section.items)) {
+          html += '<ul>' + section.items.map(item => `<li>${item}</li>`).join('') + '</ul>';
+        } else if (section.content) {
+          html += `<p>${section.content}</p>`;
+        }
+        sec.innerHTML = html;
+        container.appendChild(sec);
+      });
+    }
+  }
+
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'UPDATE_CONTENT') {
+      updateContent(event.data.payload);
+    }
+  });
+</script>
+
+</body>
+</html>

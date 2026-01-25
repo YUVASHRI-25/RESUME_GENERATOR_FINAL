@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Richard Image Two Column</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+<div id="resume" class="resume template-root">
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div class="profile-pic" id="profile-pic">
+      <img src="https://via.placeholder.com/120" alt="Profile" id="profile-image" />
+    </div>
+
+    <h2 class="name" id="name">Your Name</h2>
+    <p class="role" id="title">Your Title</p>
+
+    <section id="contact-section">
+      <h3>CONTACT</h3>
+      <div id="contact-info"></div>
+    </section>
+
+    <section id="skills-section">
+      <h3 id="skills-heading">SKILLS</h3>
+      <ul id="skills-list"></ul>
+    </section>
+
+    <section id="languages-section">
+      <h3 id="languages-heading">LANGUAGES</h3>
+      <ul id="languages-list"></ul>
+    </section>
+
+    <section id="references-section">
+      <h3 id="references-heading">REFERENCES</h3>
+      <div id="references-list"></div>
+    </section>
+
+    <div id="custom-sidebar"></div>
+  </aside>
+
+  <!-- RIGHT CONTENT -->
+  <main class="content">
+    <section id="about-section">
+      <h3 id="about-heading">PROFILE</h3>
+      <p id="about-content"></p>
+    </section>
+
+    <section id="experience-section">
+      <h3 id="experience-heading">WORK EXPERIENCE</h3>
+      <div id="experience-list"></div>
+    </section>
+
+    <section id="education-section">
+      <h3 id="education-heading">EDUCATION</h3>
+      <div id="education-list"></div>
+    </section>
+
+    <section id="projects-section">
+      <h3 id="projects-heading">PROJECTS</h3>
+      <div id="projects-list"></div>
+    </section>
+
+    <section id="awards-section">
+      <h3 id="awards-heading">AWARDS</h3>
+      <div id="awards-list"></div>
+    </section>
+
+    <div id="custom-content"></div>
+  </main>
+</div>
+
+<script>
+  function updateContent(data) {
+    if (!data || !data.payload) return;
+
+    const payload = data.payload;
+    const settings = payload.sectionSettings || {};
+
+    // Apply font
+    const font = payload.fontFamily || 'Inter';
+    const fontValue = `'${font}', sans-serif`;
+    document.documentElement.style.setProperty('--resume-font', fontValue);
+    document.body.style.fontFamily = fontValue;
+
+    // Profile image
+    if (payload.profileImage) {
+      const img = document.getElementById('profile-image');
+      if (img) img.src = payload.profileImage;
+    }
+
+    // Personal Info
+    if (payload.personalInfo) {
+      const { fullName, title, email, phone, location, website } = payload.personalInfo;
+      if (fullName) document.getElementById('name').textContent = fullName.toUpperCase();
+      if (title) document.getElementById('title').textContent = title.toUpperCase();
+
+      const contactInfo = document.getElementById('contact-info');
+      contactInfo.innerHTML = '';
+      if (email) contactInfo.innerHTML += `<p>✉ ${email}</p>`;
+      if (phone) contactInfo.innerHTML += `<p>📞 ${phone}</p>`;
+      if (location) contactInfo.innerHTML += `<p>📍 ${location}</p>`;
+      if (website) contactInfo.innerHTML += `<p>🌐 ${website}</p>`;
+    }
+
+    // Skills Section
+    const skillsHeading = document.getElementById('skills-heading');
+    const skillsSection = document.getElementById('skills-section');
+    if (skillsHeading && settings.skills?.heading) skillsHeading.textContent = settings.skills.heading.toUpperCase();
+    if (skillsSection) skillsSection.style.display = settings.skills?.visible !== false ? 'block' : 'none';
+    if (Array.isArray(payload.skills)) {
+      const list = document.getElementById('skills-list');
+      list.innerHTML = '';
+      payload.skills.forEach(skill => {
+        const li = document.createElement('li');
+        li.textContent = skill.name || skill;
+        list.appendChild(li);
+      });
+    }
+
+    // Languages Section
+    const langHeading = document.getElementById('languages-heading');
+    const langSection = document.getElementById('languages-section');
+    if (langHeading && settings.languages?.heading) langHeading.textContent = settings.languages.heading.toUpperCase();
+    if (langSection) langSection.style.display = settings.languages?.visible !== false ? 'block' : 'none';
+    if (Array.isArray(payload.languages)) {
+      const list = document.getElementById('languages-list');
+      list.innerHTML = '';
+      payload.languages.forEach(lang => {
+        const li = document.createElement('li');
+        li.textContent = `${lang.name || 'Language'} (${lang.level || 'Fluent'})`;
+        list.appendChild(li);
+      });
+    }
+
+    // References Section
+    const refHeading = document.getElementById('references-heading');
+    const refSection = document.getElementById('references-section');
+    if (refHeading && settings.references?.heading) refHeading.textContent = settings.references.heading.toUpperCase();
+    if (refSection) refSection.style.display = settings.references?.visible !== false ? 'block' : 'none';
+    if (Array.isArray(payload.references)) {
+      const list = document.getElementById('references-list');
+      list.innerHTML = '';
+      payload.references.forEach(ref => {
+        const div = document.createElement('div');
+        div.style.marginBottom = '10px';
+        div.innerHTML = `<p><strong>${ref.name || 'Reference'}</strong></p>`;
+        if (ref.title || ref.company) {
+          div.innerHTML += `<p>${ref.title || ''}${ref.company ? ` at ${ref.company}` : ''}</p>`;
+        }
+        if (ref.email || ref.phone) {
+          div.innerHTML += `<p style="font-size: 12px;">${ref.email || ''}${ref.phone ? ` / ${ref.phone}` : ''}</p>`;
+        }
+        list.appendChild(div);
+      });
+    }
+
+    // About Section
+    const aboutHeading = document.getElementById('about-heading');
+    const aboutSection = document.getElementById('about-section');
+    if (aboutHeading && settings.about?.heading) aboutHeading.textContent = settings.about.heading.toUpperCase();
+    if (aboutSection) aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
+    if (payload.about?.content) {
+      document.getElementById('about-content').textContent = payload.about.content;
+    }
+
+    // Experience Section
+    const expHeading = document.getElementById('experience-heading');
+    const expSection = document.getElementById('experience-section');
+    if (expHeading && settings.experience?.heading) expHeading.textContent = settings.experience.heading.toUpperCase();
+    if (expSection) expSection.style.display = settings.experience?.visible !== false ? 'block' : 'none';
+    if (Array.isArray(payload.experiences)) {
+      const list = document.getElementById('experience-list');
+      list.innerHTML = '';
+      payload.experiences.forEach(exp => {
+        const div = document.createElement('div');
+        div.className = 'job';
+        div.style.marginBottom = '15px';
+        
+        const header = document.createElement('div');
+        header.className = 'job-header';
+        header.style.display = 'flex';
+        header.style.justifyContent = 'space-between';
+        header.style.marginBottom = '4px';
+        
+        const company = document.createElement('strong');
+        company.textContent = exp.company || '';
+        
+        const dates = document.createElement('span');
+        dates.textContent = `${exp.startDate || ''}${exp.endDate ? ` – ${exp.endDate}` : exp.currentlyWorking ? ' – Present' : ''}`;
+        
+        header.appendChild(company);
+        header.appendChild(dates);
+        
+        const position = document.createElement('p');
+        position.style.margin = '0 0 6px 0';
+        position.textContent = exp.position || '';
+        
+        div.appendChild(header);
+        if (position.textContent) div.appendChild(position);
+        
+        if (exp.description) {
+          const desc = document.createElement('p');
+          desc.style.margin = '4px 0 0 0';
+          desc.textContent = exp.description;
+          div.appendChild(desc);
+        }
+        
+        if (Array.isArray(exp.bullets)) {
+          const ul = document.createElement('ul');
+          ul.style.margin = '6px 0 0 0';
+          ul.style.paddingLeft = '20px';
+          exp.bullets.forEach(bullet => {
+            const li = document.createElement('li');
+            li.textContent = bullet;
+            ul.appendChild(li);
+          });
+          div.appendChild(ul);
+        }
+        
+        list.appendChild(div);
+      });
+    }
+
+    // Education Section
+    const eduHeading = document.getElementById('education-heading');
+    const eduSection = document.getElementById('education-section');
+    if (eduHeading && settings.education?.heading) eduHeading.textContent = settings.education.heading.toUpperCase();
+    if (eduSection) eduSection.style.display = settings.education?.visible !== false ? 'block' : 'none';
+    if (Array.isArray(payload.education)) {
+      const list = document.getElementById('education-list');
+      list.innerHTML = '';
+      payload.education.forEach(edu => {
+        const degreeP = document.createElement('p');
+        degreeP.style.fontWeight = 'bold';
+        degreeP.style.margin = '0 0 2px 0';
+        degreeP.textContent = `${edu.degree || ''}${edu.field ? ` in ${edu.field}` : ''}`.trim() || 'Education';
+        
+        const schoolP = document.createElement('p');
+        schoolP.style.margin = '0 0 4px 0';
+        schoolP.textContent = edu.school || '';
+        
+        const datesP = document.createElement('p');
+        datesP.style.margin = '0 0 10px 0';
+        datesP.style.fontSize = '12px';
+        datesP.textContent = `${edu.startDate || ''}${edu.endDate ? ` – ${edu.endDate}` : ''}`;
+        
+        if (degreeP.textContent) list.appendChild(degreeP);
+        if (schoolP.textContent) list.appendChild(schoolP);
+        if (datesP.textContent) list.appendChild(datesP);
+        
+        if (edu.description) {
+          const descP = document.createElement('p');
+          descP.style.margin = '0 0 10px 0';
+          descP.style.fontSize = '12px';
+          descP.textContent = edu.description;
+          list.appendChild(descP);
+        }
+      });
+    }
+
+    // Projects Section
+    const projHeading = document.getElementById('projects-heading');
+    const projSection = document.getElementById('projects-section');
+    if (projHeading && settings.projects?.heading) projHeading.textContent = settings.projects.heading.toUpperCase();
+    if (projSection) projSection.style.display = settings.projects?.visible !== false ? 'block' : 'none';
+    if (Array.isArray(payload.projects)) {
+      const list = document.getElementById('projects-list');
+      list.innerHTML = '';
+      payload.projects.forEach(proj => {
+        const div = document.createElement('div');
+        div.style.marginBottom = '12px';
+        
+        const titleP = document.createElement('p');
+        titleP.style.fontWeight = 'bold';
+        titleP.style.margin = '0 0 4px 0';
+        titleP.textContent = proj.title || 'Project';
+        
+        const descP = document.createElement('p');
+        descP.style.margin = '0';
+        descP.textContent = proj.description || '';
+        
+        div.appendChild(titleP);
+        if (descP.textContent) div.appendChild(descP);
+        list.appendChild(div);
+      });
+    }
+
+    // Awards Section
+    const awardHeading = document.getElementById('awards-heading');
+    const awardSection = document.getElementById('awards-section');
+    if (awardHeading && settings.awards?.heading) awardHeading.textContent = settings.awards.heading.toUpperCase();
+    if (awardSection) awardSection.style.display = settings.awards?.visible !== false ? 'block' : 'none';
+    if (Array.isArray(payload.awards)) {
+      const list = document.getElementById('awards-list');
+      list.innerHTML = '';
+      payload.awards.forEach(award => {
+        const div = document.createElement('div');
+        div.style.marginBottom = '10px';
+        
+        const titleP = document.createElement('p');
+        titleP.style.fontWeight = 'bold';
+        titleP.style.margin = '0 0 2px 0';
+        titleP.textContent = award.title || 'Award';
+        
+        const infoP = document.createElement('p');
+        infoP.style.margin = '0';
+        infoP.style.fontSize = '12px';
+        infoP.textContent = `${award.issuer || ''}${award.date ? ` (${award.date})` : ''}`;
+        
+        div.appendChild(titleP);
+        if (infoP.textContent) div.appendChild(infoP);
+        list.appendChild(div);
+      });
+    }
+
+    // Custom Sections (both sidebar and content)
+    const sidebarCustom = document.getElementById('custom-sidebar');
+    const contentCustom = document.getElementById('custom-content');
+    sidebarCustom.innerHTML = '';
+    contentCustom.innerHTML = '';
+    if (Array.isArray(payload.customSections)) {
+      payload.customSections.forEach(section => {
+        const wrapper = document.createElement('section');
+        wrapper.style.marginTop = '16px';
+        
+        const heading = document.createElement('h3');
+        heading.textContent = section.heading || 'Custom Section';
+        heading.style.margin = '0 0 10px 0';
+        heading.style.textTransform = 'uppercase';
+        heading.style.fontSize = '14px';
+        heading.style.fontWeight = 'bold';
+        
+        const content = document.createElement('div');
+        content.textContent = section.content || '';
+        
+        wrapper.appendChild(heading);
+        wrapper.appendChild(content);
+        
+        // Alternate between sidebar and content
+        if (section.column === 'left') {
+          sidebarCustom.appendChild(wrapper.cloneNode(true));
+        } else {
+          contentCustom.appendChild(wrapper.cloneNode(true));
+        }
+      });
+    }
+  }
+
+  window.addEventListener('message', (event) => {
+    if (event.data === 'DOWNLOAD_PDF') {
+      const resume = document.getElementById('resume');
+      const opt = {
+        margin: 0,
+        filename: 'resume.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(resume).save();
+      return;
+    }
+    updateContent(event.data);
+  });
+
+  window.parent.postMessage({ type: 'template-ready' }, '*');
+</script>
+
+</body>
+</html>

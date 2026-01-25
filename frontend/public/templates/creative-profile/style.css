@@ -7,10 +7,15 @@ body {
   font-family: var(--resume-font, 'Montserrat', sans-serif);
   background: #ffffff;
   color: #333;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .template-root {
   font-family: var(--resume-font, 'Montserrat', sans-serif);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .container {

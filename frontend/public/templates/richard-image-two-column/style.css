@@ -1,0 +1,88 @@
+* {
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+body {
+  background: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.resume {
+  display: flex;
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* LEFT SIDEBAR */
+.sidebar {
+  width: 32%;
+  background: #2f3b4a;
+  color: white;
+  padding: 20px;
+}
+
+.profile-pic img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: block;
+  margin: auto;
+}
+
+.name {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.role {
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.sidebar h3 {
+  margin-top: 25px;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  padding-bottom: 5px;
+  font-size: 14px;
+}
+
+.sidebar ul {
+  padding-left: 18px;
+}
+
+/* RIGHT CONTENT */
+.content {
+  width: 68%;
+  padding: 25px;
+}
+
+.content h3 {
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.job {
+  margin-bottom: 15px;
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.job ul {
+  padding-left: 18px;
+}

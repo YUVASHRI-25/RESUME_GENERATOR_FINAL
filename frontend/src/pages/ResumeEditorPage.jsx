@@ -12,26 +12,69 @@ const ResumeEditorPage = () => {
     const [resumeData, setResumeData] = useState({
         fontFamily: 'Inter',
         profileImage: null,
-        personalInfo: { fullName: '', email: '', phone: '', location: '', website: '', title: '', links: [] },
-        summary: '',
-        experiences: [],
-        education: [],
-        skills: [],
-        languages: [],
-        awards: [],
-        projects: [],
-        references: [],
+        personalInfo: { 
+            fullName: '', 
+            email: '', 
+            phone: '', 
+            location: '', 
+            website: '', 
+            title: '', 
+            links: [] 
+        },
+        about: {
+            heading: 'About Me',
+            content: '',
+            visible: true,
+            column: 'right'
+        },
+        experiences: [
+            {
+                id: 'exp-1',
+                company: '',
+                position: '',
+                startDate: '',
+                endDate: '',
+                currentlyWorking: false,
+                description: '',
+                bullets: []
+            }
+        ],
+        education: [
+            {
+                id: 'edu-1',
+                school: '',
+                degree: '',
+                field: '',
+                startDate: '',
+                endDate: '',
+                description: ''
+            }
+        ],
+        skills: [
+            { id: 'skill-1', name: '', level: 'Intermediate' }
+        ],
+        languages: [
+            { id: 'lang-1', name: '', level: 'Fluent' }
+        ],
+        awards: [
+            { id: 'award-1', title: '', issuer: '', date: '', description: '' }
+        ],
+        projects: [
+            { id: 'proj-1', title: '', description: '', url: '', startDate: '', endDate: '' }
+        ],
+        references: [
+            { id: 'ref-1', name: '', title: '', company: '', email: '', phone: '' }
+        ],
         customSections: [],
         sectionSettings: {
             about: { heading: 'About Me', visible: true, column: 'right' },
             education: { heading: 'Education', visible: true, column: 'right' },
-            skills: { heading: 'Skill', visible: true, column: 'left' },
-            experience: { heading: 'Experience', visible: true, column: 'right' },
+            skills: { heading: 'Skills', visible: true, column: 'left' },
+            experience: { heading: 'Work Experience', visible: true, column: 'right' },
             projects: { heading: 'Projects', visible: true, column: 'right' },
-            languages: { heading: 'Language', visible: true, column: 'left' },
+            languages: { heading: 'Languages', visible: true, column: 'left' },
             awards: { heading: 'Awards', visible: true, column: 'left' },
-            references: { heading: 'References', visible: true, column: 'right' },
-            custom: { heading: 'Custom', visible: true, column: 'right' }
+            references: { heading: 'References', visible: true, column: 'right' }
         }
     });
 

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Avery Gold</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="resume">
+
+  <!-- HEADER -->
+  <header>
+    <h1 id="name">Avery Davis</h1>
+    <h2 id="title">Web Designer</h2>
+
+    <div class="contact-box">
+      <div><i class="fa-solid fa-envelope"></i> <span id="email"></span></div>
+      <div><i class="fa-solid fa-phone"></i> <span id="phone"></span></div>
+      <div><i class="fa-solid fa-globe"></i> <span id="website"></span></div>
+    </div>
+
+    <p class="summary" id="summary"></p>
+  </header>
+
+  <!-- EXPERIENCE -->
+  <section>
+    <div class="section-title">
+      <h3 id="experienceHeading">EXPERIENCE</h3>
+      <span class="line"></span>
+    </div>
+    <div id="experienceContainer"></div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section>
+    <div class="section-title">
+      <h3 id="educationHeading">EDUCATION</h3>
+      <span class="line"></span>
+    </div>
+    <div id="educationContainer"></div>
+  </section>
+
+  <!-- SKILLS -->
+  <section>
+    <div class="section-title">
+      <h3 id="skillsHeading">SKILLS</h3>
+      <span class="line"></span>
+    </div>
+    <div class="skills" id="skillsContainer"></div>
+  </section>
+
+  <!-- CUSTOM SECTIONS -->
+  <div id="customSectionsContainer"></div>
+
+</div>
+
+<script>
+  function updateContent(payload) {
+    // Personal info
+    if (payload.personalInfo) {
+      document.getElementById('name').textContent = payload.personalInfo.name || '';
+      document.getElementById('title').textContent = payload.personalInfo.title || '';
+      document.getElementById('email').textContent = payload.personalInfo.email || '';
+      document.getElementById('phone').textContent = payload.personalInfo.phone || '';
+      document.getElementById('website').textContent = payload.personalInfo.website || '';
+      document.getElementById('summary').textContent = payload.personalInfo.summary || '';
+    }
+
+    // Experience
+    if (payload.experiences && Array.isArray(payload.experiences)) {
+      const experienceContainer = document.getElementById('experienceContainer');
+      experienceContainer.innerHTML = '';
+      payload.experiences.forEach(exp => {
+        const timeline = document.createElement('div');
+        timeline.className = 'timeline';
+        const duration = exp.startDate ? exp.startDate + (exp.endDate ? ' - ' + exp.endDate : '') : '';
+        let bulletHTML = '';
+        if (exp.bullets && Array.isArray(exp.bullets)) {
+          bulletHTML = '<ul>' + exp.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>';
+        }
+        timeline.innerHTML = `
+          <div class="dot"></div>
+          <div class="content">
+            <div class="row">
+              <strong>${exp.position || ''}</strong>
+              <span>${duration}</span>
+            </div>
+            ${bulletHTML}
+          </div>
+        `;
+        experienceContainer.appendChild(timeline);
+      });
+    }
+
+    // Education
+    if (payload.education && Array.isArray(payload.education)) {
+      const educationContainer = document.getElementById('educationContainer');
+      educationContainer.innerHTML = '';
+      payload.education.forEach(edu => {
+        const timeline = document.createElement('div');
+        timeline.className = 'timeline';
+        const year = edu.startDate ? edu.startDate + (edu.endDate ? ' - ' + edu.endDate : '') : '';
+        let bulletHTML = '';
+        if (edu.bullets && Array.isArray(edu.bullets)) {
+          bulletHTML = '<ul>' + edu.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>';
+        }
+        timeline.innerHTML = `
+          <div class="dot"></div>
+          <div class="content">
+            <div class="row">
+              <strong>${edu.degree || ''}</strong>
+              <span>${year}</span>
+            </div>
+            <div>${edu.school || ''}</div>
+            ${bulletHTML}
+          </div>
+        `;
+        educationContainer.appendChild(timeline);
+      });
+    }
+
+    // Skills
+    if (payload.skills && Array.isArray(payload.skills)) {
+      const skillsContainer = document.getElementById('skillsContainer');
+      skillsContainer.innerHTML = '';
+      
+      // Split skills into two columns
+      const halfLength = Math.ceil(payload.skills.length / 2);
+      const skillsLeft = payload.skills.slice(0, halfLength);
+      const skillsRight = payload.skills.slice(halfLength);
+      
+      const leftUl = document.createElement('ul');
+      skillsLeft.forEach(skill => {
+        const li = document.createElement('li');
+        li.textContent = typeof skill === 'string' ? skill : (skill.name || '');
+        leftUl.appendChild(li);
+      });
+      skillsContainer.appendChild(leftUl);
+      
+      const rightUl = document.createElement('ul');
+      skillsRight.forEach(skill => {
+        const li = document.createElement('li');
+        li.textContent = typeof skill === 'string' ? skill : (skill.name || '');
+        rightUl.appendChild(li);
+      });
+      skillsContainer.appendChild(rightUl);
+    }
+
+    // Custom Sections
+    if (payload.customSections && Array.isArray(payload.customSections)) {
+      const customContainer = document.getElementById('customSectionsContainer');
+      customContainer.innerHTML = '';
+      payload.customSections.forEach(section => {
+        const sectionEl = document.createElement('section');
+        let content = `
+          <div class="section-title">
+            <h3>${section.heading || ''}</h3>
+            <span class="line"></span>
+          </div>
+        `;
+        if (section.items && Array.isArray(section.items)) {
+          content += '<ul>' + section.items.map(item => `<li>${item}</li>`).join('') + '</ul>';
+        } else if (section.content) {
+          content += `<p>${section.content}</p>`;
+        }
+        sectionEl.innerHTML = content;
+        customContainer.appendChild(sectionEl);
+      });
+    }
+  }
+
+  // Handle postMessage from parent (React editor)
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'UPDATE_CONTENT') {
+      updateContent(event.data.payload);
+    }
+  });
+</script>
+
+</body>
+</html>

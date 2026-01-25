@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pedro Classic</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="resume">
+
+  <!-- TOP -->
+  <div class="top">
+    <img id="profileImage" src="/avatar.png" />
+
+    <div class="top-info">
+      <h1 id="name">PEDRO FERNANDES</h1>
+
+      <div class="details">
+        <p id="dob"></p>
+        <p id="birthplace"></p>
+        <p id="address"></p>
+        <p id="phone"></p>
+        <p id="email"></p>
+      </div>
+    </div>
+  </div>
+
+  <hr />
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- LEFT COLUMN -->
+    <div class="left">
+
+      <section>
+        <h3 id="educationHeading">EDUCATION</h3>
+        <div id="educationContainer"></div>
+      </section>
+
+      <section>
+        <h3 id="languagesHeading">LANGUAGES</h3>
+        <ul id="languagesContainer"></ul>
+      </section>
+
+      <section>
+        <h3 id="skillsHeading">SKILLS</h3>
+        <ul id="skillsContainer"></ul>
+      </section>
+
+      <section>
+        <h3 id="contactHeading">CONTACT</h3>
+        <p id="contactPhone"></p>
+        <p id="contactWebsite"></p>
+        <p id="contactAddress"></p>
+        <p id="contactEmail"></p>
+      </section>
+
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="divider"></div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right">
+
+      <section>
+        <h3 id="profileHeading">PROFILE</h3>
+        <ul id="profileContainer"></ul>
+      </section>
+
+      <section>
+        <h3 id="experienceHeading">EXPERIENCE</h3>
+        <div id="experienceContainer"></div>
+      </section>
+
+      <!-- DYNAMIC CUSTOM SECTIONS -->
+      <div id="customSectionsContainer"></div>
+
+    </div>
+  </div>
+
+  <hr />
+
+</div>
+
+<script>
+  function updateContent(payload) {
+    // Personal info
+    if (payload.personalInfo) {
+      document.getElementById('name').textContent = payload.personalInfo.name || '';
+      document.getElementById('dob').textContent = payload.personalInfo.dob || '';
+      document.getElementById('birthplace').textContent = payload.personalInfo.birthplace || '';
+      document.getElementById('address').textContent = payload.personalInfo.address || '';
+      document.getElementById('phone').textContent = payload.personalInfo.phone || '';
+      document.getElementById('email').textContent = payload.personalInfo.email || '';
+    }
+
+    // Profile image
+    if (payload.profileImage) {
+      document.getElementById('profileImage').src = payload.profileImage;
+    }
+
+    // Education
+    if (payload.education && Array.isArray(payload.education)) {
+      const educationContainer = document.getElementById('educationContainer');
+      educationContainer.innerHTML = '';
+      payload.education.forEach(edu => {
+        const item = document.createElement('div');
+        item.innerHTML = `
+          <p><strong>${edu.degree || ''}</strong></p>
+          <p>${edu.school || ''}</p>
+          <p>${edu.startDate || ''}${edu.endDate ? ' - ' + edu.endDate : ''}</p>
+          ${edu.bullets && Array.isArray(edu.bullets) ? '<ul>' + edu.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>' : ''}
+        `;
+        educationContainer.appendChild(item);
+      });
+    }
+
+    // Languages
+    if (payload.languages && Array.isArray(payload.languages)) {
+      const languagesContainer = document.getElementById('languagesContainer');
+      languagesContainer.innerHTML = '';
+      payload.languages.forEach(lang => {
+        const li = document.createElement('li');
+        li.textContent = typeof lang === 'string' ? lang : (lang.name || '');
+        languagesContainer.appendChild(li);
+      });
+    }
+
+    // Skills
+    if (payload.skills && Array.isArray(payload.skills)) {
+      const skillsContainer = document.getElementById('skillsContainer');
+      skillsContainer.innerHTML = '';
+      payload.skills.forEach(skill => {
+        const li = document.createElement('li');
+        li.textContent = typeof skill === 'string' ? skill : (skill.name || '');
+        skillsContainer.appendChild(li);
+      });
+    }
+
+    // Experience
+    if (payload.experiences && Array.isArray(payload.experiences)) {
+      const experienceContainer = document.getElementById('experienceContainer');
+      experienceContainer.innerHTML = '';
+      payload.experiences.forEach(exp => {
+        const item = document.createElement('div');
+        const duration = exp.startDate ? exp.startDate + (exp.endDate ? ' - ' + exp.endDate : '') : '';
+        let bulletHTML = '';
+        if (exp.bullets && Array.isArray(exp.bullets)) {
+          bulletHTML = '<ul>' + exp.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>';
+        }
+        item.innerHTML = `
+          <p><strong>${exp.position || ''}</strong></p>
+          <p>${exp.company || ''}</p>
+          <p>${duration}</p>
+          ${bulletHTML}
+        `;
+        experienceContainer.appendChild(item);
+      });
+    }
+
+    // Custom Sections
+    if (payload.customSections && Array.isArray(payload.customSections)) {
+      const customContainer = document.getElementById('customSectionsContainer');
+      customContainer.innerHTML = '';
+      payload.customSections.forEach(section => {
+        const sectionEl = document.createElement('section');
+        let content = `<h3>${section.heading || ''}</h3>`;
+        if (section.items && Array.isArray(section.items)) {
+          content += '<ul>' + section.items.map(item => `<li>${item}</li>`).join('') + '</ul>';
+        } else if (section.content) {
+          content += `<p>${section.content}</p>`;
+        }
+        sectionEl.innerHTML = content;
+        customContainer.appendChild(sectionEl);
+      });
+    }
+  }
+
+  // Handle postMessage from parent (React editor)
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'UPDATE_CONTENT') {
+      updateContent(event.data.payload);
+    }
+  });
+</script>
+
+</body>
+</html>

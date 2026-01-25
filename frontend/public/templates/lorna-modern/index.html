@@ -58,195 +58,235 @@
 
   <script>
     function updateContent(data) {
-      if (!data || typeof data !== "object") return;
+      if (!data || !data.payload) return;
+      
+      const payload = data.payload;
+      const settings = payload.sectionSettings || {};
 
-      const font = data.fontFamily || 'Inter';
+      // Apply font
+      const font = payload.fontFamily || 'Inter';
       const fontValue = `'${font}', sans-serif`;
       document.documentElement.style.setProperty('--resume-font', fontValue);
       document.body.style.fontFamily = fontValue;
-      const resume = document.getElementById('resume');
-      if (resume) resume.style.fontFamily = fontValue;
 
-      // Update section headings and visibility from sectionSettings
-      const settings = data.sectionSettings || {};
+      // Personal Info Header
+      if (payload.personalInfo) {
+        const { fullName, title, email, phone, location, website } = payload.personalInfo;
+        if (fullName) document.getElementById('name').textContent = fullName;
+        if (title) document.getElementById('title').textContent = title;
+        if (email) document.getElementById('email').textContent = email;
+        if (phone) document.getElementById('phone').textContent = phone;
+        if (location) document.getElementById('location').textContent = location;
+      }
 
-      // Profile/About section
-      const profileHeading = document.getElementById("profile-heading") || document.getElementById("about-heading");
-      const profileSection = profileHeading?.closest('section');
-      if (profileHeading && settings.about?.heading) profileHeading.innerText = settings.about.heading;
-      if (profileSection) profileSection.style.display = settings.about?.visible !== false ? "block" : "none";
+      // About Section
+      const aboutSection = document.querySelector('[id$="-heading"]').closest('section');
+      const aboutHeading = document.getElementById('profile-heading');
+      if (aboutHeading && settings.about?.heading) {
+        aboutHeading.textContent = settings.about.heading;
+      }
+      if (payload.about?.content) {
+        document.getElementById('summary').textContent = payload.about.content;
+      }
+      if (aboutSection) {
+        aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
+      }
 
-      // Education section
-      const eduHeading = document.getElementById("education-heading");
-      const eduSection = eduHeading?.closest('section');
-      if (eduHeading && settings.education?.heading) eduHeading.innerText = settings.education.heading;
-      if (eduSection) eduSection.style.display = settings.education?.visible !== false ? "block" : "none";
-
-      // Skills section
-      const skillsHeading = document.getElementById("skills-heading");
-      const skillsSection = skillsHeading?.closest('section');
-      if (skillsHeading && settings.skills?.heading) skillsHeading.innerText = settings.skills.heading;
-      if (skillsSection) skillsSection.style.display = settings.skills?.visible !== false ? "block" : "none";
-
-      // Experience section
-      const expHeading = document.getElementById("experience-heading");
-      const expSection = expHeading?.closest('section');
-      if (expHeading && settings.experience?.heading) expHeading.innerText = settings.experience.heading;
-      if (expSection) expSection.style.display = settings.experience?.visible !== false ? "block" : "none";
-
-      // Projects section  
-      const projHeading = document.getElementById("projects-heading");
-      const projSection = projHeading?.closest('section');
-      if (projHeading && settings.projects?.heading) projHeading.innerText = settings.projects.heading;
-      if (projSection) projSection.style.display = settings.projects?.visible !== false ? "block" : "none";
-
-      if (data.name) document.getElementById("name").innerText = data.name;
-      if (data.title) document.getElementById("title").innerText = data.title;
-      if (data.email) document.getElementById("email").innerText = data.email;
-      if (data.phone) document.getElementById("phone").innerText = data.phone;
-      if (data.location) document.getElementById("location").innerText = data.location;
-      if (data.summary) document.getElementById("summary").innerText = data.summary;
-
-      // Education
-      if (Array.isArray(data.education)) {
-        const wrap = document.getElementById("education-section");
-        wrap.innerHTML = "";
-        data.education.forEach(item => {
-          const div = document.createElement("div");
-          div.style.marginBottom = "10px";
+      // Education Section
+      const eduSection = document.getElementById('education-section');
+      const eduHeading = document.getElementById('education-heading');
+      if (eduHeading && settings.education?.heading) {
+        eduHeading.textContent = settings.education.heading;
+      }
+      if (eduSection) {
+        eduSection.parentElement.style.display = settings.education?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.education)) {
+        const content = document.getElementById('education-section');
+        content.innerHTML = '';
+        payload.education.forEach(edu => {
+          const div = document.createElement('div');
+          div.style.marginBottom = '10px';
           
-          const degree = document.createElement("p");
-          degree.style.fontWeight = "bold";
-          degree.style.margin = "0";
-          degree.textContent = item.degree || "";
+          const title = document.createElement('p');
+          title.style.fontWeight = 'bold';
+          title.style.margin = '0';
+          title.textContent = `${edu.degree || ''} ${edu.field ? `in ${edu.field}` : ''}`.trim() || 'Education';
           
-          const school = document.createElement("p");
-          school.style.margin = "0";
-          school.textContent = item.school || "";
+          const school = document.createElement('p');
+          school.style.margin = '0';
+          school.textContent = edu.school || '';
           
-          const year = document.createElement("p");
-          year.style.fontSize = "12px";
-          year.style.margin = "0";
-          year.textContent = item.year || "";
+          const dates = document.createElement('p');
+          dates.style.fontSize = '12px';
+          dates.style.margin = '0';
+          dates.textContent = `${edu.startDate || ''} ${edu.endDate ? `- ${edu.endDate}` : ''}`.trim();
           
-          if (degree.textContent) div.appendChild(degree);
+          if (title.textContent) div.appendChild(title);
           if (school.textContent) div.appendChild(school);
-          if (year.textContent) div.appendChild(year);
-          wrap.appendChild(div);
+          if (dates.textContent) div.appendChild(dates);
+          if (edu.description) {
+            const desc = document.createElement('p');
+            desc.style.margin = '4px 0 0 0';
+            desc.textContent = edu.description;
+            div.appendChild(desc);
+          }
+          content.appendChild(div);
         });
       }
 
-      // Skills
-      if (Array.isArray(data.skills)) {
-        const list = document.getElementById("skills-list");
-        list.innerHTML = "";
-        data.skills.forEach(skill => {
-          const li = document.createElement("li");
-          li.textContent = skill;
+      // Skills Section
+      const skillsHeading = document.getElementById('skills-heading');
+      const skillsSection = skillsHeading?.parentElement;
+      if (skillsHeading && settings.skills?.heading) {
+        skillsHeading.textContent = settings.skills.heading;
+      }
+      if (skillsSection) {
+        skillsSection.style.display = settings.skills?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.skills)) {
+        const list = document.getElementById('skills-list');
+        list.innerHTML = '';
+        payload.skills.forEach(skill => {
+          const li = document.createElement('li');
+          li.textContent = skill.name || skill;
           list.appendChild(li);
         });
       }
 
-      // Languages
-      if (Array.isArray(data.languages)) {
-        const list = document.getElementById("languages-list");
-        list.innerHTML = "";
-        data.languages.forEach(lang => {
-          const li = document.createElement("li");
-          li.textContent = lang;
+      // Languages Section
+      const langSection = document.getElementById('languages-list').parentElement;
+      if (langSection) {
+        langSection.style.display = settings.languages?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.languages)) {
+        const list = document.getElementById('languages-list');
+        list.innerHTML = '';
+        payload.languages.forEach(lang => {
+          const li = document.createElement('li');
+          li.textContent = `${lang.name || 'Language'} – ${lang.level || 'Fluent'}`;
           list.appendChild(li);
         });
       }
 
-      // Experience
-      if (Array.isArray(data.experiences)) {
-        const wrap = document.getElementById("experience-section");
-        wrap.innerHTML = "";
-        data.experiences.forEach(exp => {
-          const div = document.createElement("div");
-          div.style.marginBottom = "12px";
+      // Experience Section
+      const expHeading = document.getElementById('experience-heading');
+      const expSection = document.getElementById('experience-section');
+      if (expHeading && settings.experience?.heading) {
+        expHeading.textContent = settings.experience.heading;
+      }
+      if (expSection) {
+        expSection.parentElement.style.display = settings.experience?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.experiences)) {
+        const content = document.getElementById('experience-section');
+        content.innerHTML = '';
+        payload.experiences.forEach(exp => {
+          const div = document.createElement('div');
+          div.style.marginBottom = '12px';
           
-          const title = document.createElement("p");
-          title.style.fontWeight = "bold";
-          title.style.margin = "0 0 4px";
-          title.textContent = exp.company || "";
+          const title = document.createElement('p');
+          title.style.fontWeight = 'bold';
+          title.style.margin = '0 0 4px';
+          title.textContent = exp.company || '';
           
-          const role = document.createElement("p");
-          role.style.margin = "0 0 4px";
-          role.style.fontStyle = "italic";
-          role.textContent = exp.title || "";
+          const role = document.createElement('p');
+          role.style.margin = '0 0 4px';
+          role.style.fontStyle = 'italic';
+          role.textContent = exp.position || '';
           
-          const meta = document.createElement("p");
-          meta.style.margin = "0 0 6px";
-          meta.style.fontSize = "12px";
-          meta.textContent = exp.duration || "";
+          const dates = document.createElement('p');
+          dates.style.margin = '0 0 6px';
+          dates.style.fontSize = '12px';
+          dates.textContent = `${exp.startDate || ''} ${exp.endDate ? `- ${exp.endDate}` : exp.currentlyWorking ? '- Present' : ''}`.trim();
           
-          const desc = document.createElement("p");
-          desc.style.margin = "0";
-          desc.textContent = exp.description || "";
-          
-          if (title.textContent) div.appendChild(title);
+          div.appendChild(title);
           if (role.textContent) div.appendChild(role);
-          if (meta.textContent) div.appendChild(meta);
-          if (desc.textContent) div.appendChild(desc);
-          wrap.appendChild(div);
+          if (dates.textContent) div.appendChild(dates);
+          
+          if (exp.description) {
+            const desc = document.createElement('p');
+            desc.style.margin = '0';
+            desc.textContent = exp.description;
+            div.appendChild(desc);
+          }
+          
+          if (Array.isArray(exp.bullets)) {
+            const ul = document.createElement('ul');
+            ul.style.margin = '4px 0 0 0';
+            ul.style.paddingLeft = '20px';
+            exp.bullets.forEach(bullet => {
+              const li = document.createElement('li');
+              li.textContent = bullet;
+              ul.appendChild(li);
+            });
+            div.appendChild(ul);
+          }
+          
+          content.appendChild(div);
         });
       }
 
-      // Projects
-      if (Array.isArray(data.projects)) {
-        const wrap = document.getElementById("projects-section");
-        wrap.innerHTML = "";
-        data.projects.forEach(proj => {
-          const div = document.createElement("div");
-          div.style.marginBottom = "12px";
+      // Projects Section
+      const projHeading = document.getElementById('projects-heading');
+      const projSection = document.getElementById('projects-section');
+      if (projHeading && settings.projects?.heading) {
+        projHeading.textContent = settings.projects.heading;
+      }
+      if (projSection) {
+        projSection.parentElement.style.display = settings.projects?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.projects)) {
+        const content = document.getElementById('projects-section');
+        content.innerHTML = '';
+        payload.projects.forEach(proj => {
+          const div = document.createElement('div');
+          div.style.marginBottom = '12px';
           
-          const title = document.createElement("p");
-          title.style.fontWeight = "bold";
-          title.style.margin = "0 0 4px";
-          title.textContent = proj.name || proj.title || "";
+          const title = document.createElement('p');
+          title.style.fontWeight = 'bold';
+          title.style.margin = '0 0 4px';
+          title.textContent = proj.title || 'Project';
           
-          const desc = document.createElement("p");
-          desc.style.margin = "0";
-          desc.textContent = proj.description || "";
+          const desc = document.createElement('p');
+          desc.style.margin = '0';
+          desc.textContent = proj.description || '';
           
           if (title.textContent) div.appendChild(title);
           if (desc.textContent) div.appendChild(desc);
-          wrap.appendChild(div);
+          content.appendChild(div);
         });
       }
 
-      // Custom sections
-      const customWrap = document.getElementById("custom-section");
-      if (customWrap) {
-        customWrap.innerHTML = "";
-        const heading = (data.sectionSettings?.custom?.heading ?? "Custom") || "";
-        const visible = data.sectionSettings?.custom?.visible !== false;
-        const headingEl = document.getElementById("custom-heading");
-        if (headingEl) headingEl.textContent = heading;
-        const container = document.getElementById("custom-container");
-        if (container) container.style.display = visible ? "block" : "none";
-
-        if (visible && Array.isArray(data.customSections)) {
-          data.customSections.forEach(sec => {
-            if (!sec || (!sec.title && !sec.content)) return;
-            const block = document.createElement("div");
-            block.style.marginBottom = "12px";
-            
-            const title = document.createElement("p");
-            title.style.fontWeight = "bold";
-            title.style.margin = "0 0 4px";
-            title.textContent = sec.title || "";
-            
-            const body = document.createElement("p");
-            body.style.margin = "0";
-            body.textContent = sec.content || "";
-            
-            if (title.textContent) block.appendChild(title);
-            if (body.textContent) block.appendChild(body);
-            customWrap.appendChild(block);
-          });
-        }
+      // Custom Sections
+      const customContainer = document.getElementById('custom-section').parentElement;
+      if (customContainer) {
+        customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
+      }
+      const customHeading = document.getElementById('custom-heading');
+      if (customHeading && settings.custom?.heading) {
+        customHeading.textContent = settings.custom.heading;
+      }
+      const customContent = document.getElementById('custom-section');
+      customContent.innerHTML = '';
+      if (Array.isArray(payload.customSections)) {
+        payload.customSections.forEach(section => {
+          const wrapper = document.createElement('div');
+          wrapper.style.marginBottom = '12px';
+          
+          const heading = document.createElement('p');
+          heading.style.fontWeight = 'bold';
+          heading.style.margin = '0 0 4px';
+          heading.textContent = section.heading || 'Custom Section';
+          
+          const content = document.createElement('p');
+          content.style.margin = '0';
+          content.textContent = section.content || '';
+          
+          wrapper.appendChild(heading);
+          if (content.textContent) wrapper.appendChild(content);
+          customContent.appendChild(wrapper);
+        });
       }
     }
 

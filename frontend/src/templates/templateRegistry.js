@@ -55,6 +55,44 @@ export const templates = [
     html: "/templates/creative-profile/index.html",
     supportsProfileImage: true
   }
+  ,
+  {
+    id: "richard-image-two-column",
+    name: "Richard Image Two Column",
+    preview: "/templates/richard-image-two-column/preview.png",
+    html: "/templates/richard-image-two-column/index.html",
+    supportsProfileImage: true
+  },
+  {
+    id: "anaisha-timeline",
+    name: "Anaisha Timeline",
+    preview: "/templates/anaisha-timeline/preview.png",
+    html: "/templates/anaisha-timeline/index.html",
+    supportsProfileImage: true,
+    supportsColumnPlacement: true
+  },
+  {
+    id: "pedro-classic",
+    name: "Pedro Classic",
+    preview: "/templates/pedro-classic/preview.png",
+    html: "/templates/pedro-classic/index.html",
+    supportsProfileImage: true,
+    supportsColumnPlacement: true
+  },
+  {
+    id: "avery-gold",
+    name: "Avery Gold",
+    preview: "/templates/avery-gold/preview.png",
+    html: "/templates/avery-gold/index.html",
+    supportsColumnPlacement: false
+  },
+  {
+    id: "olivia-minimal",
+    name: "Olivia Minimal",
+    preview: "/templates/olivia-minimal/preview.png",
+    html: "/templates/olivia-minimal/index.html",
+    supportsColumnPlacement: true
+  }
 ];
 
 /**

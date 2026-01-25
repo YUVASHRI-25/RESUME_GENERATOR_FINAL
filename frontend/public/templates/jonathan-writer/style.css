@@ -7,6 +7,9 @@ body {
   font-family: var(--resume-font, "Arial", sans-serif);
   margin: 40px;
   color: #333;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .header {

@@ -1,6 +1,6 @@
-body{margin:0;background:#fff;font-family:var(--resume-font, Arial, Helvetica, sans-serif)}
-.template-root{font-family:var(--resume-font, Arial, Helvetica, sans-serif)}
-.resume{width:794px;min-height:1123px;margin:0 auto;background:#fff;box-sizing:border-box}
+body{margin:0;background:#fff;font-family:var(--resume-font, Arial, Helvetica, sans-serif);word-wrap:break-word;overflow-wrap:break-word}
+.template-root{font-family:var(--resume-font, Arial, Helvetica, sans-serif);word-wrap:break-word;overflow-wrap:break-word}
+.resume{width:794px;min-height:1123px;margin:0 auto;background:#fff;box-sizing:border-box;word-wrap:break-word;overflow-wrap:break-word;word-break:break-word}
 .header{background:#f2f2f2;padding:40px 48px 28px}
 .name{margin:0;font-size:40px;font-weight:700;letter-spacing:.2px}
 .role{margin:6px 0 0;font-size:18px;font-weight:500}

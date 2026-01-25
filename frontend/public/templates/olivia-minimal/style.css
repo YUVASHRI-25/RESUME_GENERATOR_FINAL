@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Great+Vibes&display=swap');
+
+* {
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+body {
+  margin: 0;
+  padding: 40px;
+  font-family: var(--resume-font, 'Montserrat'), 'Montserrat', sans-serif;
+  color: #555;
+  background: #fff;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.resume {
+  max-width: 1000px;
+  margin: auto;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font-family: var(--resume-font, 'Montserrat'), 'Montserrat', sans-serif;
+}
+
+.top {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.line {
+  height: 1px;
+  background: #999;
+  margin: 15px 0;
+}
+
+.name-wrap {
+  position: relative;
+  text-align: center;
+}
+
+.name-wrap h1 {
+  letter-spacing: 6px;
+  font-size: 36px;
+  margin: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font-family: var(--resume-font, 'Montserrat'), 'Montserrat', sans-serif;
+}
+
+.signature {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Great Vibes', cursive;
+  font-size: 90px;
+  opacity: 0.15;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.name-wrap h2 {
+  letter-spacing: 3px;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  padding: 20px 0;
+}
+
+aside {
+  border-right: 1px solid #999;
+  padding-right: 20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+section {
+  margin-bottom: 25px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.pill {
+  display: inline-block;
+  background: #eaeaea;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+.icon-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.icon-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.icon-list i {
+  width: 16px;
+}
+
+ul {
+  padding-left: 18px;
+  margin-top: 8px;
+  margin-bottom: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+li {
+  margin-bottom: 6px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.year {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.job {
+  margin-bottom: 20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.job-head {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.job em {
+  display: block;
+  margin: 6px 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+p {
+  margin: 8px 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}

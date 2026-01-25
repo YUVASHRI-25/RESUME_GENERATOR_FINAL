@@ -119,7 +119,7 @@ const LandingPage = () => {
 
                         {/* CTA Buttons */}
                         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-                            <Link to="/templates">
+                            <Link to="/login">
                                 <button className="group bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-cyan-400/50 transition-all duration-300 flex items-center gap-2 justify-center">
                                     Get Started
                                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

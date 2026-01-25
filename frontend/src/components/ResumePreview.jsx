@@ -15,24 +15,29 @@ const ResumePreview = forwardRef(({ data, template }, downloadRef) => {
             if (!win) return;
 
             const payload = {
-                fontFamily: data?.fontFamily || 'Inter',
-                profileImage: data?.profileImage || null,
-                name: data?.personalInfo?.fullName || '',
-                title: data?.personalInfo?.title || '',
-                email: data?.personalInfo?.email || '',
-                phone: data?.personalInfo?.phone || '',
-                location: data?.personalInfo?.location || '',
-                website: data?.personalInfo?.website || '',
-                summary: data?.summary || '',
-                education: data?.education || [],
-                skills: data?.skills || [],
-                languages: data?.languages || [],
-                awards: data?.awards || [],
-                experiences: data?.experiences || [],
-                projects: data?.projects || [],
-                references: data?.references || [],
-                customSections: data?.customSections || [],
-                sectionSettings: data?.sectionSettings || {}
+                type: 'UPDATE_CONTENT',
+                payload: {
+                    fontFamily: data?.fontFamily || 'Inter',
+                    profileImage: data?.profileImage || null,
+                    personalInfo: data?.personalInfo || {
+                        fullName: '',
+                        email: '',
+                        phone: '',
+                        location: '',
+                        website: '',
+                        title: ''
+                    },
+                    about: data?.about || { heading: 'About Me', content: '', visible: true },
+                    education: data?.education || [],
+                    skills: data?.skills || [],
+                    languages: data?.languages || [],
+                    awards: data?.awards || [],
+                    experiences: data?.experiences || [],
+                    projects: data?.projects || [],
+                    references: data?.references || [],
+                    customSections: data?.customSections || [],
+                    sectionSettings: data?.sectionSettings || {}
+                }
             };
 
             win.postMessage(payload, '*');
