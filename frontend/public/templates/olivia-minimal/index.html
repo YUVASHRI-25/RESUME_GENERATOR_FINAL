@@ -145,7 +145,16 @@
       if (email) document.getElementById('email').textContent = email;
       if (location) document.getElementById('address').textContent = location;
       if (website) document.getElementById('website').textContent = website;
-      if (payload.personalInfo.summary) document.getElementById('summary').textContent = payload.personalInfo.summary;
+    }
+
+    // About/Professional Summary Section
+    const aboutSection = document.querySelector('section:has(#summary)');
+    const aboutPill = aboutSection?.querySelector('.pill');
+    if (aboutPill && settings.about?.heading) aboutPill.textContent = settings.about.heading;
+    if (aboutSection) aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
+    
+    if (payload.about?.content) {
+      document.getElementById('summary').textContent = payload.about.content;
     }
 
     // Education

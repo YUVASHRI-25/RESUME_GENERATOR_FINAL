@@ -102,11 +102,11 @@ export const templates = [
     supportsProfileImage: true,
     defaultTheme: {
       fontFamily: "Inter",
-      primaryColor: "#ec4899",
-      backgroundColor: "#fdf2f8",
-      textColor: "#831843",
-      textSecondary: "#9f1239",
-      borderColor: "#f9a8d4"
+      primaryColor: "#6b7280",
+      backgroundColor: "#f9fafb",
+      textColor: "#374151",
+      textSecondary: "#9ca3af",
+      borderColor: "#d1d5db"
     }
   },
   {
