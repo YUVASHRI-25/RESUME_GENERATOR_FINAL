@@ -11,6 +11,13 @@ const ResumeEditorPage = () => {
 
     const [resumeData, setResumeData] = useState({
         fontFamily: 'Inter',
+        theme: {
+            primaryColor: '#2563eb',
+            backgroundColor: '#ffffff',
+            textColor: '#333333',
+            textSecondary: '#666666',
+            borderColor: '#cccccc'
+        },
         profileImage: null,
         personalInfo: { 
             fullName: '', 
@@ -88,6 +95,26 @@ const ResumeEditorPage = () => {
 
     const handleDownload = async () => {
         try {
+            // Ensure theme colors are applied before PDF generation
+            if (resumeData.theme) {
+                const theme = resumeData.theme;
+                if (theme.primaryColor) {
+                    document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
+                }
+                if (theme.backgroundColor) {
+                    document.documentElement.style.setProperty('--background-color', theme.backgroundColor);
+                }
+                if (theme.textColor) {
+                    document.documentElement.style.setProperty('--text-color', theme.textColor);
+                }
+                if (theme.textSecondary) {
+                    document.documentElement.style.setProperty('--text-secondary', theme.textSecondary);
+                }
+                if (theme.borderColor) {
+                    document.documentElement.style.setProperty('--border-color', theme.borderColor);
+                }
+            }
+
             // Try to download via iframe's postMessage
             if (previewRef.current?.downloadPDF) {
                 const result = previewRef.current.downloadPDF();
@@ -100,14 +127,28 @@ const ResumeEditorPage = () => {
             // Fallback for React templates
             const element = document.getElementById('resume-preview-content');
             if (element) {
-                const opt = {
-                    margin: 0,
-                    filename: 'resume.pdf',
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2 },
-                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-                };
-                html2pdf().set(opt).from(element).save();
+                // Apply background color with higher priority for PDF generation
+                if (resumeData.theme && resumeData.theme.backgroundColor) {
+                    const bgColor = resumeData.theme.backgroundColor;
+                    element.style.backgroundColor = bgColor;
+                    element.style.setProperty('background-color', bgColor, 'important');
+                    
+                    // Also apply to body if needed
+                    document.body.style.backgroundColor = bgColor;
+                    document.body.style.setProperty('background-color', bgColor, 'important');
+                }
+                
+                // Small delay to ensure styles are applied before PDF generation
+                setTimeout(() => {
+                    const opt = {
+                        margin: 0,
+                        filename: 'resume.pdf',
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2 },
+                        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                    };
+                    html2pdf().set(opt).from(element).save();
+                }, 100);
             } else {
                 alert('Could not find resume content to download');
             }

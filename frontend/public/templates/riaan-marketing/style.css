@@ -4,11 +4,19 @@
   overflow-wrap: break-word;
 }
 
+:root {
+  --primary-color: #d4a574;
+  --background-color: #f5efe9;
+  --text-color: #333333;
+  --text-secondary: #666666;
+  --border-color: #d4a574;
+}
+
 body {
-  background: #f5efe9;
+  background: var(--background-color);
   margin: 0;
   padding: 40px 20px;
-  color: #333;
+  color: var(--text-color);
   font-family: var(--resume-font, "Segoe UI", "Helvetica Neue", sans-serif);
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -22,7 +30,7 @@ body {
 }
 
 .resume {
-  background: white;
+  background: var(--background-color);
   max-width: 900px;
   margin: 0 auto;
   padding: 40px;
@@ -34,7 +42,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 2px solid #d0d0d0;
+  border-bottom: 2px solid var(--border-color);
   padding-bottom: 25px;
   margin-bottom: 30px;
 }
@@ -44,7 +52,7 @@ body {
 }
 
 .header h1 {
-  color: #a04a00;
+  color: var(--primary-color);
   font-size: 36px;
   margin: 0 0 8px 0;
   font-weight: 700;
@@ -52,7 +60,7 @@ body {
 }
 
 .header h2 {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 18px;
   font-weight: 400;
   margin: 0;
@@ -67,7 +75,7 @@ body {
 
 .header .right p {
   margin: 4px 0;
-  color: #555;
+  color: var(--text-color);
   line-height: 1.6;
 }
 
@@ -78,12 +86,12 @@ section {
 }
 
 section h3 {
-  color: #a04a00;
+  color: var(--primary-color);
   font-size: 16px;
   font-weight: 700;
   margin: 0 0 15px 0;
   padding-bottom: 8px;
-  border-bottom: 2px solid #d0d0d0;
+  border-bottom: 2px solid var(--border-color);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -91,7 +99,7 @@ section h3 {
 section p {
   margin: 0 0 12px 0;
   line-height: 1.6;
-  color: #444;
+  color: var(--text-color);
 }
 
 /* SKILLS */
@@ -105,7 +113,7 @@ section p {
 
 .skills li {
   margin-bottom: 6px;
-  color: #444;
+  color: var(--text-color);
 }
 
 /* EXPERIENCE & PROJECTS */
@@ -125,13 +133,13 @@ section p {
 .job-title,
 .project-title {
   font-weight: 700;
-  color: #333;
+  color: var(--text-color);
   font-size: 14px;
 }
 
 .job-date {
   font-size: 12px;
-  color: #888;
+  color: var(--text-secondary);
   flex-shrink: 0;
   margin-left: 20px;
 }

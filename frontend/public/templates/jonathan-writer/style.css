@@ -1,12 +1,18 @@
 :root {
   /* Default font; overridden via --resume-font if set by editor */
   --resume-font: "Arial", sans-serif;
+  --primary-color: #6b4fa1;
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --text-secondary: #666666;
+  --border-color: #cccccc;
 }
 
 body {
   font-family: var(--resume-font, "Arial", sans-serif);
   margin: 40px;
-  color: #333;
+  color: var(--text-color);
+  background: var(--background-color);
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -17,7 +23,7 @@ body {
 }
 
 .header h1 {
-  color: #6b4fa1;
+  color: var(--primary-color);
   letter-spacing: 4px;
   font-size: 36px;
   margin-bottom: 5px;
@@ -30,7 +36,7 @@ body {
 }
 
 .contact {
-  border: 2px solid #b59ad6;
+  border: 2px solid var(--border-color);
   padding: 10px;
   margin-bottom: 30px;
   font-size: 14px;
@@ -41,8 +47,8 @@ section {
 }
 
 h3 {
-  color: #6b4fa1;
-  border-bottom: 2px solid #cbb8e6;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--border-color);
   padding-bottom: 5px;
   letter-spacing: 2px;
 }
@@ -54,7 +60,7 @@ h3 {
 }
 
 .skills span {
-  background: #7d5ab5;
+  background: var(--primary-color);
   color: white;
   padding: 8px 12px;
   font-size: 14px;

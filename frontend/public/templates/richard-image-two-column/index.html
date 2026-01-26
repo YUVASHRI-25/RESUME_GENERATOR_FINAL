@@ -89,6 +89,29 @@
     document.documentElement.style.setProperty('--resume-font', fontValue);
     document.body.style.fontFamily = fontValue;
 
+    // Apply theme colors
+    if (payload.theme) {
+      const theme = payload.theme;
+      if (theme.primaryColor) {
+        document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
+      }
+      if (theme.backgroundColor) {
+        document.documentElement.style.setProperty('--background-color', theme.backgroundColor);
+      }
+      if (theme.textColor) {
+        document.documentElement.style.setProperty('--text-color', theme.textColor);
+      }
+      if (theme.textSecondary) {
+        document.documentElement.style.setProperty('--text-secondary', theme.textSecondary);
+      }
+      if (theme.borderColor) {
+        document.documentElement.style.setProperty('--border-color', theme.borderColor);
+      }
+      if (theme.sidebarBg) {
+        document.documentElement.style.setProperty('--sidebar-bg', theme.sidebarBg);
+      }
+    }
+
     // Profile image
     if (payload.profileImage) {
       const img = document.getElementById('profile-image');

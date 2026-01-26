@@ -110,6 +110,30 @@
     document.documentElement.style.setProperty('--resume-font', fontValue);
     document.body.style.fontFamily = fontValue;
 
+    // Apply theme colors
+    if (payload.theme) {
+      window.currentTheme = payload.theme; // Store for PDF generation
+      const theme = payload.theme;
+      if (theme.primaryColor) {
+        document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
+      }
+      if (theme.backgroundColor) {
+        document.documentElement.style.setProperty('--background-color', theme.backgroundColor);
+      }
+      if (theme.textColor) {
+        document.documentElement.style.setProperty('--text-color', theme.textColor);
+      }
+      if (theme.textSecondary) {
+        document.documentElement.style.setProperty('--text-secondary', theme.textSecondary);
+      }
+      if (theme.borderColor) {
+        document.documentElement.style.setProperty('--border-color', theme.borderColor);
+      }
+      if (theme.pillBg) {
+        document.documentElement.style.setProperty('--pill-bg', theme.pillBg);
+      }
+    }
+
     // Personal info
     if (payload.personalInfo) {
       const { fullName, title, email, phone, location, website, signature } = payload.personalInfo;
@@ -371,14 +395,29 @@
       updateContent(event.data);
     } else if (event.data === 'DOWNLOAD_PDF') {
       const resume = document.querySelector('.resume');
-      const opt = {
-        margin: 0,
-        filename: 'resume.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
-      html2pdf().set(opt).from(resume).save();
+      
+      // Apply background color with higher priority for PDF generation
+      if (window.currentTheme && window.currentTheme.backgroundColor) {
+        const bgColor = window.currentTheme.backgroundColor;
+        resume.style.backgroundColor = bgColor;
+        resume.style.setProperty('background-color', bgColor, 'important');
+        
+        // Also apply to body if needed
+        document.body.style.backgroundColor = bgColor;
+        document.body.style.setProperty('background-color', bgColor, 'important');
+      }
+      
+      // Small delay to ensure styles are applied before PDF generation
+      setTimeout(() => {
+        const opt = {
+          margin: 0,
+          filename: 'resume.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(resume).save();
+      }, 100);
     }
   });
 </script>

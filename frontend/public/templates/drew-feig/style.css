@@ -1,8 +1,16 @@
-body{background:#fff;margin:0;font-family:var(--resume-font, Calibri, Arial, sans-serif);word-wrap:break-word;overflow-wrap:break-word}
+:root {
+  --primary-color: #1aa6a6;
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --text-secondary: #666666;
+  --border-color: #cccccc;
+}
+
+body{background:var(--background-color);margin:0;font-family:var(--resume-font, Calibri, Arial, sans-serif);word-wrap:break-word;overflow-wrap:break-word;color:var(--text-color)}
 .template-root{font-family:var(--resume-font, Calibri, Arial, sans-serif);word-wrap:break-word;overflow-wrap:break-word}
 .resume{width:794px;min-height:1123px;margin:0 auto;padding:32px;box-sizing:border-box;word-wrap:break-word;overflow-wrap:break-word;word-break:break-word}
-header h1{color:#1aa6a6;letter-spacing:2px;margin:0;word-wrap:break-word;overflow-wrap:break-word}
+header h1{color:var(--primary-color);letter-spacing:2px;margin:0;word-wrap:break-word;overflow-wrap:break-word}
 header h2{text-align:right;margin:6px 0 12px;word-wrap:break-word;overflow-wrap:break-word}
-.contact{display:flex;justify-content:space-between;border-top:2px solid #1aa6a6;padding-top:10px;word-wrap:break-word;overflow-wrap:break-word;flex-wrap:wrap}
-section h3{color:#1aa6a6;border-bottom:2px solid #1aa6a6;margin-top:25px;word-wrap:break-word;overflow-wrap:break-word}
+.contact{display:flex;justify-content:space-between;border-top:2px solid var(--primary-color);padding-top:10px;word-wrap:break-word;overflow-wrap:break-word;flex-wrap:wrap}
+section h3{color:var(--primary-color);border-bottom:2px solid var(--primary-color);margin-top:25px;word-wrap:break-word;overflow-wrap:break-word}
 .two-col{display:flex;gap:40px;word-wrap:break-word;overflow-wrap:break-word}

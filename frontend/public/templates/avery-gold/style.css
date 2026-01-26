@@ -2,6 +2,11 @@
 
 :root {
   --gold: #9b7b2f;
+  --primary-color: #9b7b2f;
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --text-secondary: #666666;
+  --border-color: #cccccc;
 }
 
 * {
@@ -14,8 +19,8 @@ body {
   margin: 0;
   padding: 40px;
   font-family: var(--resume-font, 'Inter', sans-serif);
-  color: #333;
-  background: #fff;
+  color: var(--text-color);
+  background: var(--background-color);
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -24,6 +29,7 @@ body {
 .resume {
   max-width: 900px;
   margin: auto;
+  background: var(--background-color);
   word-wrap: break-word;
   overflow-wrap: break-word;
 }

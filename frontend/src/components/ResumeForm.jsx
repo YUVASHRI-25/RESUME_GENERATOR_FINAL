@@ -106,6 +106,110 @@ const ResumeForm = ({ data, updateData, template }) => {
                     <p className="text-xs text-gray-500 mt-2">Selected: <strong>{data.fontFamily || 'Inter'}</strong> - Changes apply instantly to form & preview</p>
                 </div>
 
+                {/* Theme Color Controls */}
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border-2 border-purple-200">
+                    <p className="text-sm font-semibold text-gray-700 mb-3">Theme Colors</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Primary Color (Headings)</label>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="color"
+                                    value={data.theme?.primaryColor || '#2563eb'}
+                                    onChange={(e) => updateData(prev => ({
+                                        ...prev,
+                                        theme: { ...prev.theme, primaryColor: e.target.value }
+                                    }))}
+                                    className="w-12 h-8 border border-gray-300 rounded cursor-pointer"
+                                />
+                                <input
+                                    type="text"
+                                    value={data.theme?.primaryColor || '#2563eb'}
+                                    onChange={(e) => updateData(prev => ({
+                                        ...prev,
+                                        theme: { ...prev.theme, primaryColor: e.target.value }
+                                    }))}
+                                    className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded"
+                                    placeholder="#2563eb"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Background Color</label>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="color"
+                                    value={data.theme?.backgroundColor || '#ffffff'}
+                                    onChange={(e) => updateData(prev => ({
+                                        ...prev,
+                                        theme: { ...prev.theme, backgroundColor: e.target.value }
+                                    }))}
+                                    className="w-12 h-8 border border-gray-300 rounded cursor-pointer"
+                                />
+                                <input
+                                    type="text"
+                                    value={data.theme?.backgroundColor || '#ffffff'}
+                                    onChange={(e) => updateData(prev => ({
+                                        ...prev,
+                                        theme: { ...prev.theme, backgroundColor: e.target.value }
+                                    }))}
+                                    className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded"
+                                    placeholder="#ffffff"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Text Color</label>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="color"
+                                    value={data.theme?.textColor || '#333333'}
+                                    onChange={(e) => updateData(prev => ({
+                                        ...prev,
+                                        theme: { ...prev.theme, textColor: e.target.value }
+                                    }))}
+                                    className="w-12 h-8 border border-gray-300 rounded cursor-pointer"
+                                />
+                                <input
+                                    type="text"
+                                    value={data.theme?.textColor || '#333333'}
+                                    onChange={(e) => updateData(prev => ({
+                                        ...prev,
+                                        theme: { ...prev.theme, textColor: e.target.value }
+                                    }))}
+                                    className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded"
+                                    placeholder="#333333"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Secondary Text Color</label>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="color"
+                                    value={data.theme?.textSecondary || '#666666'}
+                                    onChange={(e) => updateData(prev => ({
+                                        ...prev,
+                                        theme: { ...prev.theme, textSecondary: e.target.value }
+                                    }))}
+                                    className="w-12 h-8 border border-gray-300 rounded cursor-pointer"
+                                />
+                                <input
+                                    type="text"
+                                    value={data.theme?.textSecondary || '#666666'}
+                                    onChange={(e) => updateData(prev => ({
+                                        ...prev,
+                                        theme: { ...prev.theme, textSecondary: e.target.value }
+                                    }))}
+                                    className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded"
+                                    placeholder="#666666"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-3">Colors change instantly in preview. Use color picker or enter hex codes.</p>
+                </div>
+
                 <div className="bg-blue-50 p-4 rounded border border-blue-200 space-y-3">
                     {/* About Section */}
                     <div className="flex items-center justify-between">

@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Great+Vibes&display=swap');
 
+:root {
+  --primary-color: #2563eb;
+  --background-color: #ffffff;
+  --text-color: #555555;
+  --text-secondary: #666666;
+  --border-color: #999999;
+  --pill-bg: #eaeaea;
+}
+
 * {
   box-sizing: border-box;
   word-wrap: break-word;
@@ -10,8 +19,8 @@ body {
   margin: 0;
   padding: 40px;
   font-family: var(--resume-font, 'Montserrat'), 'Montserrat', sans-serif;
-  color: #555;
-  background: #fff;
+  color: var(--text-color);
+  background: var(--background-color);
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -20,6 +29,7 @@ body {
 .resume {
   max-width: 1000px;
   margin: auto;
+  background: var(--background-color);
   word-wrap: break-word;
   overflow-wrap: break-word;
   font-family: var(--resume-font, 'Montserrat'), 'Montserrat', sans-serif;
@@ -32,7 +42,7 @@ body {
 
 .line {
   height: 1px;
-  background: #999;
+  background: var(--border-color);
   margin: 15px 0;
 }
 
@@ -45,6 +55,7 @@ body {
   letter-spacing: 6px;
   font-size: 36px;
   margin: 0;
+  color: var(--primary-color);
   word-wrap: break-word;
   overflow-wrap: break-word;
   font-family: var(--resume-font, 'Montserrat'), 'Montserrat', sans-serif;
@@ -75,13 +86,13 @@ body {
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: 30px;
-  border-top: 1px solid #999;
-  border-bottom: 1px solid #999;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   padding: 20px 0;
 }
 
 aside {
-  border-right: 1px solid #999;
+  border-right: 1px solid var(--border-color);
   padding-right: 20px;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -95,13 +106,15 @@ section {
 
 .pill {
   display: inline-block;
-  background: #eaeaea;
+  background: var(--pill-bg);
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 13px;
   letter-spacing: 2px;
   margin-bottom: 10px;
   white-space: nowrap;
+  color: var(--primary-color);
+  font-weight: 600;
 }
 
 .icon-list {

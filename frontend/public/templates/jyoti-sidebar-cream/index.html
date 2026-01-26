@@ -97,6 +97,30 @@
     document.documentElement.style.setProperty('--resume-font', fontValue);
     document.body.style.fontFamily = fontValue;
 
+    // Apply theme colors
+    if (payload.theme) {
+      window.currentTheme = payload.theme; // Store for PDF generation
+      const theme = payload.theme;
+      if (theme.primaryColor) {
+        document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
+      }
+      if (theme.backgroundColor) {
+        document.documentElement.style.setProperty('--background-color', theme.backgroundColor);
+      }
+      if (theme.textColor) {
+        document.documentElement.style.setProperty('--text-color', theme.textColor);
+      }
+      if (theme.textSecondary) {
+        document.documentElement.style.setProperty('--text-secondary', theme.textSecondary);
+      }
+      if (theme.borderColor) {
+        document.documentElement.style.setProperty('--border-color', theme.borderColor);
+      }
+      if (theme.sidebarBg) {
+        document.documentElement.style.setProperty('--sidebar-bg', theme.sidebarBg);
+      }
+    }
+
     // Personal Info
     if (payload.personalInfo) {
       const { fullName, title, email, phone, location, website } = payload.personalInfo;
@@ -373,6 +397,15 @@
   window.addEventListener('message', (event) => {
     if (event.data === 'DOWNLOAD_PDF') {
       const resume = document.getElementById('resume');
+      
+      // Apply background color directly to sidebar for PDF generation
+      if (window.currentTheme && window.currentTheme.backgroundColor) {
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) {
+          sidebar.style.backgroundColor = window.currentTheme.backgroundColor;
+        }
+      }
+      
       const opt = {
         margin: 0,
         filename: 'resume.pdf',
