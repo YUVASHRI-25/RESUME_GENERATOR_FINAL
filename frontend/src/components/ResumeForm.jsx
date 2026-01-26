@@ -23,23 +23,42 @@ const ResumeForm = ({ data, updateData, template }) => {
         document.documentElement.style.setProperty('--resume-font', `'${fontName}', sans-serif`);
     };
 
+    const enhanceText = async (text, type, callback) => {
+        if (!text.trim()) {
+            alert('Please enter some text to enhance');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:5000/api/enhance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    text: text,
+                    type: type
+                }),
+            });
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                callback(data.enhancedText);
+            } else {
+                alert(data.error || 'Failed to enhance text');
+            }
+        } catch (err) {
+            alert('AI service unavailable. Please try again later.');
+            console.error('AI Enhancement Error:', err);
+        }
+    };
+
     const handleChange = (section, field, value) => {
         updateData(prev => ({
             ...prev,
             [section]: { ...prev[section], [field]: value }
         }));
-    };
-
-    const enhanceText = async (text, type, displaySetter) => {
-        try {
-            // Basic implementation to find the right field to update might be tricky with this generic signature
-            // Ideally we just return the value and let the caller set it.
-            const res = await axios.post('http://localhost:5000/api/enhance', { text, type });
-            displaySetter(res.data.enhancedText);
-        } catch (err) {
-            console.error(err);
-            alert('Failed to enhance text. Ensure backend is running.');
-        }
     };
 
     // Helper for arrays (Experiences, Education, etc.)
@@ -815,7 +834,15 @@ const ResumeForm = ({ data, updateData, template }) => {
                                 <Trash size={16} />
                             </button>
                             <input className="border p-2 rounded w-full" placeholder="Project Title" value={proj.title || ''} onChange={(e) => updateItem('projects', index, 'title', e.target.value)} />
-                            <textarea className="w-full border p-2 rounded h-16" placeholder="Project Description" value={proj.description || ''} onChange={(e) => updateItem('projects', index, 'description', e.target.value)} />
+                            <div className="relative">
+                                <textarea className="w-full border p-2 rounded h-16" placeholder="Project Description" value={proj.description || ''} onChange={(e) => updateItem('projects', index, 'description', e.target.value)} />
+                                <button
+                                    onClick={() => enhanceText(proj.description || '', 'project', (val) => updateItem('projects', index, 'description', val))}
+                                    className="absolute bottom-2 right-2 text-indigo-600 hover:text-indigo-800 text-xs flex items-center gap-1 bg-white px-2 py-1 rounded shadow"
+                                >
+                                    <Wand2 size={12} /> Enhance
+                                </button>
+                            </div>
                         </div>
                     ))
                 }
@@ -919,12 +946,20 @@ const ResumeForm = ({ data, updateData, template }) => {
                                 value={section.heading || ''}
                                 onChange={(e) => updateItem('customSections', index, 'heading', e.target.value)}
                             />
-                            <textarea
-                                className="w-full border p-2 rounded h-24"
-                                placeholder="Content (e.g. List of achievements...)"
-                                value={section.content || ''}
-                                onChange={(e) => updateItem('customSections', index, 'content', e.target.value)}
-                            />
+                            <div className="relative">
+                                <textarea
+                                    className="w-full border p-2 rounded h-24"
+                                    placeholder="Content (e.g. List of achievements...)"
+                                    value={section.content || ''}
+                                    onChange={(e) => updateItem('customSections', index, 'content', e.target.value)}
+                                />
+                                <button
+                                    onClick={() => enhanceText(section.content || '', 'custom', (val) => updateItem('customSections', index, 'content', val))}
+                                    className="absolute bottom-2 right-2 text-indigo-600 hover:text-indigo-800 text-xs flex items-center gap-1 bg-white px-2 py-1 rounded shadow"
+                                >
+                                    <Wand2 size={12} /> Enhance
+                                </button>
+                            </div>
                         </div>
                     ))
                 }

@@ -14,8 +14,10 @@
 <body>
   <div id="resume" class="resume template-root">
     <header>
-      <h1 id="name">Your Name</h1>
-      <h2 id="title">Your Title</h2>
+      <div class="header-top">
+        <h1 id="name">Your Name</h1>
+        <h2 id="title">Your Title</h2>
+      </div>
       <div class="contact" id="contact">
         <span id="email"></span>
         <span id="phone"></span>
@@ -181,28 +183,31 @@
         content.innerHTML = '';
         payload.education.forEach(edu => {
           const div = document.createElement('div');
-          div.style.marginBottom = '12px';
+          div.className = 'education-item';
           
-          const title = document.createElement('p');
-          title.style.fontWeight = 'bold';
-          title.style.margin = '0 0 4px 0';
+          const headerDiv = document.createElement('div');
+          headerDiv.className = 'item-header';
+          
+          const title = document.createElement('div');
+          title.className = 'item-title';
           title.textContent = `${edu.degree || ''} ${edu.field ? `in ${edu.field}` : ''}`.trim() || 'Education';
           
-          const school = document.createElement('p');
-          school.style.margin = '0 0 4px 0';
+          const date = document.createElement('div');
+          date.className = 'item-date';
+          date.textContent = `${edu.startDate || ''} ${edu.endDate ? `- ${edu.endDate}` : ''}`.trim();
+          
+          headerDiv.appendChild(title);
+          headerDiv.appendChild(date);
+          
+          const school = document.createElement('div');
+          school.className = 'item-subtitle';
           school.textContent = edu.school || '';
           
-          const dates = document.createElement('p');
-          dates.style.fontSize = '12px';
-          dates.style.margin = '0';
-          dates.textContent = `${edu.startDate || ''} ${edu.endDate ? `- ${edu.endDate}` : ''}`.trim();
-          
-          div.appendChild(title);
+          div.appendChild(headerDiv);
           if (school.textContent) div.appendChild(school);
-          if (dates.textContent) div.appendChild(dates);
           if (edu.description) {
-            const desc = document.createElement('p');
-            desc.style.margin = '4px 0 0 0';
+            const desc = document.createElement('div');
+            desc.className = 'item-description';
             desc.textContent = edu.description;
             div.appendChild(desc);
           }
@@ -224,36 +229,53 @@
         content.innerHTML = '';
         payload.experiences.forEach(exp => {
           const div = document.createElement('div');
-          div.style.marginBottom = '14px';
+          div.className = 'experience-item';
           
-          const title = document.createElement('p');
-          title.style.fontWeight = 'bold';
-          title.style.margin = '0 0 4px 0';
-          title.textContent = `${exp.position || ''} at ${exp.company || ''}`.trim() || 'Position';
+          const headerDiv = document.createElement('div');
+          headerDiv.className = 'item-header';
           
-          const dates = document.createElement('p');
-          dates.style.fontSize = '12px';
-          dates.style.margin = '0 0 6px 0';
-          dates.textContent = `${exp.startDate || ''} ${exp.endDate ? `- ${exp.endDate}` : exp.currentlyWorking ? '- Present' : ''}`.trim();
+          const title = document.createElement('div');
+          title.className = 'item-title';
           
-          div.appendChild(title);
-          if (dates.textContent) div.appendChild(dates);
+          // More flexible title formatting - remove hardcoded "at"
+          const position = exp.position || '';
+          const company = exp.company || '';
+          
+          if (position && company) {
+            title.textContent = `${position}, ${company}`;
+          } else if (position) {
+            title.textContent = position;
+          } else if (company) {
+            title.textContent = company;
+          } else {
+            title.textContent = 'Position';
+          }
+          
+          const date = document.createElement('div');
+          date.className = 'item-date';
+          date.textContent = `${exp.startDate || ''} ${exp.endDate ? `- ${exp.endDate}` : ''}`.trim();
+          
+          headerDiv.appendChild(title);
+          headerDiv.appendChild(date);
+          
+          div.appendChild(headerDiv);
           
           if (exp.description) {
-            const desc = document.createElement('p');
-            desc.style.margin = '0 0 4px 0';
+            const desc = document.createElement('div');
+            desc.className = 'item-description';
             desc.textContent = exp.description;
             div.appendChild(desc);
           }
           
-          if (Array.isArray(exp.bullets)) {
+          // Add bullets if they exist
+          if (exp.bullets && exp.bullets.length > 0) {
             const ul = document.createElement('ul');
-            ul.style.margin = '4px 0 0 0';
-            ul.style.paddingLeft = '20px';
             exp.bullets.forEach(bullet => {
-              const li = document.createElement('li');
-              li.textContent = bullet;
-              ul.appendChild(li);
+              if (bullet) {
+                const li = document.createElement('li');
+                li.textContent = bullet;
+                ul.appendChild(li);
+              }
             });
             div.appendChild(ul);
           }
@@ -374,7 +396,20 @@
           
           const info = document.createElement('p');
           info.style.margin = '0';
-          info.textContent = `${ref.title || ''} ${ref.company ? `at ${ref.company}` : ''}`.trim();
+          
+          // More flexible reference info formatting - remove hardcoded "at"
+          const title = ref.title || '';
+          const company = ref.company || '';
+          
+          if (title && company) {
+            info.textContent = `${title}, ${company}`;
+          } else if (title) {
+            info.textContent = title;
+          } else if (company) {
+            info.textContent = company;
+          } else {
+            info.textContent = '';
+          }
           
           const contact = document.createElement('p');
           contact.style.fontSize = '12px';

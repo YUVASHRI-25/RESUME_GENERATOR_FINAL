@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { templates } from '../templates/templateRegistry';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { templates, applyTemplateTheme } from '../templates/templateRegistry';
+import { Sparkles, ArrowRight, FileText, Palette, Layout } from 'lucide-react';
 
 const TemplateSelectionPage = () => {
     const navigate = useNavigate();
@@ -20,197 +20,230 @@ const TemplateSelectionPage = () => {
 
     const selectTemplate = (id) => {
         setSelectedId(id);
+        // Save current resume data before navigating
+        const currentData = localStorage.getItem('resumeData');
+        let dataToSave;
+        
+        if (currentData) {
+            try {
+                const parsedData = JSON.parse(currentData);
+                // Apply new template theme to existing data
+                dataToSave = applyTemplateTheme(id, parsedData);
+            } catch (error) {
+                console.error('Error parsing saved resume data:', error);
+                dataToSave = null;
+            }
+        }
+        
+        if (!dataToSave) {
+            // If no existing data or error, create empty structure with template theme
+            const defaultData = {
+                profileImage: null,
+                personalInfo: { 
+                    fullName: '', 
+                    email: '', 
+                    phone: '', 
+                    location: '', 
+                    website: '', 
+                    title: '', 
+                    links: [] 
+                },
+                about: {
+                    heading: 'About Me',
+                    content: '',
+                    visible: true,
+                    column: 'right'
+                },
+                experiences: [
+                    {
+                        id: 'exp-1',
+                        company: '',
+                        position: '',
+                        startDate: '',
+                        endDate: '',
+                        currentlyWorking: false,
+                        description: '',
+                        bullets: []
+                    }
+                ],
+                education: [
+                    {
+                        id: 'edu-1',
+                        school: '',
+                        degree: '',
+                        field: '',
+                        startDate: '',
+                        endDate: '',
+                        description: ''
+                    }
+                ],
+                skills: [
+                    { id: 'skill-1', name: '' }
+                ],
+                languages: [
+                    { id: 'lang-1', name: '', level: 'Fluent' }
+                ],
+                awards: [
+                    { id: 'award-1', title: '', issuer: '', date: '', description: '' }
+                ],
+                projects: [
+                    { id: 'proj-1', title: '', description: '', url: '', startDate: '', endDate: '' }
+                ],
+                references: [
+                    { id: 'ref-1', name: '', title: '', company: '', email: '', phone: '' }
+                ],
+                customSections: [],
+                sectionSettings: {
+                    about: { heading: 'About Me', visible: true, column: 'right' },
+                    education: { heading: 'Education', visible: true, column: 'right' },
+                    skills: { heading: 'Skills', visible: true, column: 'left' },
+                    experience: { heading: 'Work Experience', visible: true, column: 'right' },
+                    projects: { heading: 'Projects', visible: true, column: 'right' },
+                    languages: { heading: 'Languages', visible: true, column: 'left' },
+                    awards: { heading: 'Awards', visible: true, column: 'left' },
+                    references: { heading: 'References', visible: true, column: 'right' }
+                }
+            };
+            dataToSave = applyTemplateTheme(id, defaultData);
+        }
+        
+        localStorage.setItem('resumeData', JSON.stringify(dataToSave));
+        
         setTimeout(() => {
-            navigate(`/editor?template=${id}`);
+            navigate(`/editor?template=${id}`, { state: { preserveData: true } });
         }, 300);
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 relative overflow-hidden">
-            {/* Animated background elements */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-                <div className="absolute top-0 right-1/4 w-96 h-96 bg-cyan-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-                <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+            {/* Header */}
+            <div className="bg-white border-b border-slate-200">
+                <div className="max-w-7xl mx-auto px-6 py-6">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-xl flex items-center justify-center">
+                                <FileText className="w-5 h-5 text-white" />
+                            </div>
+                            <h1 className="text-2xl font-bold text-slate-900">Choose Your Template</h1>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-slate-600">
+                            <Sparkles className="w-4 h-4" />
+                            <span>12 Professional Templates</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {/* Content */}
-            <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-8">
-                {/* Header */}
-                <div className="text-center mb-20">
-                    <div className="flex items-center justify-center gap-3 mb-6">
-                        <Sparkles className="w-8 h-8 text-cyan-600" />
-                        <h1 className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
-                            Resume Templates
-                        </h1>
-                        <Sparkles className="w-8 h-8 text-blue-600" />
-                    </div>
-                    <p className="text-xl text-slate-700 max-w-2xl mx-auto">
-                        Choose a professional template to create your stunning resume
-                    </p>
-                </div>
-
-                {/* Tabs */}
-                <div className="mb-12 max-w-7xl w-full">
-                    <div className="flex gap-4 border-b border-cyan-200/50">
-                        <button
-                            onClick={() => setActiveTab('one-column')}
-                            className={`px-6 py-3 font-semibold text-lg transition-all duration-300 relative ${
-                                activeTab === 'one-column'
-                                    ? 'text-cyan-600'
-                                    : 'text-slate-600 hover:text-slate-800'
-                            }`}
-                        >
-                            One Column Templates
-                            {activeTab === 'one-column' && (
-                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-t"></div>
-                            )}
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('two-column')}
-                            className={`px-6 py-3 font-semibold text-lg transition-all duration-300 relative ${
-                                activeTab === 'two-column'
-                                    ? 'text-cyan-600'
-                                    : 'text-slate-600 hover:text-slate-800'
-                            }`}
-                        >
-                            Two Column Templates
-                            {activeTab === 'two-column' && (
-                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-t"></div>
-                            )}
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('image-two-column')}
-                            className={`px-6 py-3 font-semibold text-lg transition-all duration-300 relative ${
-                                activeTab === 'image-two-column'
-                                    ? 'text-cyan-600'
-                                    : 'text-slate-600 hover:text-slate-800'
-                            }`}
-                        >
-                            Image Two Column Templates
-                            {activeTab === 'image-two-column' && (
-                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-t"></div>
-                            )}
-                        </button>
-                    </div>
+            <div className="max-w-7xl mx-auto px-6 py-8">
+                {/* Category Tabs */}
+                <div className="flex gap-2 mb-8 bg-white p-1 rounded-xl shadow-sm border border-slate-200 w-fit">
+                    <button
+                        onClick={() => setActiveTab('one-column')}
+                        className={`px-6 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
+                            activeTab === 'one-column'
+                                ? 'bg-blue-600 text-white shadow-sm'
+                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                        }`}
+                    >
+                        <Layout className="w-4 h-4" />
+                        One Column
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('two-column')}
+                        className={`px-6 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
+                            activeTab === 'two-column'
+                                ? 'bg-blue-600 text-white shadow-sm'
+                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                        }`}
+                    >
+                        <Layout className="w-4 h-4" />
+                        Two Column
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('image-two-column')}
+                        className={`px-6 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
+                            activeTab === 'image-two-column'
+                                ? 'bg-blue-600 text-white shadow-sm'
+                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                        }`}
+                    >
+                        <Palette className="w-4 h-4" />
+                        Image Layouts
+                    </button>
                 </div>
 
                 {/* Templates Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl w-full">
-                    {displayTemplates.map((t, index) => (
-                        <button
-                            key={t.id}
-                            type="button"
-                            onClick={() => selectTemplate(t.id)}
-                            onMouseEnter={() => setHoveredId(t.id)}
-                            onMouseLeave={() => setHoveredId(null)}
-                            className={`group relative h-full transform transition-all duration-500 ${
-                                selectedId === t.id ? 'scale-95 opacity-50' : ''
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {displayTemplates.map((template, index) => (
+                        <div
+                            key={template.id}
+                            className={`group relative bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-blue-300 cursor-pointer ${
+                                selectedId === template.id ? 'ring-2 ring-blue-500 shadow-lg' : ''
                             }`}
-                            style={{
-                                perspective: '1000px',
-                            }}
+                            onClick={() => selectTemplate(template.id)}
+                            onMouseEnter={() => setHoveredId(template.id)}
+                            onMouseLeave={() => setHoveredId(null)}
                         >
-                            {/* Card Container */}
-                            <div
-                                className={`relative bg-white/60 backdrop-blur-xl rounded-2xl p-6 border border-cyan-200/50 h-full transition-all duration-500 ${
-                                    hoveredId === t.id
-                                        ? 'border-cyan-400/80 shadow-2xl shadow-cyan-400/30 scale-105'
-                                        : 'hover:border-cyan-300/60'
-                                }`}
-                                style={{
-                                    transform:
-                                        hoveredId === t.id
-                                            ? 'rotateY(-5deg) rotateX(5deg)'
-                                            : 'rotateY(0deg) rotateX(0deg)',
-                                    transformStyle: 'preserve-3d',
-                                }}
-                            >
-                                {/* Shine effect */}
-                                <div
-                                    className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}
-                                    style={{
-                                        background:
-                                            'linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, transparent 50%)',
-                                    }}
-                                ></div>
-
-                                {/* Preview Image Container */}
-                                <div className="relative h-80 mb-6 overflow-hidden rounded-xl bg-gradient-to-br from-blue-100/50 to-cyan-100/50 border border-cyan-200/30 flex items-center justify-center group/image">
-                                    {t.preview ? (
-                                        <img
-                                            src={t.preview}
-                                            alt={`${t.name} preview`}
-                                            className={`h-full w-full object-cover transition-all duration-500 ${
-                                                hoveredId === t.id
-                                                    ? 'scale-110 brightness-110'
-                                                    : 'group-hover/image:scale-105'
-                                            }`}
-                                        />
-                                    ) : (
-                                        <span className="text-gray-400">Preview of {t.name}</span>
-                                    )}
-
-                                    {/* Overlay gradient on hover */}
-                                    <div
-                                        className={`absolute inset-0 bg-gradient-to-t from-cyan-600/20 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300`}
-                                    ></div>
-                                </div>
-
-                                {/* Template Name */}
-                                <h3 className="text-2xl font-bold text-slate-800 mb-4 text-center relative z-10">
-                                    {t.name}
-                                </h3>
-
-                                {/* CTA Button */}
-                                <div
-                                    className={`flex items-center justify-center gap-2 text-sm font-semibold text-cyan-600 group-hover:text-cyan-700 transition-colors duration-300 relative z-10 ${
-                                        hoveredId === t.id ? 'opacity-100' : 'opacity-75'
-                                    }`}
-                                >
-                                    <span>Use Template</span>
-                                    <ArrowRight
-                                        className={`w-4 h-4 transition-transform duration-300 ${
-                                            hoveredId === t.id ? 'translate-x-1' : ''
+                            {/* Preview */}
+                            <div className="aspect-[3/4] bg-gradient-to-br from-slate-100 to-slate-200 relative overflow-hidden">
+                                {template.preview ? (
+                                    <img
+                                        src={template.preview}
+                                        alt={`${template.name} preview`}
+                                        className={`w-full h-full object-cover transition-transform duration-300 ${
+                                            hoveredId === template.id ? 'scale-105' : ''
                                         }`}
                                     />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                        <div className="text-center">
+                                            <FileText className="w-12 h-12 text-slate-400 mx-auto mb-2" />
+                                            <p className="text-slate-500 text-sm">{template.name}</p>
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                {/* Hover Overlay */}
+                                <div className={`absolute inset-0 bg-gradient-to-t from-black/60 to-transparent transition-opacity duration-300 ${
+                                    hoveredId === template.id ? 'opacity-100' : 'opacity-0'
+                                }`}>
+                                    <div className="absolute bottom-4 left-4 right-4">
+                                        <div className="flex items-center justify-center gap-2 text-white">
+                                            <span className="text-sm font-medium">Use Template</span>
+                                            <ArrowRight className="w-4 h-4" />
+                                        </div>
+                                    </div>
                                 </div>
 
-                                {/* Badge */}
+                                {/* Popular Badge */}
                                 {index === 0 && (
-                                    <div className="absolute top-4 right-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                                        POPULAR
+                                    <div className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                        Popular
                                     </div>
                                 )}
                             </div>
-                        </button>
+
+                            {/* Template Info */}
+                            <div className="p-4">
+                                <h3 className="font-semibold text-slate-900 mb-1">{template.name}</h3>
+                                <p className="text-sm text-slate-600 line-clamp-2">{template.description}</p>
+                            </div>
+                        </div>
                     ))}
                 </div>
-            </div>
 
-            {/* Animated dots decoration */}
-            <style>{`
-                @keyframes blob {
-                    0%, 100% {
-                        transform: translate(0, 0) scale(1);
-                    }
-                    33% {
-                        transform: translate(30px, -50px) scale(1.1);
-                    }
-                    66% {
-                        transform: translate(-20px, 20px) scale(0.9);
-                    }
-                }
-                .animate-blob {
-                    animation: blob 7s infinite;
-                }
-                .animation-delay-2000 {
-                    animation-delay: 2s;
-                }
-                .animation-delay-4000 {
-                    animation-delay: 4s;
-                }
-            `}</style>
+                {/* Empty State */}
+                {displayTemplates.length === 0 && (
+                    <div className="text-center py-12">
+                        <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <FileText className="w-8 h-8 text-slate-400" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-slate-900 mb-2">No templates found</h3>
+                        <p className="text-slate-600">Try selecting a different category</p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
