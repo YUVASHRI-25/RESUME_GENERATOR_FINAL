@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jyoti Sidebar Resume</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Montserrat:wght@300;400;600;700&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
@@ -39,11 +43,6 @@
         <h3 id="awards-heading">{{section.awards.heading}}</h3>
         <ul id="awards-list"></ul>
       </section>
-
-      <section id="custom-section">
-        <h3 id="custom-heading">{{section.custom.heading}}</h3>
-        <div id="custom-list"></div>
-      </section>
     </div>
 
   </aside>
@@ -62,6 +61,11 @@
         <div id="education-list"></div>
       </section>
 
+      <section id="projects-section">
+        <h3 id="projects-heading">{{section.projects.heading}}</h3>
+        <div id="projects-list"></div>
+      </section>
+
       <section id="experience-section">
         <h3 id="experience-heading">{{section.experience.heading}}</h3>
         <div id="experience-list"></div>
@@ -72,6 +76,9 @@
         <div id="references-list"></div>
       </section>
     </div>
+
+    <!-- CUSTOM SECTIONS -->
+    <div id="custom-section"></div>
 
   </main>
 
@@ -129,6 +136,45 @@
           desc.textContent = edu.description;
           div.appendChild(desc);
         }
+        list.appendChild(div);
+      });
+    }
+
+    // Projects section
+    const projSection = document.getElementById('projects-section');
+    const projHeading = document.getElementById('projects-heading');
+    if (projHeading && settings.projects?.heading) projHeading.textContent = settings.projects.heading;
+    if (projSection) projSection.style.display = settings.projects?.visible !== false ? 'block' : 'none';
+    if (Array.isArray(payload.projects)) {
+      const list = document.getElementById('projects-list');
+      list.innerHTML = '';
+      payload.projects.forEach(proj => {
+        const div = document.createElement('div');
+        div.style.marginBottom = '12px';
+        
+        const title = document.createElement('p');
+        title.style.fontWeight = 'bold';
+        title.style.margin = '0 0 4px';
+        title.textContent = proj.title || proj.name || '';
+        
+        const description = document.createElement('p');
+        description.style.margin = '0 0 4px';
+        description.textContent = proj.description || '';
+        
+        div.appendChild(title);
+        if (description.textContent) div.appendChild(description);
+        
+        if (Array.isArray(proj.bullets)) {
+          const ul = document.createElement('ul');
+          ul.style.margin = '4px 0 0 0';
+          proj.bullets.forEach(bullet => {
+            const li = document.createElement('li');
+            li.textContent = bullet;
+            ul.appendChild(li);
+          });
+          div.appendChild(ul);
+        }
+        
         list.appendChild(div);
       });
     }
@@ -256,33 +302,30 @@
       });
     }
 
-    // Custom sections
-    const customSection = document.getElementById('custom-section');
-    const customHeading = document.getElementById('custom-heading');
-    if (customHeading && settings.custom?.heading) customHeading.textContent = settings.custom.heading;
-    if (customSection) customSection.parentElement.style.display = settings.custom?.visible !== false ? 'block' : 'none';
-    const customList = document.getElementById('custom-list');
-    if (customList) {
-      customList.innerHTML = '';
-      if (Array.isArray(payload.customSections)) {
-        payload.customSections.forEach(sec => {
-          const block = document.createElement('div');
-          block.className = 'custom-block';
-
-          const title = document.createElement('p');
-          title.style.fontWeight = 'bold';
-          title.style.margin = '0 0 4px';
-          title.textContent = sec.heading || 'Custom Section';
-
-          const body = document.createElement('p');
-          body.style.margin = '0 0 10px';
-          body.textContent = sec.content || '';
-
-          if (title.textContent) block.appendChild(title);
-          if (body.textContent) block.appendChild(body);
-          customList.appendChild(block);
-        });
-      }
+    // Custom Sections
+    const customContainer = document.getElementById('custom-section');
+    customContainer.innerHTML = '';
+    if (Array.isArray(payload.customSections)) {
+      payload.customSections.forEach(section => {
+        const wrapper = document.createElement('section');
+        wrapper.style.marginTop = '16px';
+        
+        const heading = document.createElement('h3');
+        heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
+        heading.style.margin = '0 0 10px 0';
+        
+        const content = document.createElement('div');
+        content.textContent = section.content || '';
+        
+        wrapper.appendChild(heading);
+        wrapper.appendChild(content);
+        customContainer.appendChild(wrapper);
+      });
+    }
+    
+    // Custom Sections visibility
+    if (customContainer) {
+      customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
     }
 
     // Column placement (move sections between left/right)
@@ -302,9 +345,28 @@
       moveSection('awards-section', settings.awards?.column === 'left');
       moveSection('about-section', settings.about?.column === 'left');
       moveSection('education-section', settings.education?.column === 'left');
+      moveSection('projects-section', settings.projects?.column === 'left');
       moveSection('experience-section', settings.experience?.column === 'left');
       moveSection('references-section', settings.references?.column === 'left');
-      moveSection('custom-section', settings.custom?.column === 'left');
+      
+      // Ensure Projects section always comes immediately after Education section
+      const educationSection = document.getElementById('education-section');
+      const projectsSection = document.getElementById('projects-section');
+      if (educationSection && projectsSection) {
+        const educationParent = educationSection.parentElement;
+        if (educationParent) {
+          educationParent.insertBefore(projectsSection, educationSection.nextSibling);
+        }
+      }
+      
+      // Position custom sections as the last section in the appropriate column
+      const customContainer = document.getElementById('custom-section');
+      if (customContainer) {
+        const targetColumn = settings.custom?.column === 'left' ? sidebar : content;
+        if (targetColumn) {
+          targetColumn.appendChild(customContainer);
+        }
+      }
     }
   }
 

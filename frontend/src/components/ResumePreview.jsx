@@ -29,7 +29,7 @@ const ResumePreview = forwardRef(({ data, template }, downloadRef) => {
                     },
                     about: data?.about || { heading: 'About Me', content: '', visible: true },
                     education: data?.education || [],
-                    skills: data?.skills || [],
+                    skills: (data?.skills || []).map(skill => skill.name ? { name: skill.name } : skill),
                     languages: data?.languages || [],
                     awards: data?.awards || [],
                     experiences: data?.experiences || [],
@@ -168,7 +168,7 @@ const ResumePreview = forwardRef(({ data, template }, downloadRef) => {
                     <h2 className="text-lg font-bold border-b border-gray-400 mb-2 uppercase tracking-wide">Skills</h2>
                     <div className="text-sm flex flex-wrap gap-2">
                         {data.skills.map((skill, i) => (
-                            <span key={i} className="bg-gray-200 px-2 py-1 rounded text-xs text-gray-700">{skill}</span>
+                            <span key={i} className="bg-gray-200 px-2 py-1 rounded text-xs text-gray-700">{skill.name || skill}</span>
                         ))}
                     </div>
                 </div>
@@ -206,7 +206,7 @@ const ResumePreview = forwardRef(({ data, template }, downloadRef) => {
                         <h2 className="text-lg font-bold border-b border-slate-600 pb-1 mb-3 uppercase tracking-wider">Skills</h2>
                         <div className="flex flex-wrap gap-2">
                             {data.skills.map((skill, i) => (
-                                <span key={i} className="bg-slate-700 px-2 py-1 rounded text-xs">{skill}</span>
+                                <span key={i} className="bg-slate-700 px-2 py-1 rounded text-xs">{skill.name || skill}</span>
                             ))}
                         </div>
                     </div>

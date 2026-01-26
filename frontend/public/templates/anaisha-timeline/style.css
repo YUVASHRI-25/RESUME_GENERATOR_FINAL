@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: "Inter", sans-serif;
+  font-family: var(--resume-font, "Inter", sans-serif);
   word-wrap: break-word;
   overflow-wrap: break-word;
 }

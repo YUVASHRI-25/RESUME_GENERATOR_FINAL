@@ -3,6 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Montserrat:wght@300;400;600;700&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <title>Drew Feig</title>
@@ -375,7 +379,7 @@
           wrapper.style.marginTop = '16px';
           
           const heading = document.createElement('h3');
-          heading.textContent = section.heading || 'Custom Section';
+          heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
           heading.style.margin = '0 0 10px 0';
           
           const content = document.createElement('div');
@@ -385,6 +389,11 @@
           wrapper.appendChild(content);
           customContainer.appendChild(wrapper);
         });
+      }
+      
+      // Custom Sections visibility
+      if (customContainer) {
+        customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
       }
     }
 

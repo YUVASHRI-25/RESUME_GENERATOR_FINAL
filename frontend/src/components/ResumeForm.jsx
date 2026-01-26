@@ -677,7 +677,7 @@ const ResumeForm = ({ data, updateData, template }) => {
             <section className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
                     <h2 className="text-xl font-semibold text-indigo-700">Skills</h2>
-                    <button onClick={() => addItem('skills', { id: Date.now(), name: '', level: '' })} className="text-indigo-600 hover:text-indigo-800">
+                    <button onClick={() => addItem('skills', { id: Date.now(), name: '' })} className="text-indigo-600 hover:text-indigo-800">
                         <Plus size={20} />
                     </button>
                 </div>
@@ -689,12 +689,6 @@ const ResumeForm = ({ data, updateData, template }) => {
                                 placeholder="Skill name"
                                 value={skill.name || skill}
                                 onChange={(e) => updateItem('skills', index, 'name', e.target.value)}
-                            />
-                            <input
-                                className="w-24 border p-2 rounded focus:ring-2 focus:ring-indigo-300 outline-none"
-                                placeholder="Level"
-                                value={skill.level || ''}
-                                onChange={(e) => updateItem('skills', index, 'level', e.target.value)}
                             />
                             <button onClick={() => removeItem('skills', index)} className="text-red-500"><Trash size={14} /></button>
                         </div>

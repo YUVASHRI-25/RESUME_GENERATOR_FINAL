@@ -3,6 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Montserrat:wght@300;400;600;700&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <title>Lorna Modern</title>
@@ -17,6 +21,7 @@
       <span id="phone">+123-456-7890</span>
       <span id="email">hello@reallygreatsite.com</span>
       <span id="location">Any City</span>
+      <span id="website">www.reallygreatsite.com</span>
     </div>
 
     <div class="columns">
@@ -48,10 +53,16 @@
           <h3 id="projects-heading">Projects</h3>
           <div id="projects-section"></div>
         </section>
-        <section id="custom-container">
-          <h3 id="custom-heading">{{section.custom.heading}}</h3>
-          <div id="custom-section"></div>
+        <section>
+          <h3 id="awards-heading">Awards</h3>
+          <div id="awards-list"></div>
         </section>
+        <section>
+          <h3 id="references-heading">References</h3>
+          <div id="references-list"></div>
+        </section>
+        <!-- CUSTOM SECTIONS -->
+        <div id="custom-section"></div>
       </main>
     </div>
   </div>
@@ -77,6 +88,7 @@
         if (email) document.getElementById('email').textContent = email;
         if (phone) document.getElementById('phone').textContent = phone;
         if (location) document.getElementById('location').textContent = location;
+        if (website) document.getElementById('website').textContent = website;
       }
 
       // About Section
@@ -258,36 +270,118 @@
         });
       }
 
-      // Custom Sections
-      const customContainer = document.getElementById('custom-section').parentElement;
-      if (customContainer) {
-        customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
+      // Awards Section
+      const awardsHeading = document.getElementById('awards-heading');
+      const awardsSection = document.getElementById('awards-list');
+      if (awardsHeading && settings.awards?.heading) {
+        awardsHeading.textContent = settings.awards.heading;
       }
-      const customHeading = document.getElementById('custom-heading');
-      if (customHeading && settings.custom?.heading) {
-        customHeading.textContent = settings.custom.heading;
+      if (awardsSection) {
+        awardsSection.parentElement.style.display = settings.awards?.visible !== false ? 'block' : 'none';
       }
-      const customContent = document.getElementById('custom-section');
-      customContent.innerHTML = '';
-      if (Array.isArray(payload.customSections)) {
-        payload.customSections.forEach(section => {
-          const wrapper = document.createElement('div');
-          wrapper.style.marginBottom = '12px';
+      if (Array.isArray(payload.awards)) {
+        const awardsList = document.getElementById('awards-list');
+        awardsList.innerHTML = '';
+        payload.awards.forEach(award => {
+          const div = document.createElement('div');
+          div.style.marginBottom = '12px';
           
-          const heading = document.createElement('p');
-          heading.style.fontWeight = 'bold';
-          heading.style.margin = '0 0 4px';
-          heading.textContent = section.heading || 'Custom Section';
+          const title = document.createElement('p');
+          title.style.fontWeight = 'bold';
+          title.style.margin = '0 0 4px';
+          title.textContent = award.title || award.name || '';
           
-          const content = document.createElement('p');
-          content.style.margin = '0';
-          content.textContent = section.content || '';
+          const issuer = document.createElement('p');
+          issuer.style.margin = '0 0 2px';
+          issuer.style.fontSize = '0.9em';
+          issuer.textContent = award.issuer || award.organization || '';
           
-          wrapper.appendChild(heading);
-          if (content.textContent) wrapper.appendChild(content);
-          customContent.appendChild(wrapper);
+          const date = document.createElement('p');
+          date.style.margin = '0';
+          date.style.fontSize = '0.85em';
+          date.style.color = '#666';
+          date.textContent = award.date || award.year || '';
+          
+          if (title.textContent) div.appendChild(title);
+          if (issuer.textContent) div.appendChild(issuer);
+          if (date.textContent) div.appendChild(date);
+          awardsList.appendChild(div);
         });
       }
+
+      // References Section
+      const refHeading = document.getElementById('references-heading');
+      const refSection = document.getElementById('references-list');
+      if (refHeading && settings.references?.heading) {
+        refHeading.textContent = settings.references.heading;
+      }
+      if (refSection) {
+        refSection.parentElement.style.display = settings.references?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.references)) {
+        const refList = document.getElementById('references-list');
+        refList.innerHTML = '';
+        payload.references.forEach(ref => {
+          const div = document.createElement('div');
+          div.style.marginBottom = '12px';
+          
+          const name = document.createElement('p');
+          name.style.fontWeight = 'bold';
+          name.style.margin = '0 0 4px';
+          name.textContent = ref.name || '';
+          
+          const title = document.createElement('p');
+          title.style.margin = '0 0 2px';
+          title.style.fontSize = '0.9em';
+          title.textContent = ref.title || '';
+          
+          const company = document.createElement('p');
+          company.style.margin = '0 0 2px';
+          company.style.fontSize = '0.9em';
+          company.textContent = ref.company || '';
+          
+          const contact = document.createElement('p');
+          contact.style.margin = '0';
+          contact.style.fontSize = '0.85em';
+          contact.style.color = '#666';
+          const contactItems = [];
+          if (ref.email) contactItems.push(ref.email);
+          if (ref.phone) contactItems.push(ref.phone);
+          contact.textContent = contactItems.join(' • ');
+          
+          if (name.textContent) div.appendChild(name);
+          if (title.textContent) div.appendChild(title);
+          if (company.textContent) div.appendChild(company);
+          if (contact.textContent) div.appendChild(contact);
+          refList.appendChild(div);
+        });
+      }
+
+      // Custom Sections
+    const customContainer = document.getElementById('custom-section');
+    customContainer.innerHTML = '';
+    if (Array.isArray(payload.customSections)) {
+      payload.customSections.forEach(section => {
+        const wrapper = document.createElement('section');
+        wrapper.style.marginTop = '16px';
+        
+        const heading = document.createElement('h3');
+        heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
+        heading.style.margin = '0 0 10px 0';
+        
+        const content = document.createElement('div');
+        content.textContent = section.content || '';
+        
+        wrapper.appendChild(heading);
+        wrapper.appendChild(content);
+        customContainer.appendChild(wrapper);
+      });
+    }
+    
+    // Custom Sections visibility
+    if (customContainer) {
+      customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
+    }
     }
 
     window.addEventListener("message", (event) => {

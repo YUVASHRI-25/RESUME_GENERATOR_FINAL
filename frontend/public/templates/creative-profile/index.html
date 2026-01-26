@@ -55,6 +55,16 @@
         </div>
     </div>
 
+    <!-- SKILLS -->
+    <div class="section" id="skills-container">
+        <div class="section-title" id="skills-heading" contenteditable="true">SKILLS</div>
+        <ul class="skills" id="skills-list">
+            <li>Skill One</li>
+            <li>Skill Two</li>
+            <li>Skill Three</li>
+        </ul>
+    </div>
+
     <!-- EXPERIENCE -->
     <div class="section" id="experience-container">
         <div class="section-title" id="experience-heading" contenteditable="true">WORK EXPERIENCE</div>
@@ -69,21 +79,54 @@
         </div>
     </div>
 
-    <!-- SKILLS -->
-    <div class="section" id="skills-container">
-        <div class="section-title" id="skills-heading" contenteditable="true">SKILLS</div>
-        <ul class="skills" id="skills-list">
-            <li>Skill One</li>
-            <li>Skill Two</li>
-            <li>Skill Three</li>
+    <!-- PROJECTS -->
+    <div class="section" id="projects-container">
+        <div class="section-title" id="projects-heading" contenteditable="true">PROJECTS</div>
+        <div id="projects-list">
+            <div class="row">
+                <div class="date">2020</div>
+                <div class="content">
+                    <h4>Project Name</h4>
+                    <p>Details about your project.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LANGUAGES -->
+    <div class="section" id="languages-container">
+        <div class="section-title" id="languages-heading" contenteditable="true">LANGUAGES</div>
+        <ul class="languages" id="languages-list">
+            <li>Language One</li>
+            <li>Language Two</li>
         </ul>
     </div>
 
-    <!-- CUSTOM SECTIONS -->
-    <div class="section" id="custom-container">
-        <div class="section-title" id="custom-heading" contenteditable="true">Custom Section</div>
-        <div id="custom-section"></div>
+    <!-- AWARDS -->
+    <div class="section" id="awards-container">
+        <div class="section-title" id="awards-heading" contenteditable="true">AWARDS</div>
+        <ul class="awards" id="awards-list">
+            <li>Award One</li>
+            <li>Award Two</li>
+        </ul>
     </div>
+
+    <!-- REFERENCES -->
+    <div class="section" id="references-container">
+        <div class="section-title" id="references-heading" contenteditable="true">REFERENCES</div>
+        <div id="references-list">
+            <div class="row">
+                <div class="content">
+                    <h4>Reference Name</h4>
+                    <p>Title, Company</p>
+                    <p>Email: reference@example.com | Phone: 123-456-7890</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM SECTIONS -->
+    <div id="custom-section"></div>
 
 </div>
 
@@ -161,6 +204,42 @@
         }
         if (skillsContainer) {
             skillsContainer.style.display = settings.skills?.visible !== false ? "block" : "none";
+        }
+
+        const languagesHeading = document.getElementById("languages-heading");
+        const languagesContainer = document.getElementById("languages-container");
+        if (languagesHeading && settings.languages?.heading) {
+            languagesHeading.textContent = settings.languages.heading;
+        }
+        if (languagesContainer) {
+            languagesContainer.style.display = settings.languages?.visible !== false ? "block" : "none";
+        }
+
+        const awardsHeading = document.getElementById("awards-heading");
+        const awardsContainer = document.getElementById("awards-container");
+        if (awardsHeading && settings.awards?.heading) {
+            awardsHeading.textContent = settings.awards.heading;
+        }
+        if (awardsContainer) {
+            awardsContainer.style.display = settings.awards?.visible !== false ? "block" : "none";
+        }
+
+        const projectsHeading = document.getElementById("projects-heading");
+        const projectsContainer = document.getElementById("projects-container");
+        if (projectsHeading && settings.projects?.heading) {
+            projectsHeading.textContent = settings.projects.heading;
+        }
+        if (projectsContainer) {
+            projectsContainer.style.display = settings.projects?.visible !== false ? "block" : "none";
+        }
+
+        const referencesHeading = document.getElementById("references-heading");
+        const referencesContainer = document.getElementById("references-container");
+        if (referencesHeading && settings.references?.heading) {
+            referencesHeading.textContent = settings.references.heading;
+        }
+        if (referencesContainer) {
+            referencesContainer.style.display = settings.references?.visible !== false ? "block" : "none";
         }
 
         // Update about/summary
@@ -262,49 +341,169 @@
             });
         }
 
-        // Update custom sections
-        const customHeading = document.getElementById("custom-heading");
-        const customContainer = document.getElementById("custom-container");
-        if (customHeading && settings.custom?.heading) {
-            customHeading.textContent = settings.custom.heading;
-        }
-        if (customContainer) {
-            customContainer.style.display = settings.custom?.visible !== false ? "block" : "none";
+        // Update languages
+        if (Array.isArray(payload.languages)) {
+            const languagesList = document.getElementById("languages-list");
+            languagesList.innerHTML = "";
+            payload.languages.forEach(lang => {
+                const li = document.createElement("li");
+                li.textContent = lang.name || lang;
+                languagesList.appendChild(li);
+            });
         }
 
+        // Update awards
+        if (Array.isArray(payload.awards)) {
+            const awardsList = document.getElementById("awards-list");
+            awardsList.innerHTML = "";
+            payload.awards.forEach(award => {
+                const li = document.createElement("li");
+                li.textContent = `${award.title || ''}${award.year ? ` (${award.year})` : ''}`.trim();
+                awardsList.appendChild(li);
+            });
+        }
+
+        // Update projects
+        if (Array.isArray(payload.projects)) {
+            const projectsList = document.getElementById("projects-list");
+            projectsList.innerHTML = "";
+            payload.projects.forEach(proj => {
+                const row = document.createElement("div");
+                row.className = "row";
+
+                const dateDiv = document.createElement("div");
+                dateDiv.className = "date";
+                dateDiv.textContent = proj.date || proj.year || '';
+                row.appendChild(dateDiv);
+
+                const contentDiv = document.createElement("div");
+                contentDiv.className = "content";
+
+                const title = document.createElement("h4");
+                title.textContent = proj.title || proj.name || '';
+                contentDiv.appendChild(title);
+
+                if (proj.description) {
+                    const p = document.createElement("p");
+                    p.textContent = proj.description;
+                    contentDiv.appendChild(p);
+                }
+
+                if (Array.isArray(proj.bullets)) {
+                    const ul = document.createElement("ul");
+                    proj.bullets.forEach(bullet => {
+                        const li = document.createElement("li");
+                        li.textContent = bullet;
+                        ul.appendChild(li);
+                    });
+                    contentDiv.appendChild(ul);
+                }
+
+                row.appendChild(contentDiv);
+                projectsList.appendChild(row);
+            });
+        }
+
+        // Update references
+        if (Array.isArray(payload.references)) {
+            const referencesList = document.getElementById("references-list");
+            referencesList.innerHTML = "";
+            payload.references.forEach(ref => {
+                const row = document.createElement("div");
+                row.className = "row";
+
+                const contentDiv = document.createElement("div");
+                contentDiv.className = "content";
+
+                const name = document.createElement("h4");
+                name.textContent = ref.name || '';
+                contentDiv.appendChild(name);
+
+                const info = document.createElement("p");
+                info.textContent = `${ref.title || ''}${ref.company ? ` at ${ref.company}` : ''}`.trim();
+                contentDiv.appendChild(info);
+
+                const contact = document.createElement("p");
+                const contactItems = [ref.email, ref.phone].filter(Boolean);
+                contact.textContent = contactItems.join(' | ');
+                contentDiv.appendChild(contact);
+
+                row.appendChild(contentDiv);
+                referencesList.appendChild(row);
+            });
+        }
+
+        // Update custom sections (Creative-Profile Style with Drew-Feig Logic)
         const customWrap = document.getElementById("custom-section");
         customWrap.innerHTML = "";
         if (Array.isArray(payload.customSections)) {
-            payload.customSections.forEach(sec => {
-                if (!sec || (!sec.heading && !sec.content)) return;
-                const block = document.createElement("div");
-                const heading = document.createElement("p");
-                heading.style.fontWeight = "700";
-                heading.style.margin = "0 0 4px";
-                heading.textContent = sec.heading || "";
-
-                const body = document.createElement("p");
-                body.style.margin = "0 0 10px";
-                body.textContent = sec.content || "";
-
-                if (heading.textContent) block.appendChild(heading);
-                if (body.textContent) block.appendChild(body);
-                customWrap.appendChild(block);
+            payload.customSections.forEach(section => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'section';
+                wrapper.style.marginTop = '16px';
+                
+                const heading = document.createElement('div');
+                heading.className = 'section-title';
+                heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
+                
+                const content = document.createElement('div');
+                content.textContent = section.content || '';
+                
+                wrapper.appendChild(heading);
+                wrapper.appendChild(content);
+                customWrap.appendChild(wrapper);
             });
+        }
+        
+        // Custom Sections visibility
+        if (customWrap) {
+            customWrap.style.display = settings.custom?.visible !== false ? "block" : "none";
         }
     }
 
     window.addEventListener("message", (event) => {
         if (event.data === 'DOWNLOAD_PDF') {
             const resume = document.getElementById('resume');
+            
+            // Add PDF-specific styles to fill page width
+            const originalStyle = resume.getAttribute('style') || '';
+            resume.style.width = '100%';
+            resume.style.maxWidth = '8in'; // Use inches for letter page
+            resume.style.margin = '0 auto';
+            resume.style.padding = '0';
+            
+            // Calculate actual content height
+            const contentHeight = Math.max(
+                resume.scrollHeight,
+                resume.offsetHeight,
+                resume.clientHeight
+            );
+            
             const opt = {
-                margin: 0.5,
+                margin: 0.25, // Small margins to fill page better
                 filename: 'resume.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    width: 816, // 8 inches at 102 DPI (letter width - margins)
+                    height: contentHeight, // Use actual content height
+                    windowWidth: resume.scrollWidth,
+                    windowHeight: contentHeight
+                },
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'letter', 
+                    orientation: 'portrait',
+                    compress: true
+                }
             };
-            html2pdf().set(opt).from(resume).save();
+            
+            html2pdf().set(opt).from(resume).save().then(() => {
+                // Restore original styles
+                resume.setAttribute('style', originalStyle);
+            });
             return;
         }
         updateContent(event.data);

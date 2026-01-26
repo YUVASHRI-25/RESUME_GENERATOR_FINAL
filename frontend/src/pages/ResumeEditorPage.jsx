@@ -51,7 +51,7 @@ const ResumeEditorPage = () => {
             }
         ],
         skills: [
-            { id: 'skill-1', name: '', level: 'Intermediate' }
+            { id: 'skill-1', name: '' }
         ],
         languages: [
             { id: 'lang-1', name: '', level: 'Fluent' }

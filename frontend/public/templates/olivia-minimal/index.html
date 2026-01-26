@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <title>Olivia Minimal</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Montserrat:wght@300;400;600;700&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="style.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -27,7 +32,7 @@
   <div class="grid">
 
     <!-- LEFT -->
-    <aside>
+    <aside id="left-column">
 
       <section>
         <span class="pill">CONTACT</span>
@@ -39,36 +44,49 @@
         </ul>
       </section>
 
-      <section>
+      <section id="education-section">
         <span class="pill">EDUCATION</span>
-
         <div id="educationContainer"></div>
       </section>
 
-      <section>
+      <section id="skills-section">
         <span class="pill">SKILLS</span>
         <ul id="skillsContainer"></ul>
       </section>
 
-      <section>
+      <section id="languages-section">
         <span class="pill">LANGUAGES</span>
         <ul id="languagesContainer"></ul>
+      </section>
+
+      <section id="awards-section">
+        <span class="pill">AWARDS</span>
+        <ul id="awardsContainer"></ul>
       </section>
 
     </aside>
 
     <!-- RIGHT -->
-    <main>
+    <main id="right-column">
 
-      <section>
+      <section id="about-section">
         <span class="pill">PROFILE SUMMARY</span>
         <p id="summary"></p>
       </section>
 
-      <section>
+      <section id="experience-section">
         <span class="pill">WORK EXPERIENCE</span>
-
         <div id="experienceContainer"></div>
+      </section>
+
+      <section id="projects-section">
+        <span class="pill">PROJECTS</span>
+        <div id="projectsContainer"></div>
+      </section>
+
+      <section id="references-section">
+        <span class="pill">REFERENCES</span>
+        <div id="referencesContainer"></div>
       </section>
 
       <!-- CUSTOM SECTIONS -->
@@ -80,20 +98,38 @@
 </div>
 
 <script>
-  function updateContent(payload) {
+  function updateContent(data) {
+    if (!data || !data.payload) return;
+    
+    const payload = data.payload;
+    const settings = payload.sectionSettings || {};
+
+    // Apply font
+    const font = payload.fontFamily || 'Inter';
+    const fontValue = `'${font}', sans-serif`;
+    document.documentElement.style.setProperty('--resume-font', fontValue);
+    document.body.style.fontFamily = fontValue;
+
     // Personal info
     if (payload.personalInfo) {
-      document.getElementById('name').textContent = payload.personalInfo.name || '';
-      document.getElementById('signature').textContent = payload.personalInfo.signature || payload.personalInfo.name || '';
-      document.getElementById('title').textContent = payload.personalInfo.title || '';
-      document.getElementById('phone').textContent = payload.personalInfo.phone || '';
-      document.getElementById('email').textContent = payload.personalInfo.email || '';
-      document.getElementById('address').textContent = payload.personalInfo.address || '';
-      document.getElementById('website').textContent = payload.personalInfo.website || '';
-      document.getElementById('summary').textContent = payload.personalInfo.summary || '';
+      const { fullName, title, email, phone, location, website, signature } = payload.personalInfo;
+      if (fullName) document.getElementById('name').textContent = fullName;
+      if (signature) document.getElementById('signature').textContent = signature;
+      else if (fullName) document.getElementById('signature').textContent = fullName.split(' ')[0];
+      if (title) document.getElementById('title').textContent = title;
+      if (phone) document.getElementById('phone').textContent = phone;
+      if (email) document.getElementById('email').textContent = email;
+      if (location) document.getElementById('address').textContent = location;
+      if (website) document.getElementById('website').textContent = website;
+      if (payload.personalInfo.summary) document.getElementById('summary').textContent = payload.personalInfo.summary;
     }
 
     // Education
+    const eduSection = document.querySelector('section:has(#educationContainer)');
+    const eduPill = eduSection?.querySelector('.pill');
+    if (eduPill && settings.education?.heading) eduPill.textContent = settings.education.heading;
+    if (eduSection) eduSection.style.display = settings.education?.visible !== false ? 'block' : 'none';
+    
     if (payload.education && Array.isArray(payload.education)) {
       const container = document.getElementById('educationContainer');
       container.innerHTML = '';
@@ -109,6 +145,11 @@
     }
 
     // Skills
+    const skillsSection = document.querySelector('section:has(#skillsContainer)');
+    const skillsPill = skillsSection?.querySelector('.pill');
+    if (skillsPill && settings.skills?.heading) skillsPill.textContent = settings.skills.heading;
+    if (skillsSection) skillsSection.style.display = settings.skills?.visible !== false ? 'block' : 'none';
+    
     if (payload.skills && Array.isArray(payload.skills)) {
       const container = document.getElementById('skillsContainer');
       container.innerHTML = '';
@@ -120,6 +161,11 @@
     }
 
     // Languages
+    const languagesSection = document.querySelector('section:has(#languagesContainer)');
+    const languagesPill = languagesSection?.querySelector('.pill');
+    if (languagesPill && settings.languages?.heading) languagesPill.textContent = settings.languages.heading;
+    if (languagesSection) languagesSection.style.display = settings.languages?.visible !== false ? 'block' : 'none';
+    
     if (payload.languages && Array.isArray(payload.languages)) {
       const container = document.getElementById('languagesContainer');
       container.innerHTML = '';
@@ -130,7 +176,28 @@
       });
     }
 
+    // Awards
+    const awardsSection = document.querySelector('section:has(#awardsContainer)');
+    const awardsPill = awardsSection?.querySelector('.pill');
+    if (awardsPill && settings.awards?.heading) awardsPill.textContent = settings.awards.heading;
+    if (awardsSection) awardsSection.style.display = settings.awards?.visible !== false ? 'block' : 'none';
+    
+    if (payload.awards && Array.isArray(payload.awards)) {
+      const container = document.getElementById('awardsContainer');
+      container.innerHTML = '';
+      payload.awards.forEach(award => {
+        const li = document.createElement('li');
+        li.textContent = `${award.title || ''}${award.year ? ` (${award.year})` : ''}`.trim();
+        container.appendChild(li);
+      });
+    }
+
     // Experience
+    const expSection = document.querySelector('section:has(#experienceContainer)');
+    const expPill = expSection?.querySelector('.pill');
+    if (expPill && settings.experience?.heading) expPill.textContent = settings.experience.heading;
+    if (expSection) expSection.style.display = settings.experience?.visible !== false ? 'block' : 'none';
+    
     if (payload.experiences && Array.isArray(payload.experiences)) {
       const container = document.getElementById('experienceContainer');
       container.innerHTML = '';
@@ -151,27 +218,167 @@
       });
     }
 
-    // Custom Sections
-    if (payload.customSections && Array.isArray(payload.customSections)) {
-      const container = document.getElementById('customSectionsContainer');
+    // Projects
+    const projSection = document.querySelector('section:has(#projectsContainer)');
+    const projPill = projSection?.querySelector('.pill');
+    if (projPill && settings.projects?.heading) projPill.textContent = settings.projects.heading;
+    if (projSection) projSection.style.display = settings.projects?.visible !== false ? 'block' : 'none';
+    
+    if (payload.projects && Array.isArray(payload.projects)) {
+      const container = document.getElementById('projectsContainer');
       container.innerHTML = '';
-      payload.customSections.forEach(section => {
-        const sec = document.createElement('section');
-        let html = `<span class="pill">${section.heading || ''}</span>`;
-        if (section.items && Array.isArray(section.items)) {
-          html += '<ul>' + section.items.map(item => `<li>${item}</li>`).join('') + '</ul>';
-        } else if (section.content) {
-          html += `<p>${section.content}</p>`;
+      payload.projects.forEach(proj => {
+        const div = document.createElement('div');
+        div.style.marginBottom = '12px';
+        
+        const title = document.createElement('p');
+        title.style.fontWeight = 'bold';
+        title.style.margin = '0 0 4px';
+        title.textContent = proj.title || proj.name || '';
+        
+        const description = document.createElement('p');
+        description.style.margin = '0 0 4px';
+        description.textContent = proj.description || '';
+        
+        div.appendChild(title);
+        if (description.textContent) div.appendChild(description);
+        
+        if (Array.isArray(proj.bullets)) {
+          const ul = document.createElement('ul');
+          ul.style.margin = '4px 0 0 0';
+          proj.bullets.forEach(bullet => {
+            const li = document.createElement('li');
+            li.textContent = bullet;
+            ul.appendChild(li);
+          });
+          div.appendChild(ul);
         }
-        sec.innerHTML = html;
-        container.appendChild(sec);
+        
+        container.appendChild(div);
       });
+    }
+
+    // References
+    const refSection = document.querySelector('section:has(#referencesContainer)');
+    const refPill = refSection?.querySelector('.pill');
+    if (refPill && settings.references?.heading) refPill.textContent = settings.references.heading;
+    if (refSection) refSection.style.display = settings.references?.visible !== false ? 'block' : 'none';
+    
+    if (payload.references && Array.isArray(payload.references)) {
+      const container = document.getElementById('referencesContainer');
+      container.innerHTML = '';
+      payload.references.forEach(ref => {
+        const div = document.createElement('div');
+        div.style.marginBottom = '12px';
+        
+        const name = document.createElement('p');
+        name.style.fontWeight = 'bold';
+        name.style.margin = '0 0 2px';
+        name.textContent = ref.name || '';
+        
+        const info = document.createElement('p');
+        info.style.margin = '0 0 2px';
+        info.style.fontSize = '0.9em';
+        info.textContent = `${ref.title || ''}${ref.company ? ` at ${ref.company}` : ''}`.trim();
+        
+        const contact = document.createElement('p');
+        contact.style.margin = '0';
+        contact.style.fontSize = '0.9em';
+        contact.style.color = '#666';
+        const contactItems = [ref.email, ref.phone].filter(Boolean);
+        contact.textContent = contactItems.join(' • ');
+        
+        div.appendChild(name);
+        if (info.textContent) div.appendChild(info);
+        if (contact.textContent) div.appendChild(contact);
+        
+        container.appendChild(div);
+      });
+    }
+
+    // Custom Sections (Drew-Feig Style)
+    const customContainer = document.getElementById('customSectionsContainer');
+    customContainer.innerHTML = '';
+    if (Array.isArray(payload.customSections)) {
+      payload.customSections.forEach(section => {
+        const wrapper = document.createElement('section');
+        wrapper.style.marginTop = '16px';
+        
+        const heading = document.createElement('span');
+        heading.className = 'pill';
+        heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
+        heading.style.margin = '0 0 10px 0';
+        
+        const content = document.createElement('div');
+        if (section.items && Array.isArray(section.items)) {
+          const ul = document.createElement('ul');
+          section.items.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            ul.appendChild(li);
+          });
+          content.appendChild(ul);
+        } else if (section.content) {
+          const p = document.createElement('p');
+          p.textContent = section.content;
+          content.appendChild(p);
+        }
+        
+        wrapper.appendChild(heading);
+        wrapper.appendChild(content);
+        customContainer.appendChild(wrapper);
+      });
+    }
+    
+    // Custom Sections visibility
+    if (customContainer) {
+      customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
+    }
+
+    // Column placement (move sections between left/right)
+    const leftColumn = document.getElementById('left-column');
+    const rightColumn = document.getElementById('right-column');
+    if (leftColumn && rightColumn) {
+      const moveSection = (sectionId, toLeft) => {
+        const section = document.getElementById(sectionId);
+        if (section && section.parentElement) {
+          (toLeft ? leftColumn : rightColumn).appendChild(section);
+        }
+      };
+      
+      // Move sections based on column settings
+      moveSection('education-section', settings.education?.column === 'left');
+      moveSection('skills-section', settings.skills?.column === 'left');
+      moveSection('languages-section', settings.languages?.column === 'left');
+      moveSection('awards-section', settings.awards?.column === 'left');
+      moveSection('about-section', settings.about?.column === 'left');
+      moveSection('experience-section', settings.experience?.column === 'left');
+      moveSection('projects-section', settings.projects?.column === 'left');
+      moveSection('references-section', settings.references?.column === 'left');
+      
+      // Position custom sections in the appropriate column
+      if (customContainer) {
+        const targetColumn = settings.custom?.column === 'left' ? leftColumn : rightColumn;
+        if (targetColumn) {
+          targetColumn.appendChild(customContainer);
+        }
+      }
     }
   }
 
   window.addEventListener('message', (event) => {
     if (event.data.type === 'UPDATE_CONTENT') {
-      updateContent(event.data.payload);
+      updateContent(event.data);
+    } else if (event.data === 'DOWNLOAD_PDF') {
+      const resume = document.querySelector('.resume');
+      const opt = {
+        margin: 0,
+        filename: 'resume.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(resume).save();
     }
   });
 </script>

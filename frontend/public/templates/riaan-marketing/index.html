@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Riaan Marketing Template</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Montserrat:wght@300;400;600;700&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
@@ -55,11 +59,26 @@
     <div id="projects-list"></div>
   </section>
 
-  <!-- CUSTOM SECTIONS -->
-  <section id="custom-section">
-    <h3 id="custom-heading">{{section.custom.heading}}</h3>
-    <div id="custom-sections"></div>
+  <!-- LANGUAGES -->
+  <section id="languages-section">
+    <h3 id="languages-heading">{{section.languages.heading}}</h3>
+    <ul class="languages" id="languages-list"></ul>
   </section>
+
+  <!-- AWARDS -->
+  <section id="awards-section">
+    <h3 id="awards-heading">{{section.awards.heading}}</h3>
+    <div id="awards-list"></div>
+  </section>
+
+  <!-- REFERENCES -->
+  <section id="references-section">
+    <h3 id="references-heading">{{section.references.heading}}</h3>
+    <div id="references-list"></div>
+  </section>
+
+  <!-- CUSTOM SECTIONS -->
+  <div id="custom-sections"></div>
 
 </div>
 
@@ -239,38 +258,122 @@
       });
     }
 
+    // Languages Section
+    const langHeading = document.getElementById('languages-heading');
+    const langSection = langHeading?.closest('section');
+    if (langHeading && settings.languages?.heading) {
+      langHeading.textContent = settings.languages.heading;
+    }
+    if (langSection) {
+      langSection.style.display = settings.languages?.visible !== false ? 'block' : 'none';
+    }
+    if (Array.isArray(payload.languages)) {
+      const langList = document.getElementById('languages-list');
+      langList.innerHTML = '';
+      payload.languages.forEach(lang => {
+        const li = document.createElement('li');
+        li.textContent = `${lang.name || 'Language'} – ${lang.level || 'Fluent'}`;
+        langList.appendChild(li);
+      });
+    }
+
+    // Awards Section
+    const awardsHeading = document.getElementById('awards-heading');
+    const awardsSection = awardsHeading?.closest('section');
+    if (awardsHeading && settings.awards?.heading) {
+      awardsHeading.textContent = settings.awards.heading;
+    }
+    if (awardsSection) {
+      awardsSection.style.display = settings.awards?.visible !== false ? 'block' : 'none';
+    }
+    if (Array.isArray(payload.awards)) {
+      const awardsList = document.getElementById('awards-list');
+      awardsList.innerHTML = '';
+      payload.awards.forEach(award => {
+        const div = document.createElement('div');
+        div.className = 'award';
+        
+        const title = document.createElement('h4');
+        title.textContent = award.title || award.name || '';
+        
+        const issuer = document.createElement('p');
+        issuer.textContent = award.issuer || award.organization || '';
+        
+        const date = document.createElement('p');
+        date.className = 'date';
+        date.textContent = award.date || award.year || '';
+        
+        if (title.textContent) div.appendChild(title);
+        if (issuer.textContent) div.appendChild(issuer);
+        if (date.textContent) div.appendChild(date);
+        awardsList.appendChild(div);
+      });
+    }
+
+    // References Section
+    const refHeading = document.getElementById('references-heading');
+    const refSection = refHeading?.closest('section');
+    if (refHeading && settings.references?.heading) {
+      refHeading.textContent = settings.references.heading;
+    }
+    if (refSection) {
+      refSection.style.display = settings.references?.visible !== false ? 'block' : 'none';
+    }
+    if (Array.isArray(payload.references)) {
+      const refList = document.getElementById('references-list');
+      refList.innerHTML = '';
+      payload.references.forEach(ref => {
+        const div = document.createElement('div');
+        div.className = 'reference';
+        
+        const name = document.createElement('h4');
+        name.textContent = ref.name || '';
+        
+        const title = document.createElement('p');
+        title.textContent = ref.title || '';
+        
+        const company = document.createElement('p');
+        company.textContent = ref.company || '';
+        
+        const contact = document.createElement('p');
+        contact.className = 'contact';
+        const contactItems = [];
+        if (ref.email) contactItems.push(ref.email);
+        if (ref.phone) contactItems.push(ref.phone);
+        contact.textContent = contactItems.join(' • ');
+        
+        if (name.textContent) div.appendChild(name);
+        if (title.textContent) div.appendChild(title);
+        if (company.textContent) div.appendChild(company);
+        if (contact.textContent) div.appendChild(contact);
+        refList.appendChild(div);
+      });
+    }
+
     // Custom Sections
-    const customHeading = document.getElementById('custom-heading');
-    const customSection = customHeading?.closest('section');
-    if (customHeading && settings.custom?.heading) {
-      customHeading.textContent = settings.custom.heading;
+    const customContainer = document.getElementById('custom-sections');
+    customContainer.innerHTML = '';
+    if (Array.isArray(payload.customSections)) {
+      payload.customSections.forEach(section => {
+        const wrapper = document.createElement('section');
+        wrapper.style.marginTop = '16px';
+        
+        const heading = document.createElement('h3');
+        heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
+        heading.style.margin = '0 0 10px 0';
+        
+        const content = document.createElement('div');
+        content.textContent = section.content || '';
+        
+        wrapper.appendChild(heading);
+        wrapper.appendChild(content);
+        customContainer.appendChild(wrapper);
+      });
     }
-    if (customSection) {
-      customSection.style.display = settings.custom?.visible !== false ? 'block' : 'none';
-    }
-    const customDiv = document.getElementById('custom-sections');
-    if (customDiv) {
-      customDiv.innerHTML = '';
-      if (Array.isArray(payload.customSections)) {
-        payload.customSections.forEach(section => {
-          if (!section || (!section.heading && !section.content)) return;
-          const div = document.createElement('div');
-          div.className = 'custom-block';
-          
-          const heading = document.createElement('p');
-          heading.style.fontWeight = 'bold';
-          heading.style.margin = '0 0 4px';
-          heading.textContent = section.heading || '';
-          
-          const content = document.createElement('p');
-          content.style.margin = '0 0 10px';
-          content.textContent = section.content || '';
-          
-          if (heading.textContent) div.appendChild(heading);
-          if (content.textContent) div.appendChild(content);
-          customDiv.appendChild(div);
-        });
-      }
+    
+    // Custom Sections visibility
+    if (customContainer) {
+      customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
     }
   }
 

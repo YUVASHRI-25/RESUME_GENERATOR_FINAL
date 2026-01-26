@@ -13,7 +13,7 @@
 body {
   margin: 0;
   padding: 40px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--resume-font, 'Inter', sans-serif);
   color: #333;
   background: #fff;
   word-wrap: break-word;
@@ -29,7 +29,7 @@ body {
 }
 
 header h1 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--resume-font, 'Playfair Display', serif);
   font-size: 48px;
   color: var(--gold);
   margin-bottom: 5px;
@@ -94,7 +94,7 @@ section {
 }
 
 .section-title h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--resume-font, 'Playfair Display', serif);
   color: var(--gold);
   min-width: 120px;
   margin: 0;

@@ -82,11 +82,32 @@
       </div>
     </section>
 
-    <!-- CUSTOM SECTIONS -->
-    <section id="custom-container">
-      <h3 id="custom-heading" contenteditable="true">Custom Section</h3>
-      <div id="custom-section"></div>
+    <!-- PROJECTS -->
+    <section>
+      <h3 id="projects-heading" contenteditable="true">PROJECTS</h3>
+      <div id="projects-list"></div>
     </section>
+
+    <!-- LANGUAGES -->
+    <section>
+      <h3 id="languages-heading" contenteditable="true">LANGUAGES</h3>
+      <div id="languages-list"></div>
+    </section>
+
+    <!-- AWARDS -->
+    <section>
+      <h3 id="awards-heading" contenteditable="true">AWARDS</h3>
+      <div id="awards-list"></div>
+    </section>
+
+    <!-- REFERENCES -->
+    <section>
+      <h3 id="references-heading" contenteditable="true">REFERENCES</h3>
+      <div id="references-list"></div>
+    </section>
+
+    <!-- CUSTOM SECTIONS -->
+  <div id="custom-section"></div>
 
   </div>
 
@@ -248,35 +269,160 @@
         });
       }
 
-      // Custom Sections
-      const customHeading = document.getElementById('custom-heading');
-      const customContainer = customHeading?.closest('section');
-      if (customHeading && settings.custom?.heading) {
-        customHeading.textContent = settings.custom.heading;
+      // Projects Section
+      const projectsHeading = document.getElementById('projects-heading');
+      const projectsSection = projectsHeading?.closest('section');
+      if (projectsHeading && settings.projects?.heading) {
+        projectsHeading.textContent = settings.projects.heading;
       }
-      if (customContainer) {
-        customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
+      if (projectsSection) {
+        projectsSection.style.display = settings.projects?.visible !== false ? 'block' : 'none';
       }
-      const customContent = document.getElementById('custom-section');
-      customContent.innerHTML = '';
-      if (Array.isArray(payload.customSections)) {
-        payload.customSections.forEach(section => {
-          const wrapper = document.createElement('div');
+      if (Array.isArray(payload.projects)) {
+        const projectsList = document.getElementById('projects-list');
+        projectsList.innerHTML = '';
+        payload.projects.forEach(proj => {
+          const div = document.createElement('div');
+          div.className = 'project';
           
-          const heading = document.createElement('p');
-          heading.style.fontWeight = 'bold';
-          heading.style.margin = '0 0 4px';
-          heading.textContent = section.heading || '';
-          if (heading.textContent) wrapper.appendChild(heading);
+          const title = document.createElement('h4');
+          title.textContent = proj.title || proj.name || '';
           
-          const content = document.createElement('p');
-          content.style.margin = '0';
-          content.textContent = section.content || '';
-          if (content.textContent) wrapper.appendChild(content);
+          const description = document.createElement('p');
+          description.textContent = proj.description || '';
           
-          customContent.appendChild(wrapper);
+          if (title.textContent) div.appendChild(title);
+          if (description.textContent) div.appendChild(description);
+          projectsList.appendChild(div);
         });
       }
+
+      // Languages Section
+      const langHeading = document.getElementById('languages-heading');
+      const langSection = langHeading?.closest('section');
+      if (langHeading && settings.languages?.heading) {
+        langHeading.textContent = settings.languages.heading;
+      }
+      if (langSection) {
+        langSection.style.display = settings.languages?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.languages)) {
+        const langList = document.getElementById('languages-list');
+        langList.innerHTML = '';
+        payload.languages.forEach(lang => {
+          const div = document.createElement('div');
+          div.className = 'language';
+          
+          const name = document.createElement('strong');
+          name.textContent = lang.name || '';
+          
+          const level = document.createElement('span');
+          level.textContent = lang.level ? ` – ${lang.level}` : '';
+          
+          if (name.textContent) div.appendChild(name);
+          if (level.textContent) div.appendChild(level);
+          langList.appendChild(div);
+        });
+      }
+
+      // Awards Section
+      const awardsHeading = document.getElementById('awards-heading');
+      const awardsSection = awardsHeading?.closest('section');
+      if (awardsHeading && settings.awards?.heading) {
+        awardsHeading.textContent = settings.awards.heading;
+      }
+      if (awardsSection) {
+        awardsSection.style.display = settings.awards?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.awards)) {
+        const awardsList = document.getElementById('awards-list');
+        awardsList.innerHTML = '';
+        payload.awards.forEach(award => {
+          const div = document.createElement('div');
+          div.className = 'award';
+          
+          const title = document.createElement('h4');
+          title.textContent = award.title || award.name || '';
+          
+          const issuer = document.createElement('p');
+          issuer.textContent = award.issuer || award.organization || '';
+          
+          const date = document.createElement('p');
+          date.className = 'date';
+          date.textContent = award.date || award.year || '';
+          
+          if (title.textContent) div.appendChild(title);
+          if (issuer.textContent) div.appendChild(issuer);
+          if (date.textContent) div.appendChild(date);
+          awardsList.appendChild(div);
+        });
+      }
+
+      // References Section
+      const refHeading = document.getElementById('references-heading');
+      const refSection = refHeading?.closest('section');
+      if (refHeading && settings.references?.heading) {
+        refHeading.textContent = settings.references.heading;
+      }
+      if (refSection) {
+        refSection.style.display = settings.references?.visible !== false ? 'block' : 'none';
+      }
+      if (Array.isArray(payload.references)) {
+        const refList = document.getElementById('references-list');
+        refList.innerHTML = '';
+        payload.references.forEach(ref => {
+          const div = document.createElement('div');
+          div.className = 'reference';
+          
+          const name = document.createElement('h4');
+          name.textContent = ref.name || '';
+          
+          const title = document.createElement('p');
+          title.textContent = ref.title || '';
+          
+          const company = document.createElement('p');
+          company.textContent = ref.company || '';
+          
+          const contact = document.createElement('p');
+          contact.className = 'contact';
+          const contactItems = [];
+          if (ref.email) contactItems.push(ref.email);
+          if (ref.phone) contactItems.push(ref.phone);
+          contact.textContent = contactItems.join(' • ');
+          
+          if (name.textContent) div.appendChild(name);
+          if (title.textContent) div.appendChild(title);
+          if (company.textContent) div.appendChild(company);
+          if (contact.textContent) div.appendChild(contact);
+          refList.appendChild(div);
+        });
+      }
+
+      // Custom Sections
+    const customContainer = document.getElementById('custom-section');
+    customContainer.innerHTML = '';
+    if (Array.isArray(payload.customSections)) {
+      payload.customSections.forEach(section => {
+        const wrapper = document.createElement('section');
+        wrapper.style.marginTop = '16px';
+        
+        const heading = document.createElement('h3');
+        heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
+        heading.style.margin = '0 0 10px 0';
+        
+        const content = document.createElement('div');
+        content.textContent = section.content || '';
+        
+        wrapper.appendChild(heading);
+        wrapper.appendChild(content);
+        customContainer.appendChild(wrapper);
+      });
+    }
+    
+    // Custom Sections visibility
+    if (customContainer) {
+      customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
+    }
     }
 
     window.addEventListener("message", (event) => {
