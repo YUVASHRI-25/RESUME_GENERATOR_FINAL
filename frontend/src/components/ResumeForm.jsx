@@ -899,7 +899,7 @@ const ResumeForm = ({ data, updateData, template }) => {
             <section className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
                     <h2 className="text-xl font-semibold text-indigo-700">Projects</h2>
-                    <button onClick={() => addItem('projects', { id: Date.now(), title: '', description: '' })} className="text-indigo-600 hover:text-indigo-800">
+                    <button onClick={() => addItem('projects', { id: Date.now(), title: '', description: '', bullets: [] })} className="text-indigo-600 hover:text-indigo-800">
                         <Plus size={20} />
                     </button>
                 </div>
@@ -944,6 +944,45 @@ const ResumeForm = ({ data, updateData, template }) => {
                                 >
                                     <Wand2 size={12} /> Enhance
                                 </button>
+                            </div>
+                            
+                            {/* Key Achievements (Bullet Points) */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Key Achievements (Bullet Points)</label>
+                                <div className="space-y-2">
+                                    {proj.bullets && proj.bullets.map((bullet, bulletIndex) => (
+                                        <div key={bulletIndex} className="flex gap-2">
+                                            <input
+                                                className="flex-1 border p-2 rounded focus:ring-2 focus:ring-indigo-300 outline-none"
+                                                placeholder="Enter key achievement..."
+                                                value={bullet || ''}
+                                                onChange={(e) => {
+                                                    const newBullets = [...(proj.bullets || [])];
+                                                    newBullets[bulletIndex] = e.target.value;
+                                                    updateItem('projects', index, 'bullets', newBullets);
+                                                }}
+                                            />
+                                            <button
+                                                onClick={() => {
+                                                    const newBullets = proj.bullets.filter((_, i) => i !== bulletIndex);
+                                                    updateItem('projects', index, 'bullets', newBullets);
+                                                }}
+                                                className="text-red-500 hover:text-red-700"
+                                            >
+                                                <Trash size={16} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button
+                                        onClick={() => {
+                                            const newBullets = [...(proj.bullets || []), ''];
+                                            updateItem('projects', index, 'bullets', newBullets);
+                                        }}
+                                        className="text-indigo-600 hover:text-indigo-800 text-sm flex items-center gap-1"
+                                    >
+                                        <Plus size={16} /> Add Achievement
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))
@@ -1032,7 +1071,7 @@ const ResumeForm = ({ data, updateData, template }) => {
             <section className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
                     <h2 className="text-xl font-semibold text-indigo-700">Custom Sections</h2>
-                    <button onClick={() => addItem('customSections', { id: Date.now(), heading: '', content: '' })} className="text-indigo-600 hover:text-indigo-800">
+                    <button onClick={() => addItem('customSections', { id: Date.now(), heading: '', content: '', bullets: [] })} className="text-indigo-600 hover:text-indigo-800">
                         <Plus size={20} />
                     </button>
                 </div>
@@ -1082,6 +1121,45 @@ const ResumeForm = ({ data, updateData, template }) => {
                                 >
                                     <Wand2 size={12} /> Enhance
                                 </button>
+                            </div>
+                            
+                            {/* Key Achievements (Bullet Points) */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Key Achievements (Bullet Points)</label>
+                                <div className="space-y-2">
+                                    {section.bullets && section.bullets.map((bullet, bulletIndex) => (
+                                        <div key={bulletIndex} className="flex gap-2">
+                                            <input
+                                                className="flex-1 border p-2 rounded focus:ring-2 focus:ring-indigo-300 outline-none"
+                                                placeholder="Enter key achievement..."
+                                                value={bullet || ''}
+                                                onChange={(e) => {
+                                                    const newBullets = [...(section.bullets || [])];
+                                                    newBullets[bulletIndex] = e.target.value;
+                                                    updateItem('customSections', index, 'bullets', newBullets);
+                                                }}
+                                            />
+                                            <button
+                                                onClick={() => {
+                                                    const newBullets = section.bullets.filter((_, i) => i !== bulletIndex);
+                                                    updateItem('customSections', index, 'bullets', newBullets);
+                                                }}
+                                                className="text-red-500 hover:text-red-700"
+                                            >
+                                                <Trash size={16} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button
+                                        onClick={() => {
+                                            const newBullets = [...(section.bullets || []), ''];
+                                            updateItem('customSections', index, 'bullets', newBullets);
+                                        }}
+                                        className="text-indigo-600 hover:text-indigo-800 text-sm flex items-center gap-1"
+                                    >
+                                        <Plus size={16} /> Add Achievement
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))
