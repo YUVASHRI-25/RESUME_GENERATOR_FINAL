@@ -350,7 +350,30 @@
         heading.style.margin = '0 0 10px 0';
         
         const content = document.createElement('div');
-        content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
+        
+        // Handle content with bullets
+        if (section.bullets && section.bullets.length > 0) {
+          // If bullets exist, render description first (if any), then bullets
+          if (section.content) {
+            const descDiv = document.createElement('div');
+            descDiv.innerHTML = section.content.replace(/\n/g, '<br>');
+            descDiv.style.marginBottom = '8px';
+            content.appendChild(descDiv);
+          }
+          
+          const ul = document.createElement('ul');
+          section.bullets.forEach(bullet => {
+            if (bullet) {
+              const li = document.createElement('li');
+              li.textContent = bullet;
+              ul.appendChild(li);
+            }
+          });
+          content.appendChild(ul);
+        } else {
+          // If no bullets, render content as normal
+          content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
+        }
         
         wrapper.appendChild(heading);
         wrapper.appendChild(content);
