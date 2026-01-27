@@ -40,6 +40,7 @@
           <li><i class="fa-solid fa-phone"></i><span id="phone"></span></li>
           <li><i class="fa-solid fa-envelope"></i><span id="email"></span></li>
           <li><i class="fa-solid fa-location-dot"></i><span id="address"></span></li>
+          <li><i class="fa-solid fa-globe"></i><span id="website"></span></li>
         </ul>
       </section>
 
@@ -135,7 +136,7 @@
 
     // Personal info
     if (payload.personalInfo) {
-      const { fullName, title, email, phone, location, signature } = payload.personalInfo;
+      const { fullName, title, email, phone, location, website, signature } = payload.personalInfo;
       if (fullName) document.getElementById('name').textContent = fullName;
       if (signature) document.getElementById('signature').textContent = signature;
       else if (fullName) document.getElementById('signature').textContent = fullName.split(' ')[0];
@@ -143,6 +144,7 @@
       if (phone) document.getElementById('phone').textContent = phone;
       if (email) document.getElementById('email').textContent = email;
       if (location) document.getElementById('address').textContent = location;
+      if (website) document.getElementById('website').textContent = website;
     }
 
     // About/Professional Summary Section

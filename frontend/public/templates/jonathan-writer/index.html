@@ -166,7 +166,7 @@
 
       // Personal Info Header
       if (payload.personalInfo) {
-        const { fullName, title, email, phone, location } = payload.personalInfo;
+        const { fullName, title, email, phone, location, website } = payload.personalInfo;
         if (fullName) document.getElementById('name').textContent = fullName;
         if (title) document.getElementById('title').textContent = title;
         
@@ -176,6 +176,7 @@
         if (phone) parts.push(phone);
         if (email) parts.push(email);
         if (location) parts.push(location);
+        if (website) parts.push(website);
         if (parts.length > 0) {
           contact.innerHTML = parts.join(' &nbsp; | &nbsp; ');
         } else {

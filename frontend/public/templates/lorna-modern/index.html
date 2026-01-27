@@ -18,8 +18,7 @@
       <h2 id="title">Marketing Manager</h2>
     </header>
     <div class="bar">
-      <span id="linkedin">{{linkedin}}</span>
-      <span id="github">{{github}}</span>
+      <span id="website">{{website}}</span>
     </div>
 
     <div class="columns">
@@ -107,8 +106,9 @@
 
       // Personal Info Header
       if (payload.personalInfo) {
-        const { fullName, title, email, phone, location } = payload.personalInfo;
+        const { fullName, title, email, phone, location, website } = payload.personalInfo;
         if (fullName) document.getElementById('name').textContent = fullName;
+        if (website) document.getElementById('website').textContent = website;
       }
 
       // About Section

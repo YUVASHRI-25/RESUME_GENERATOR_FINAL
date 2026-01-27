@@ -24,6 +24,7 @@
         <span id="phone">+123-456-7890</span>
         <span id="location">123 Anywhere St., Any City</span>
         <span id="email">hello@reallygreatsite.com</span>
+        <span id="website">www.reallygreatsite.com</span>
       </div>
     </div>
 
@@ -141,12 +142,13 @@
 
     // Personal info
     if (payload.personalInfo) {
-      const { fullName, title, email, phone, location } = payload.personalInfo;
+      const { fullName, title, email, phone, location, website } = payload.personalInfo;
       if (fullName) document.getElementById('name').textContent = fullName;
       if (title) document.getElementById('title').textContent = title;
       if (phone) document.getElementById('phone').textContent = phone;
       if (location) document.getElementById('location').textContent = location;
       if (email) document.getElementById('email').textContent = email;
+      if (website) document.getElementById('website').textContent = website;
     }
 
     // Profile image

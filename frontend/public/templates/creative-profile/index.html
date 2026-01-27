@@ -29,6 +29,7 @@
                 <span id="contact-phone">📞 123-456-7890</span>
                 <span id="contact-email">✉ hello@example.com</span>
                 <span id="contact-location">📍 City, Country</span>
+                <span id="contact-website">🌐 www.example.com</span>
             </div>
         </div>
     </div>
@@ -173,7 +174,7 @@
 
         // Update personal info
         if (payload.personalInfo) {
-            const { fullName, title, email, phone, location } = payload.personalInfo;
+            const { fullName, title, email, phone, location, website } = payload.personalInfo;
             if (fullName) document.getElementById("name").textContent = fullName;
             if (title) document.getElementById("title").textContent = title;
             
@@ -184,6 +185,7 @@
                 if (phone) contactHtml += `<span id="contact-phone">📞 ${phone}</span>`;
                 if (email) contactHtml += `<span id="contact-email">✉ ${email}</span>`;
                 if (location) contactHtml += `<span id="contact-location">📍 ${location}</span>`;
+                if (website) contactHtml += `<span id="contact-website">🌐 ${website}</span>`;
                 if (contactHtml) contactInfo.innerHTML = contactHtml;
             }
         }

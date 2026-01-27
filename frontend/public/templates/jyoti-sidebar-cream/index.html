@@ -25,6 +25,7 @@
       <li id="phone">{{phone}}</li>
       <li id="email">{{email}}</li>
       <li id="location">{{location}}</li>
+      <li id="website">{{website}}</li>
     </ul>
 
     <div id="sidebar-sections">
@@ -122,12 +123,13 @@
 
     // Personal Info
     if (payload.personalInfo) {
-      const { fullName, title, email, phone, location } = payload.personalInfo;
+      const { fullName, title, email, phone, location, website } = payload.personalInfo;
       document.getElementById('name').textContent = fullName || '';
       document.getElementById('title').textContent = title || '';
       document.getElementById('email').textContent = email || '';
       document.getElementById('phone').textContent = phone || '';
       document.getElementById('location').textContent = location || '';
+      if (website) document.getElementById('website').textContent = website;
     }
 
     // About section
