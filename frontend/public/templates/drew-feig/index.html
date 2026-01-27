@@ -258,7 +258,7 @@
           
           const date = document.createElement('div');
           date.className = 'item-date';
-          date.textContent = `${exp.startDate || ''} ${exp.endDate ? `- ${exp.endDate}` : ''}`.trim();
+          date.textContent = `${exp.startDate || ''} ${exp.endDate ? `- ${exp.endDate}` : exp.currentlyWorking ? '- Present' : ''}`.trim();
           
           headerDiv.appendChild(title);
           headerDiv.appendChild(date);

@@ -259,7 +259,7 @@
       payload.experiences.forEach(exp => {
         const job = document.createElement('div');
         job.className = 'job';
-        const duration = exp.startDate ? exp.startDate + (exp.endDate ? ' - ' + exp.endDate : '') : '';
+        const duration = exp.startDate ? exp.startDate + (exp.endDate ? ' - ' + exp.endDate : (exp.currentlyWorking ? ' - Present' : '')) : '';
         const bullets = exp.bullets && Array.isArray(exp.bullets) ? '<ul>' + exp.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>' : '';
         job.innerHTML = `
           <div class="job-head">
