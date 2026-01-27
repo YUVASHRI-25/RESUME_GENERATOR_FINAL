@@ -141,22 +141,6 @@ export const templates = [
     }
   },
   {
-    id: "pedro-classic",
-    name: "Pedro Classic",
-    preview: "/templates/pedro-classic/preview.png",
-    html: "/templates/pedro-classic/index.html",
-    supportsProfileImage: true,
-    supportsColumnPlacement: true,
-    defaultTheme: {
-      fontFamily: "Times New Roman",
-      primaryColor: "#0f172a",
-      backgroundColor: "#ffffff",
-      textColor: "#0f172a",
-      textSecondary: "#475569",
-      borderColor: "#cbd5e1"
-    }
-  },
-  {
     id: "olivia-minimal",
     name: "Olivia Minimal",
     preview: "/templates/olivia-minimal/preview.png",

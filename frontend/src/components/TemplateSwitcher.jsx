@@ -28,13 +28,13 @@ const TemplateSwitcher = ({ currentTemplateId, resumeData, setResumeData }) => {
         'One Column': templates.filter(t => 
             !['creative-profile', 'richard-image-two-column', 'jyoti-sidebar-cream', 
               'modern-two-column', 'lorna-modern', 'anaisha-timeline', 
-              'pedro-classic', 'olivia-minimal'].includes(t.id)
+              'olivia-minimal'].includes(t.id)
         ),
         'Two Column': templates.filter(t => 
             ['jyoti-sidebar-cream', 'modern-two-column', 'lorna-modern', 'olivia-minimal'].includes(t.id)
         ),
         'Image Layouts': templates.filter(t => 
-            ['creative-profile', 'richard-image-two-column', 'anaisha-timeline', 'pedro-classic'].includes(t.id)
+            ['creative-profile', 'richard-image-two-column', 'anaisha-timeline'].includes(t.id)
         )
     };
 

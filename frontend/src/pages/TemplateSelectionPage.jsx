@@ -9,8 +9,8 @@ const TemplateSelectionPage = () => {
     const [selectedId, setSelectedId] = useState(null);
     const [activeTab, setActiveTab] = useState('one-column');
 
-    const oneColumnTemplates = templates.filter(t => t.id !== 'creative-profile' && t.id !== 'richard-image-two-column' && t.id !== 'jyoti-sidebar-cream' && t.id !== 'modern-two-column' && t.id !== 'lorna-modern' && t.id !== 'anaisha-timeline' && t.id !== 'pedro-classic' && t.id !== 'olivia-minimal');
-    const imageColumnTemplates = templates.filter(t => t.id === 'creative-profile' || t.id === 'richard-image-two-column' || t.id === 'anaisha-timeline' || t.id === 'pedro-classic');
+    const oneColumnTemplates = templates.filter(t => t.id !== 'creative-profile' && t.id !== 'richard-image-two-column' && t.id !== 'jyoti-sidebar-cream' && t.id !== 'modern-two-column' && t.id !== 'lorna-modern' && t.id !== 'anaisha-timeline' && t.id !== 'olivia-minimal');
+    const imageColumnTemplates = templates.filter(t => t.id === 'creative-profile' || t.id === 'richard-image-two-column' || t.id === 'anaisha-timeline');
     const twoColumnTemplates = templates.filter(t => t.id === 'jyoti-sidebar-cream' || t.id === 'modern-two-column' || t.id === 'lorna-modern' || t.id === 'olivia-minimal');
     
     const displayTemplates = 
