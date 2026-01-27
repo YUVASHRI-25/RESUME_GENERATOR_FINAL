@@ -157,21 +157,6 @@ export const templates = [
     }
   },
   {
-    id: "avery-gold",
-    name: "Avery Gold",
-    preview: "/templates/avery-gold/preview.png",
-    html: "/templates/avery-gold/index.html",
-    supportsColumnPlacement: false,
-    defaultTheme: {
-      fontFamily: "Georgia",
-      primaryColor: "#b45309",
-      backgroundColor: "#fffbeb",
-      textColor: "#451a03",
-      textSecondary: "#78350f",
-      borderColor: "#fbbf24"
-    }
-  },
-  {
     id: "olivia-minimal",
     name: "Olivia Minimal",
     preview: "/templates/olivia-minimal/preview.png",

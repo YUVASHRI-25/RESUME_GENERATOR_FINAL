@@ -37,7 +37,7 @@
 
   <!-- ABOUT -->
   <section id="about-section">
-    <h3 id="aboutHeading">ABOUT ME</h3>
+    <h3 id="aboutHeading" contenteditable="true" data-field="aboutHeading">ABOUT ME</h3>
     <p id="aboutText"></p>
   </section>
 
@@ -50,27 +50,27 @@
     <div class="left">
 
       <div class="block" id="education-block">
-        <h3 id="educationHeading">EDUCATION</h3>
+        <h3 id="educationHeading" contenteditable="true" data-field="educationHeading">EDUCATION</h3>
         <div id="educationContainer"></div>
       </div>
 
       <div class="block" id="skills-block">
-        <h3 id="skillsHeading">SKILLS</h3>
+        <h3 id="skillsHeading" contenteditable="true" data-field="skillsHeading">SKILLS</h3>
         <ul id="skillsContainer"></ul>
       </div>
 
       <div class="block" id="projects-block">
-        <h3 id="projectsHeading">PROJECTS</h3>
+        <h3 id="projectsHeading" contenteditable="true" data-field="projectsHeading">PROJECTS</h3>
         <div id="projectsContainer"></div>
       </div>
 
       <div class="block" id="languages-block">
-        <h3 id="languagesHeading">LANGUAGES</h3>
+        <h3 id="languagesHeading" contenteditable="true" data-field="languagesHeading">LANGUAGES</h3>
         <ul id="languagesContainer"></ul>
       </div>
 
       <div class="block" id="awards-block">
-        <h3 id="awardsHeading">AWARDS</h3>
+        <h3 id="awardsHeading" contenteditable="true" data-field="awardsHeading">AWARDS</h3>
         <ul id="awardsContainer"></ul>
       </div>
 
@@ -83,12 +83,12 @@
     <div class="right">
 
       <div class="block" id="experience-block">
-        <h3 id="experienceHeading">WORK EXPERIENCE</h3>
+        <h3 id="experienceHeading" contenteditable="true" data-field="experienceHeading">WORK EXPERIENCE</h3>
         <div id="experienceContainer"></div>
       </div>
 
       <div class="block" id="references-block">
-        <h3 id="referencesHeading">REFERENCES</h3>
+        <h3 id="referencesHeading" contenteditable="true" data-field="referencesHeading">REFERENCES</h3>
         <div id="referencesContainer"></div>
       </div>
 
@@ -159,7 +159,8 @@
     // About section with sectionSettings
     const aboutHeading = document.getElementById('aboutHeading');
     const aboutSection = document.getElementById('about-section');
-    if (aboutHeading && settings.about?.heading) {
+    // Only apply default heading if user hasn't customized it
+    if (aboutHeading && settings.about?.heading && !aboutHeading.hasAttribute('data-customized')) {
       aboutHeading.textContent = settings.about.heading;
     }
     if (aboutSection) {
@@ -172,7 +173,8 @@
     // Education with sectionSettings
     const educationHeading = document.getElementById('educationHeading');
     const educationBlock = document.getElementById('education-block');
-    if (educationHeading && settings.education?.heading) {
+    // Only apply default heading if user hasn't customized it
+    if (educationHeading && settings.education?.heading && !educationHeading.hasAttribute('data-customized')) {
       educationHeading.textContent = settings.education.heading;
     }
     if (educationBlock) {
@@ -197,7 +199,8 @@
     // Skills with sectionSettings
     const skillsHeading = document.getElementById('skillsHeading');
     const skillsBlock = document.getElementById('skills-block');
-    if (skillsHeading && settings.skills?.heading) {
+    // Only apply default heading if user hasn't customized it
+    if (skillsHeading && settings.skills?.heading && !skillsHeading.hasAttribute('data-customized')) {
       skillsHeading.textContent = settings.skills.heading;
     }
     if (skillsBlock) {
@@ -217,7 +220,8 @@
     // Projects with sectionSettings
     const projectsHeading = document.getElementById('projectsHeading');
     const projectsBlock = document.getElementById('projects-block');
-    if (projectsHeading && settings.projects?.heading) {
+    // Only apply default heading if user hasn't customized it
+    if (projectsHeading && settings.projects?.heading && !projectsHeading.hasAttribute('data-customized')) {
       projectsHeading.textContent = settings.projects.heading;
     }
     if (projectsBlock) {
@@ -250,7 +254,8 @@
     // Languages with sectionSettings
     const languagesHeading = document.getElementById('languagesHeading');
     const languagesBlock = document.getElementById('languages-block');
-    if (languagesHeading && settings.languages?.heading) {
+    // Only apply default heading if user hasn't customized it
+    if (languagesHeading && settings.languages?.heading && !languagesHeading.hasAttribute('data-customized')) {
       languagesHeading.textContent = settings.languages.heading;
     }
     if (languagesBlock) {
@@ -270,7 +275,8 @@
     // Awards with sectionSettings
     const awardsHeading = document.getElementById('awardsHeading');
     const awardsBlock = document.getElementById('awards-block');
-    if (awardsHeading && settings.awards?.heading) {
+    // Only apply default heading if user hasn't customized it
+    if (awardsHeading && settings.awards?.heading && !awardsHeading.hasAttribute('data-customized')) {
       awardsHeading.textContent = settings.awards.heading;
     }
     if (awardsBlock) {
@@ -290,7 +296,8 @@
     // Experience with sectionSettings
     const experienceHeading = document.getElementById('experienceHeading');
     const experienceBlock = document.getElementById('experience-block');
-    if (experienceHeading && settings.experience?.heading) {
+    // Only apply default heading if user hasn't customized it
+    if (experienceHeading && settings.experience?.heading && !experienceHeading.hasAttribute('data-customized')) {
       experienceHeading.textContent = settings.experience.heading;
     }
     if (experienceBlock) {
@@ -323,7 +330,8 @@
     // References with sectionSettings
     const referencesHeading = document.getElementById('referencesHeading');
     const referencesBlock = document.getElementById('references-block');
-    if (referencesHeading && settings.references?.heading) {
+    // Only apply default heading if user hasn't customized it
+    if (referencesHeading && settings.references?.heading && !referencesHeading.hasAttribute('data-customized')) {
       referencesHeading.textContent = settings.references.heading;
     }
     if (referencesBlock) {
@@ -400,6 +408,32 @@
       }
     }
   }
+
+  // Handle inline editing for headings
+  document.addEventListener('input', function(e) {
+    if (e.target.hasAttribute('contenteditable') && e.target.hasAttribute('data-field')) {
+      const field = e.target.getAttribute('data-field');
+      const value = e.target.textContent.trim();
+      
+      // Mark this heading as customized
+      e.target.setAttribute('data-customized', 'true');
+      
+      // Send updated heading to parent
+      window.parent.postMessage({
+        type: 'heading-update',
+        field: field,
+        value: value
+      }, '*');
+    }
+  });
+
+  // Prevent Enter key from creating new lines in headings
+  document.addEventListener('keydown', function(e) {
+    if (e.target.hasAttribute('contenteditable') && e.key === 'Enter') {
+      e.preventDefault();
+      e.target.blur();
+    }
+  });
 
   // Handle postMessage from parent (React editor)
   window.addEventListener('message', (event) => {

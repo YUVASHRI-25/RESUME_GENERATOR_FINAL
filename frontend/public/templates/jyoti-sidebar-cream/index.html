@@ -30,17 +30,17 @@
 
     <div id="sidebar-sections">
       <section id="skills-section">
-        <h3 id="skills-heading">{{section.skills.heading}}</h3>
+        <h3 id="skills-heading" contenteditable="true" data-field="skillsHeading">{{section.skills.heading}}</h3>
         <ul id="skills-list"></ul>
       </section>
 
       <section id="languages-section">
-        <h3 id="languages-heading">{{section.languages.heading}}</h3>
+        <h3 id="languages-heading" contenteditable="true" data-field="languagesHeading">{{section.languages.heading}}</h3>
         <ul id="languages-list"></ul>
       </section>
 
       <section id="awards-section">
-        <h3 id="awards-heading">{{section.awards.heading}}</h3>
+        <h3 id="awards-heading" contenteditable="true" data-field="awardsHeading">{{section.awards.heading}}</h3>
         <ul id="awards-list"></ul>
       </section>
     </div>
@@ -52,27 +52,27 @@
 
     <div id="content-sections">
       <section id="about-section">
-        <h3 id="about-heading">{{section.about.heading}}</h3>
+        <h3 id="about-heading" contenteditable="true" data-field="aboutHeading">{{section.about.heading}}</h3>
         <p id="summary">{{section.about.content}}</p>
       </section>
 
       <section id="education-section">
-        <h3 id="education-heading">{{section.education.heading}}</h3>
+        <h3 id="education-heading" contenteditable="true" data-field="educationHeading">{{section.education.heading}}</h3>
         <div id="education-list"></div>
       </section>
 
       <section id="projects-section">
-        <h3 id="projects-heading">{{section.projects.heading}}</h3>
+        <h3 id="projects-heading" contenteditable="true" data-field="projectsHeading">{{section.projects.heading}}</h3>
         <div id="projects-list"></div>
       </section>
 
       <section id="experience-section">
-        <h3 id="experience-heading">{{section.experience.heading}}</h3>
+        <h3 id="experience-heading" contenteditable="true" data-field="experienceHeading">{{section.experience.heading}}</h3>
         <div id="experience-list"></div>
       </section>
 
       <section id="references-section">
-        <h3 id="references-heading">{{section.references.heading}}</h3>
+        <h3 id="references-heading" contenteditable="true" data-field="referencesHeading">{{section.references.heading}}</h3>
         <div id="references-list"></div>
       </section>
     </div>
@@ -136,7 +136,8 @@
     // About section
     const aboutSection = document.getElementById('about-section');
     const aboutHeading = document.getElementById('about-heading');
-    if (aboutHeading && settings.about?.heading) aboutHeading.textContent = settings.about.heading;
+    // Only apply default heading if user hasn't customized it
+    if (aboutHeading && settings.about?.heading && !aboutHeading.hasAttribute('data-customized')) aboutHeading.textContent = settings.about.heading;
     if (aboutSection) aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
     if (payload.about?.content) {
       document.getElementById('summary').textContent = payload.about.content;
@@ -145,7 +146,8 @@
     // Education section
     const eduSection = document.getElementById('education-section');
     const eduHeading = document.getElementById('education-heading');
-    if (eduHeading && settings.education?.heading) eduHeading.textContent = settings.education.heading;
+    // Only apply default heading if user hasn't customized it
+    if (eduHeading && settings.education?.heading && !eduHeading.hasAttribute('data-customized')) eduHeading.textContent = settings.education.heading;
     if (eduSection) eduSection.style.display = settings.education?.visible !== false ? 'block' : 'none';
     if (Array.isArray(payload.education)) {
       const list = document.getElementById('education-list');
@@ -167,7 +169,8 @@
     // Projects section
     const projSection = document.getElementById('projects-section');
     const projHeading = document.getElementById('projects-heading');
-    if (projHeading && settings.projects?.heading) projHeading.textContent = settings.projects.heading;
+    // Only apply default heading if user hasn't customized it
+    if (projHeading && settings.projects?.heading && !projHeading.hasAttribute('data-customized')) projHeading.textContent = settings.projects.heading;
     if (projSection) projSection.style.display = settings.projects?.visible !== false ? 'block' : 'none';
     if (Array.isArray(payload.projects)) {
       const list = document.getElementById('projects-list');
@@ -206,7 +209,8 @@
     // Experience section
     const expSection = document.getElementById('experience-section');
     const expHeading = document.getElementById('experience-heading');
-    if (expHeading && settings.experience?.heading) expHeading.textContent = settings.experience.heading;
+    // Only apply default heading if user hasn't customized it
+    if (expHeading && settings.experience?.heading && !expHeading.hasAttribute('data-customized')) expHeading.textContent = settings.experience.heading;
     if (expSection) expSection.style.display = settings.experience?.visible !== false ? 'block' : 'none';
     if (Array.isArray(payload.experiences)) {
       const list = document.getElementById('experience-list');
@@ -250,7 +254,8 @@
     // Skills section
     const skillsSection = document.getElementById('skills-section');
     const skillsHeading = document.getElementById('skills-heading');
-    if (skillsHeading && settings.skills?.heading) skillsHeading.textContent = settings.skills.heading;
+    // Only apply default heading if user hasn't customized it
+    if (skillsHeading && settings.skills?.heading && !skillsHeading.hasAttribute('data-customized')) skillsHeading.textContent = settings.skills.heading;
     if (skillsSection) skillsSection.style.display = settings.skills?.visible !== false ? 'block' : 'none';
     if (Array.isArray(payload.skills)) {
       const list = document.getElementById('skills-list');
@@ -265,7 +270,8 @@
     // Languages section
     const langSection = document.getElementById('languages-section');
     const langHeading = document.getElementById('languages-heading');
-    if (langHeading && settings.languages?.heading) langHeading.textContent = settings.languages.heading;
+    // Only apply default heading if user hasn't customized it
+    if (langHeading && settings.languages?.heading && !langHeading.hasAttribute('data-customized')) langHeading.textContent = settings.languages.heading;
     if (langSection) langSection.style.display = settings.languages?.visible !== false ? 'block' : 'none';
     if (Array.isArray(payload.languages)) {
       const list = document.getElementById('languages-list');
@@ -280,7 +286,8 @@
     // Awards section
     const awardsSection = document.getElementById('awards-section');
     const awardsHeading = document.getElementById('awards-heading');
-    if (awardsHeading && settings.awards?.heading) awardsHeading.textContent = settings.awards.heading;
+    // Only apply default heading if user hasn't customized it
+    if (awardsHeading && settings.awards?.heading && !awardsHeading.hasAttribute('data-customized')) awardsHeading.textContent = settings.awards.heading;
     if (awardsSection) awardsSection.style.display = settings.awards?.visible !== false ? 'block' : 'none';
     if (Array.isArray(payload.awards)) {
       const list = document.getElementById('awards-list');
@@ -295,7 +302,8 @@
     // References section
     const refSection = document.getElementById('references-section');
     const refHeading = document.getElementById('references-heading');
-    if (refHeading && settings.references?.heading) refHeading.textContent = settings.references.heading;
+    // Only apply default heading if user hasn't customized it
+    if (refHeading && settings.references?.heading && !refHeading.hasAttribute('data-customized')) refHeading.textContent = settings.references.heading;
     if (refSection) refSection.style.display = settings.references?.visible !== false ? 'block' : 'none';
     if (Array.isArray(payload.references)) {
       const list = document.getElementById('references-list');
@@ -393,6 +401,32 @@
       }
     }
   }
+
+  // Handle inline editing for headings
+  document.addEventListener('input', function(e) {
+    if (e.target.hasAttribute('contenteditable') && e.target.hasAttribute('data-field')) {
+      const field = e.target.getAttribute('data-field');
+      const value = e.target.textContent.trim();
+      
+      // Mark this heading as customized
+      e.target.setAttribute('data-customized', 'true');
+      
+      // Send updated heading to parent
+      window.parent.postMessage({
+        type: 'heading-update',
+        field: field,
+        value: value
+      }, '*');
+    }
+  });
+
+  // Prevent Enter key from creating new lines in headings
+  document.addEventListener('keydown', function(e) {
+    if (e.target.hasAttribute('contenteditable') && e.key === 'Enter') {
+      e.preventDefault();
+      e.target.blur();
+    }
+  });
 
   window.addEventListener('message', (event) => {
     if (event.data === 'DOWNLOAD_PDF') {

@@ -27,38 +27,38 @@
     <div class="columns">
       <aside class="left">
         <section>
-          <h3 id="education-heading">Education</h3>
+          <h3 id="education-heading" contenteditable="true" data-field="educationHeading">Education</h3>
           <div id="education-section"></div>
         </section>
         <section>
-          <h3 id="skills-heading">Skills</h3>
+          <h3 id="skills-heading" contenteditable="true" data-field="skillsHeading">Skills</h3>
           <ul id="skills-list"></ul>
         </section>
         <section>
-          <h3>LANGUAGE</h3>
+          <h3 id="languages-heading" contenteditable="true" data-field="languagesHeading">LANGUAGE</h3>
           <ul id="languages-list"></ul>
         </section>
       </aside>
 
       <main class="right">
         <section>
-          <h3 id="profile-heading">Profile</h3>
+          <h3 id="profile-heading" contenteditable="true" data-field="aboutHeading">Profile</h3>
           <p id="summary">Professional summary</p>
         </section>
         <section>
-          <h3 id="experience-heading">Experience</h3>
+          <h3 id="experience-heading" contenteditable="true" data-field="experienceHeading">Experience</h3>
           <div id="experience-section"></div>
         </section>
         <section>
-          <h3 id="projects-heading">Projects</h3>
+          <h3 id="projects-heading" contenteditable="true" data-field="projectsHeading">Projects</h3>
           <div id="projects-section"></div>
         </section>
         <section>
-          <h3 id="awards-heading">Awards</h3>
+          <h3 id="awards-heading" contenteditable="true" data-field="awardsHeading">Awards</h3>
           <div id="awards-list"></div>
         </section>
         <section>
-          <h3 id="references-heading">References</h3>
+          <h3 id="references-heading" contenteditable="true" data-field="referencesHeading">References</h3>
           <div id="references-list"></div>
         </section>
         <!-- CUSTOM SECTIONS -->
@@ -121,7 +121,8 @@
       // About Section
       const aboutSection = document.querySelector('[id$="-heading"]').closest('section');
       const aboutHeading = document.getElementById('profile-heading');
-      if (aboutHeading && settings.about?.heading) {
+      // Only apply default heading if user hasn't customized it
+      if (aboutHeading && settings.about?.heading && !aboutHeading.hasAttribute('data-customized')) {
         aboutHeading.textContent = settings.about.heading;
       }
       if (payload.about?.content) {
@@ -134,7 +135,8 @@
       // Education Section
       const eduSection = document.getElementById('education-section');
       const eduHeading = document.getElementById('education-heading');
-      if (eduHeading && settings.education?.heading) {
+      // Only apply default heading if user hasn't customized it
+      if (eduHeading && settings.education?.heading && !eduHeading.hasAttribute('data-customized')) {
         eduHeading.textContent = settings.education.heading;
       }
       if (eduSection) {
@@ -177,7 +179,8 @@
       // Skills Section
       const skillsHeading = document.getElementById('skills-heading');
       const skillsSection = skillsHeading?.parentElement;
-      if (skillsHeading && settings.skills?.heading) {
+      // Only apply default heading if user hasn't customized it
+      if (skillsHeading && settings.skills?.heading && !skillsHeading.hasAttribute('data-customized')) {
         skillsHeading.textContent = settings.skills.heading;
       }
       if (skillsSection) {
@@ -211,7 +214,8 @@
       // Experience Section
       const expHeading = document.getElementById('experience-heading');
       const expSection = document.getElementById('experience-section');
-      if (expHeading && settings.experience?.heading) {
+      // Only apply default heading if user hasn't customized it
+      if (expHeading && settings.experience?.heading && !expHeading.hasAttribute('data-customized')) {
         expHeading.textContent = settings.experience.heading;
       }
       if (expSection) {
@@ -269,7 +273,8 @@
       // Projects Section
       const projHeading = document.getElementById('projects-heading');
       const projSection = document.getElementById('projects-section');
-      if (projHeading && settings.projects?.heading) {
+      // Only apply default heading if user hasn't customized it
+      if (projHeading && settings.projects?.heading && !projHeading.hasAttribute('data-customized')) {
         projHeading.textContent = settings.projects.heading;
       }
       if (projSection) {
@@ -300,7 +305,8 @@
       // Awards Section
       const awardsHeading = document.getElementById('awards-heading');
       const awardsSection = document.getElementById('awards-list');
-      if (awardsHeading && settings.awards?.heading) {
+      // Only apply default heading if user hasn't customized it
+      if (awardsHeading && settings.awards?.heading && !awardsHeading.hasAttribute('data-customized')) {
         awardsHeading.textContent = settings.awards.heading;
       }
       if (awardsSection) {
@@ -339,7 +345,8 @@
       // References Section
       const refHeading = document.getElementById('references-heading');
       const refSection = document.getElementById('references-list');
-      if (refHeading && settings.references?.heading) {
+      // Only apply default heading if user hasn't customized it
+      if (refHeading && settings.references?.heading && !refHeading.hasAttribute('data-customized')) {
         refHeading.textContent = settings.references.heading;
       }
       if (refSection) {
@@ -410,6 +417,32 @@
       customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
     }
     }
+
+  // Handle inline editing for headings
+  document.addEventListener('input', function(e) {
+    if (e.target.hasAttribute('contenteditable') && e.target.hasAttribute('data-field')) {
+      const field = e.target.getAttribute('data-field');
+      const value = e.target.textContent.trim();
+      
+      // Mark this heading as customized
+      e.target.setAttribute('data-customized', 'true');
+      
+      // Send updated heading to parent
+      window.parent.postMessage({
+        type: 'heading-update',
+        field: field,
+        value: value
+      }, '*');
+    }
+  });
+
+  // Prevent Enter key from creating new lines in headings
+  document.addEventListener('keydown', function(e) {
+    if (e.target.hasAttribute('contenteditable') && e.key === 'Enter') {
+      e.preventDefault();
+      e.target.blur();
+    }
+  });
 
     window.addEventListener("message", (event) => {
       if (event.data === 'DOWNLOAD_PDF') {
