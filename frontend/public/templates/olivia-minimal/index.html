@@ -40,9 +40,6 @@
           <li><i class="fa-solid fa-phone"></i><span id="phone"></span></li>
           <li><i class="fa-solid fa-envelope"></i><span id="email"></span></li>
           <li><i class="fa-solid fa-location-dot"></i><span id="address"></span></li>
-          <li><i class="fa-solid fa-code"></i><span id="website"></span></li>
-          <li><i class="fa-brands fa-linkedin"></i><span id="linkedin"></span></li>
-          <li><i class="fa-brands fa-github"></i><span id="github"></span></li>
         </ul>
       </section>
 
@@ -138,17 +135,14 @@
 
     // Personal info
     if (payload.personalInfo) {
-      const { fullName, title, email, phone, location, leetcode, linkedin, github, signature } = payload.personalInfo;
+      const { fullName, title, email, phone, location, signature } = payload.personalInfo;
       if (fullName) document.getElementById('name').textContent = fullName;
       if (signature) document.getElementById('signature').textContent = signature;
       else if (fullName) document.getElementById('signature').textContent = fullName.split(' ')[0];
-      if (title) document.getElementById('title').textContent = title;
+      
       if (phone) document.getElementById('phone').textContent = phone;
       if (email) document.getElementById('email').textContent = email;
       if (location) document.getElementById('address').textContent = location;
-      if (leetcode) document.getElementById('website').textContent = leetcode;
-      if (linkedin) document.getElementById('linkedin').textContent = linkedin;
-      if (github) document.getElementById('github').textContent = github;
     }
 
     // About/Professional Summary Section

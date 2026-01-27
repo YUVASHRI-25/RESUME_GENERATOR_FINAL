@@ -107,11 +107,8 @@
 
       // Personal Info Header
       if (payload.personalInfo) {
-        const { fullName, title, email, phone, location, leetcode, linkedin, github } = payload.personalInfo;
+        const { fullName, title, email, phone, location } = payload.personalInfo;
         if (fullName) document.getElementById('name').textContent = fullName;
-        if (linkedin) document.getElementById('linkedin').textContent = linkedin;
-        if (github) document.getElementById('github').textContent = github;
-        if (leetcode) document.getElementById('website').textContent = leetcode;
       }
 
       // About Section

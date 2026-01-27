@@ -19,11 +19,7 @@
       <h1 id="name" contenteditable="true">JONATHAN PATTERSON</h1>
       <h2 id="title" contenteditable="true">CONTENT WRITER</h2>
 
-      <div class="contact" id="contact" contenteditable="true">
-        +123-456-7890 &nbsp; | &nbsp; @reallygreatsite &nbsp; | &nbsp;
-        hello@reallygreatsite.com &nbsp; | &nbsp;
-        123 Anywhere St., Any City, ST 12345
-      </div>
+      <div class="contact" id="contact"></div>
     </header>
 
     <!-- SUMMARY -->
@@ -111,8 +107,17 @@
 
   </div>
 
-  <script>
-    function updateContent(data) {
+    <script>
+      // Clear any cached content immediately
+      document.addEventListener('DOMContentLoaded', function() {
+        const contactElement = document.getElementById('contact');
+        if (contactElement) {
+          contactElement.innerHTML = '';
+          contactElement.textContent = '';
+        }
+      });
+
+      function updateContent(data) {
       if (!data || !data.payload) return;
 
       const payload = data.payload;
@@ -147,9 +152,21 @@
       const resume = document.getElementById('resume');
       if (resume) resume.style.fontFamily = fontValue;
 
+      // Force clear contact section initially and aggressively
+      const contactElement = document.getElementById('contact');
+      if (contactElement) {
+        contactElement.innerHTML = '';
+        contactElement.textContent = '';
+        contactElement.innerText = '';
+        // Remove all child nodes
+        while (contactElement.firstChild) {
+          contactElement.removeChild(contactElement.firstChild);
+        }
+      }
+
       // Personal Info Header
       if (payload.personalInfo) {
-        const { fullName, title, email, phone, location, leetcode, linkedin, github } = payload.personalInfo;
+        const { fullName, title, email, phone, location } = payload.personalInfo;
         if (fullName) document.getElementById('name').textContent = fullName;
         if (title) document.getElementById('title').textContent = title;
         
@@ -159,12 +176,15 @@
         if (phone) parts.push(phone);
         if (email) parts.push(email);
         if (location) parts.push(location);
-        if (leetcode) parts.push(leetcode);
-        if (linkedin) parts.push(linkedin);
-        if (github) parts.push(github);
         if (parts.length > 0) {
           contact.innerHTML = parts.join(' &nbsp; | &nbsp; ');
+        } else {
+          contact.innerHTML = '';
         }
+      } else {
+        // Clear contact info if no personal info data
+        const contact = document.getElementById('contact');
+        if (contact) contact.innerHTML = '';
       }
 
       // About Section

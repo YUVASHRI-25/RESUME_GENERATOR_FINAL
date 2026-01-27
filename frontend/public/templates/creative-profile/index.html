@@ -173,7 +173,7 @@
 
         // Update personal info
         if (payload.personalInfo) {
-            const { fullName, title, email, phone, location, leetcode, linkedin, github } = payload.personalInfo;
+            const { fullName, title, email, phone, location } = payload.personalInfo;
             if (fullName) document.getElementById("name").textContent = fullName;
             if (title) document.getElementById("title").textContent = title;
             
@@ -184,9 +184,6 @@
                 if (phone) contactHtml += `<span id="contact-phone">📞 ${phone}</span>`;
                 if (email) contactHtml += `<span id="contact-email">✉ ${email}</span>`;
                 if (location) contactHtml += `<span id="contact-location">📍 ${location}</span>`;
-                if (leetcode) contactHtml += `<span id="contact-website">💻 ${leetcode}</span>`;
-                if (linkedin) contactHtml += `<span id="contact-linkedin">💼 ${linkedin}</span>`;
-                if (github) contactHtml += `<span id="contact-github">💻 ${github}</span>`;
                 if (contactHtml) contactInfo.innerHTML = contactHtml;
             }
         }
