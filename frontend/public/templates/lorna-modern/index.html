@@ -18,6 +18,9 @@
       <h2 id="title">Marketing Manager</h2>
     </header>
     <div class="bar">
+      <span id="email">{{email}}</span>
+      <span id="phone">{{phone}}</span>
+      <span id="location">{{location}}</span>
       <span id="website">{{website}}</span>
     </div>
 
@@ -105,10 +108,53 @@
       }
 
       // Personal Info Header
+      const nameElement = document.getElementById('name');
+      const titleElement = document.getElementById('title');
+      const emailElement = document.getElementById('email');
+      const phoneElement = document.getElementById('phone');
+      const locationElement = document.getElementById('location');
+      const websiteElement = document.getElementById('website');
+      
       if (payload.personalInfo) {
         const { fullName, title, email, phone, location, website } = payload.personalInfo;
-        if (fullName) document.getElementById('name').textContent = fullName;
-        if (website) document.getElementById('website').textContent = website;
+        
+        // Update name
+        if (nameElement) {
+          nameElement.textContent = fullName || '';
+        }
+        
+        // Update title
+        if (titleElement) {
+          titleElement.textContent = title || '';
+        }
+        
+        // Update email
+        if (emailElement) {
+          emailElement.textContent = email || '';
+        }
+        
+        // Update phone
+        if (phoneElement) {
+          phoneElement.textContent = phone || '';
+        }
+        
+        // Update location
+        if (locationElement) {
+          locationElement.textContent = location || '';
+        }
+        
+        // Update website
+        if (websiteElement) {
+          websiteElement.textContent = website || '';
+        }
+      } else {
+        // Clear personal info if no data
+        if (nameElement) nameElement.textContent = '';
+        if (titleElement) titleElement.textContent = '';
+        if (emailElement) emailElement.textContent = '';
+        if (phoneElement) phoneElement.textContent = '';
+        if (locationElement) locationElement.textContent = '';
+        if (websiteElement) websiteElement.textContent = '';
       }
 
       // About Section
