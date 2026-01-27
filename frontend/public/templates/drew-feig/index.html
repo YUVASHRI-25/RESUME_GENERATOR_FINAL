@@ -133,6 +133,7 @@
         if (website) {
           const span = document.createElement('span');
           span.textContent = website;
+          span.id = 'website';
           contactDiv.appendChild(span);
         }
       }
@@ -145,7 +146,7 @@
         aboutHeading.textContent = settings.about.heading;
       }
       if (payload.about?.content) {
-        document.getElementById('about-content').textContent = payload.about.content;
+        document.getElementById('about-content').innerHTML = payload.about.content.replace(/\n/g, '<br>');
       }
       if (aboutSection) {
         aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
@@ -211,7 +212,7 @@
           if (edu.description) {
             const desc = document.createElement('div');
             desc.className = 'item-description';
-            desc.textContent = edu.description;
+            desc.innerHTML = edu.description.replace(/\n/g, '<br>');
             div.appendChild(desc);
           }
           content.appendChild(div);
@@ -267,7 +268,7 @@
           if (exp.description) {
             const desc = document.createElement('div');
             desc.className = 'item-description';
-            desc.textContent = exp.description;
+            desc.innerHTML = exp.description.replace(/\n/g, '<br>');
             div.appendChild(desc);
           }
           
@@ -312,7 +313,8 @@
           
           const desc = document.createElement('p');
           desc.style.margin = '0';
-          desc.textContent = proj.description || '';
+          desc.className = 'project-description';
+          desc.innerHTML = (proj.description || '').replace(/\n/g, '<br>');
           
           div.appendChild(title);
           if (desc.textContent) div.appendChild(desc);
@@ -447,7 +449,8 @@
           heading.style.margin = '0 0 10px 0';
           
           const content = document.createElement('div');
-          content.textContent = section.content || '';
+          content.className = 'custom-section-content';
+          content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
           
           wrapper.appendChild(heading);
           wrapper.appendChild(content);

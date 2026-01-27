@@ -173,7 +173,7 @@
 
         // Update personal info
         if (payload.personalInfo) {
-            const { fullName, title, email, phone, location, website } = payload.personalInfo;
+            const { fullName, title, email, phone, location, leetcode, linkedin, github } = payload.personalInfo;
             if (fullName) document.getElementById("name").textContent = fullName;
             if (title) document.getElementById("title").textContent = title;
             
@@ -184,7 +184,9 @@
                 if (phone) contactHtml += `<span id="contact-phone">📞 ${phone}</span>`;
                 if (email) contactHtml += `<span id="contact-email">✉ ${email}</span>`;
                 if (location) contactHtml += `<span id="contact-location">📍 ${location}</span>`;
-                if (website) contactHtml += `<span id="contact-website">🌐 ${website}</span>`;
+                if (leetcode) contactHtml += `<span id="contact-website">💻 ${leetcode}</span>`;
+                if (linkedin) contactHtml += `<span id="contact-linkedin">💼 ${linkedin}</span>`;
+                if (github) contactHtml += `<span id="contact-github">💻 ${github}</span>`;
                 if (contactHtml) contactInfo.innerHTML = contactHtml;
             }
         }
@@ -264,7 +266,7 @@
 
         // Update about/summary
         if (payload.about?.content) {
-            document.getElementById("about-text").textContent = payload.about.content;
+            document.getElementById("about-text").innerHTML = payload.about.content.replace(/\n/g, '<br>');
         }
 
         // Update education
@@ -295,7 +297,7 @@
 
                 if (edu.description) {
                     const p = document.createElement("p");
-                    p.textContent = edu.description;
+                    p.innerHTML = edu.description.replace(/\n/g, '<br>');
                     contentDiv.appendChild(p);
                 }
 
@@ -331,7 +333,7 @@
 
                 if (exp.description) {
                     const p = document.createElement("p");
-                    p.textContent = exp.description;
+                    p.innerHTML = exp.description.replace(/\n/g, '<br>');
                     contentDiv.appendChild(p);
                 }
 
@@ -405,7 +407,7 @@
 
                 if (proj.description) {
                     const p = document.createElement("p");
-                    p.textContent = proj.description;
+                    p.innerHTML = proj.description.replace(/\n/g, '<br>');
                     contentDiv.appendChild(p);
                 }
 
@@ -467,7 +469,7 @@
                 heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
                 
                 const content = document.createElement('div');
-                content.textContent = section.content || '';
+                content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
                 
                 wrapper.appendChild(heading);
                 wrapper.appendChild(content);

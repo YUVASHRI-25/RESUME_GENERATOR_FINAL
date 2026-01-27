@@ -25,6 +25,8 @@
         <span id="location">123 Anywhere St., Any City</span>
         <span id="email">hello@reallygreatsite.com</span>
         <span id="website">www.reallygreatsite.com</span>
+        <span id="linkedin">linkedin.com/in/username</span>
+        <span id="github">github.com/username</span>
       </div>
     </div>
 
@@ -142,13 +144,15 @@
 
     // Personal info
     if (payload.personalInfo) {
-      const { fullName, title, email, phone, location, website } = payload.personalInfo;
+      const { fullName, title, email, phone, location, leetcode, linkedin, github } = payload.personalInfo;
       if (fullName) document.getElementById('name').textContent = fullName;
       if (title) document.getElementById('title').textContent = title;
       if (phone) document.getElementById('phone').textContent = phone;
       if (location) document.getElementById('location').textContent = location;
       if (email) document.getElementById('email').textContent = email;
-      if (website) document.getElementById('website').textContent = website;
+      if (leetcode) document.getElementById('website').textContent = leetcode;
+      if (linkedin) document.getElementById('linkedin').textContent = linkedin;
+      if (github) document.getElementById('github').textContent = github;
     }
 
     // Profile image
@@ -167,7 +171,7 @@
       aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
     }
     if (payload.about) {
-      document.getElementById('aboutText').textContent = payload.about.content || '';
+      document.getElementById('aboutText').innerHTML = (payload.about.content || '').replace(/\n/g, '<br>');
     }
 
     // Education with sectionSettings
@@ -191,6 +195,7 @@
           <strong>${edu.school || ''}</strong>
           <p>${edu.degree || ''}</p>
           <span>${edu.startDate || ''}${edu.endDate ? ' - ' + edu.endDate : ''}</span>
+          ${edu.description ? `<p>${edu.description.replace(/\n/g, '<br>')}</p>` : ''}
         `;
         educationContainer.appendChild(item);
       });
@@ -244,7 +249,7 @@
             <strong>${proj.title || proj.name || ''}</strong>
             <span>${duration}</span>
           </div>
-          ${proj.description ? `<p>${proj.description}</p>` : ''}
+          ${proj.description ? `<p>${proj.description.replace(/\n/g, '<br>')}</p>` : ''}
           ${bulletHTML}
         `;
         projectsContainer.appendChild(item);
@@ -321,6 +326,7 @@
             <span>${duration}</span>
           </div>
           ${exp.position ? `<p>${exp.position}</p>` : ''}
+          ${exp.description ? `<p>${exp.description.replace(/\n/g, '<br>')}</p>` : ''}
           ${bulletHTML}
         `;
         experienceContainer.appendChild(item);
@@ -366,7 +372,7 @@
         heading.style.margin = '0 0 10px 0';
         
         const content = document.createElement('div');
-        content.textContent = section.content || '';
+        content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
         
         wrapper.appendChild(heading);
         wrapper.appendChild(content);

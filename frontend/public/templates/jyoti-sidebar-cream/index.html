@@ -25,7 +25,9 @@
       <li id="phone">{{phone}}</li>
       <li id="email">{{email}}</li>
       <li id="location">{{location}}</li>
-      <li id="website">{{website}}</li>
+      <li id="leetcode">{{leetcode}}</li>
+      <li id="linkedin">{{linkedin}}</li>
+      <li id="github">{{github}}</li>
     </ul>
 
     <div id="sidebar-sections">
@@ -123,14 +125,15 @@
 
     // Personal Info
     if (payload.personalInfo) {
-      const { fullName, title, email, phone, location, website } = payload.personalInfo;
+      const { fullName, title, email, phone, location, leetcode, linkedin, github } = payload.personalInfo;
       document.getElementById('name').textContent = fullName || '';
       document.getElementById('title').textContent = title || '';
       document.getElementById('email').textContent = email || '';
       document.getElementById('phone').textContent = phone || '';
       document.getElementById('location').textContent = location || '';
-      const websiteLi = document.getElementById('website');
-      if (websiteLi) websiteLi.textContent = website || '';
+      if (leetcode) document.getElementById('leetcode').textContent = leetcode;
+      if (linkedin) document.getElementById('linkedin').textContent = linkedin;
+      if (github) document.getElementById('github').textContent = github;
     }
 
     // About section
@@ -140,7 +143,7 @@
     if (aboutHeading && settings.about?.heading && !aboutHeading.hasAttribute('data-customized')) aboutHeading.textContent = settings.about.heading;
     if (aboutSection) aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
     if (payload.about?.content) {
-      document.getElementById('summary').textContent = payload.about.content;
+      document.getElementById('summary').innerHTML = payload.about.content.replace(/\n/g, '<br>');
     }
 
     // Education section
@@ -159,7 +162,7 @@
         if (edu.description) {
           const desc = document.createElement('small');
           desc.style.display = 'block';
-          desc.textContent = edu.description;
+          desc.innerHTML = edu.description.replace(/\n/g, '<br>');
           div.appendChild(desc);
         }
         list.appendChild(div);
@@ -186,7 +189,7 @@
         
         const description = document.createElement('p');
         description.style.margin = '0 0 4px';
-        description.textContent = proj.description || '';
+        description.innerHTML = (proj.description || '').replace(/\n/g, '<br>');
         
         div.appendChild(title);
         if (description.textContent) div.appendChild(description);
@@ -231,7 +234,7 @@
         titleDiv.appendChild(dateSpan);
         
         const desc = document.createElement('p');
-        desc.textContent = exp.description || '';
+        desc.innerHTML = (exp.description || '').replace(/\n/g, '<br>');
         
         div.appendChild(titleDiv);
         if (desc.textContent) div.appendChild(desc);
@@ -347,7 +350,7 @@
         heading.style.margin = '0 0 10px 0';
         
         const content = document.createElement('div');
-        content.textContent = section.content || '';
+        content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
         
         wrapper.appendChild(heading);
         wrapper.appendChild(content);

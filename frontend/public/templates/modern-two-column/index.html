@@ -114,7 +114,7 @@
       if (profileHeading && settings.about?.heading) profileHeading.textContent = settings.about.heading;
       if (profileSection) profileSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
       if (payload.about?.content) {
-        document.getElementById('summary').textContent = payload.about.content;
+        document.getElementById('summary').innerHTML = payload.about.content.replace(/\n/g, '<br>');
       }
 
       // Education section
@@ -137,7 +137,7 @@
             desc.style.display = 'block';
             desc.style.fontSize = '12px';
             desc.style.marginTop = '4px';
-            desc.textContent = item.description;
+            desc.innerHTML = item.description.replace(/\n/g, '<br>');
             li.appendChild(desc);
           }
           list.appendChild(li);
@@ -181,7 +181,7 @@
 
           const desc = document.createElement('p');
           desc.style.margin = '0 0 10px';
-          desc.textContent = exp.description || '';
+          desc.innerHTML = (exp.description || '').replace(/\n/g, '<br>');
 
           if (title.textContent) div.appendChild(title);
           if (dates.textContent) div.appendChild(dates);
@@ -221,7 +221,7 @@
 
           const desc = document.createElement('p');
           desc.style.margin = '0 0 10px';
-          desc.textContent = proj.description || '';
+          desc.innerHTML = (proj.description || '').replace(/\n/g, '<br>');
 
           if (title.textContent) div.appendChild(title);
           if (desc.textContent) div.appendChild(desc);
@@ -252,7 +252,7 @@
 
             const body = document.createElement('p');
             body.style.margin = '0 0 10px';
-            body.textContent = sec.content || '';
+            body.innerHTML = (sec.content || '').replace(/\n/g, '<br>');
 
             if (title.textContent) block.appendChild(title);
             if (body.textContent) block.appendChild(body);

@@ -160,6 +160,20 @@ p, li {
   line-height: 1.5;
   color: var(--text-color);
   margin: 0;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  overflow: visible;
+}
+
+#about-content,
+.project-description,
+.custom-section-content,
+.item-description {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  overflow: visible;
 }
 
 /* ================= LISTS ================= */

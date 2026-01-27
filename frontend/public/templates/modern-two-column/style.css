@@ -14,9 +14,21 @@ body{margin:0;background:var(--background-color);font-family:var(--resume-font, 
 .header{background:var(--header-bg);padding:40px 48px 28px}
 .name{margin:0;font-size:40px;font-weight:700;letter-spacing:.2px;color:var(--primary-color)}
 .role{margin:6px 0 0;font-size:18px;font-weight:500}
-.contact{display:flex;gap:24px;background:var(--contact-bg);padding:10px 12px;margin-top:18px;font-size:14px}
+.contact{display:flex;flex-wrap:wrap;gap:12px;background:var(--contact-bg);padding:10px 12px;margin-top:18px;font-size:14px;align-items:center}
+.contact span{display:inline-flex;align-items:center;white-space:nowrap}
 .grid{display:grid;grid-template-columns:36% 64%;gap:36px;padding:36px 48px}
 .left{border-right:1px solid var(--border-color);padding-right:24px}
 .right{padding-left:24px}
 .section{margin-bottom:24px}
 .section h3{margin:0 0 8px;font-size:14px;letter-spacing:.6px;text-transform:uppercase;color:var(--primary-color)}
+
+/* Preserve new lines in content areas */
+#summary,
+#education-list span,
+#experience-list p,
+#projects-list p,
+#custom-section p {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}

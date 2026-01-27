@@ -149,7 +149,7 @@
 
       // Personal Info Header
       if (payload.personalInfo) {
-        const { fullName, title, email, phone, location, website } = payload.personalInfo;
+        const { fullName, title, email, phone, location, leetcode, linkedin, github } = payload.personalInfo;
         if (fullName) document.getElementById('name').textContent = fullName;
         if (title) document.getElementById('title').textContent = title;
         
@@ -159,7 +159,9 @@
         if (phone) parts.push(phone);
         if (email) parts.push(email);
         if (location) parts.push(location);
-        if (website) parts.push(website);
+        if (leetcode) parts.push(leetcode);
+        if (linkedin) parts.push(linkedin);
+        if (github) parts.push(github);
         if (parts.length > 0) {
           contact.innerHTML = parts.join(' &nbsp; | &nbsp; ');
         }
@@ -176,7 +178,7 @@
         aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
       }
       if (payload.about?.content) {
-        document.getElementById('summary').textContent = payload.about.content;
+        document.getElementById('summary').innerHTML = payload.about.content.replace(/\n/g, '<br>');
       }
 
       // Skills Section
@@ -235,7 +237,7 @@
           
           if (edu.description) {
             const desc = document.createElement('p');
-            desc.textContent = edu.description;
+            desc.innerHTML = edu.description.replace(/\n/g, '<br>');
             div.appendChild(desc);
           }
           
@@ -276,7 +278,7 @@
           
           if (exp.description) {
             const desc = document.createElement('p');
-            desc.textContent = exp.description;
+            desc.innerHTML = exp.description.replace(/\n/g, '<br>');
             div.appendChild(desc);
           }
           
@@ -315,7 +317,7 @@
           title.textContent = proj.title || proj.name || '';
           
           const description = document.createElement('p');
-          description.textContent = proj.description || '';
+          description.innerHTML = (proj.description || '').replace(/\n/g, '<br>');
           
           if (title.textContent) div.appendChild(title);
           if (description.textContent) div.appendChild(description);
@@ -440,7 +442,7 @@
         heading.style.margin = '0 0 10px 0';
         
         const content = document.createElement('div');
-        content.textContent = section.content || '';
+        content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
         
         wrapper.appendChild(heading);
         wrapper.appendChild(content);

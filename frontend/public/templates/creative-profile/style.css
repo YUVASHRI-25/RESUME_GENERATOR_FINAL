@@ -61,9 +61,18 @@ body {
 
 .contact {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
   font-size: 14px;
   color: var(--text-color);
+  align-items: center;
+}
+
+.contact span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
 }
 
 /* SECTION */

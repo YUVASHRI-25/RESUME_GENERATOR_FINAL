@@ -40,7 +40,9 @@
           <li><i class="fa-solid fa-phone"></i><span id="phone"></span></li>
           <li><i class="fa-solid fa-envelope"></i><span id="email"></span></li>
           <li><i class="fa-solid fa-location-dot"></i><span id="address"></span></li>
-          <li><i class="fa-solid fa-globe"></i><span id="website"></span></li>
+          <li><i class="fa-solid fa-code"></i><span id="website"></span></li>
+          <li><i class="fa-brands fa-linkedin"></i><span id="linkedin"></span></li>
+          <li><i class="fa-brands fa-github"></i><span id="github"></span></li>
         </ul>
       </section>
 
@@ -136,7 +138,7 @@
 
     // Personal info
     if (payload.personalInfo) {
-      const { fullName, title, email, phone, location, website, signature } = payload.personalInfo;
+      const { fullName, title, email, phone, location, leetcode, linkedin, github, signature } = payload.personalInfo;
       if (fullName) document.getElementById('name').textContent = fullName;
       if (signature) document.getElementById('signature').textContent = signature;
       else if (fullName) document.getElementById('signature').textContent = fullName.split(' ')[0];
@@ -144,7 +146,9 @@
       if (phone) document.getElementById('phone').textContent = phone;
       if (email) document.getElementById('email').textContent = email;
       if (location) document.getElementById('address').textContent = location;
-      if (website) document.getElementById('website').textContent = website;
+      if (leetcode) document.getElementById('website').textContent = leetcode;
+      if (linkedin) document.getElementById('linkedin').textContent = linkedin;
+      if (github) document.getElementById('github').textContent = github;
     }
 
     // About/Professional Summary Section
@@ -157,7 +161,7 @@
     if (aboutSection) aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
     
     if (payload.about?.content) {
-      document.getElementById('summary').textContent = payload.about.content;
+      document.getElementById('summary').innerHTML = payload.about.content.replace(/\n/g, '<br>');
     }
 
     // Education
@@ -292,7 +296,7 @@
         
         const description = document.createElement('p');
         description.style.margin = '0 0 4px';
-        description.textContent = proj.description || '';
+        description.innerHTML = (proj.description || '').replace(/\n/g, '<br>');
         
         div.appendChild(title);
         if (description.textContent) div.appendChild(description);

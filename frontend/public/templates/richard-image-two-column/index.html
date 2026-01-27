@@ -194,7 +194,7 @@
     if (aboutHeading && settings.about?.heading && !aboutHeading.hasAttribute('data-customized')) aboutHeading.textContent = settings.about.heading.toUpperCase();
     if (aboutSection) aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
     if (payload.about?.content) {
-      document.getElementById('about-content').textContent = payload.about.content;
+      document.getElementById('about-content').innerHTML = payload.about.content.replace(/\n/g, '<br>');
     }
 
     // Experience Section
@@ -236,7 +236,7 @@
         if (exp.description) {
           const desc = document.createElement('p');
           desc.style.margin = '4px 0 0 0';
-          desc.textContent = exp.description;
+          desc.innerHTML = exp.description.replace(/\n/g, '<br>');
           div.appendChild(desc);
         }
         
@@ -288,7 +288,7 @@
           const descP = document.createElement('p');
           descP.style.margin = '0 0 10px 0';
           descP.style.fontSize = '12px';
-          descP.textContent = edu.description;
+          descP.innerHTML = edu.description.replace(/\n/g, '<br>');
           list.appendChild(descP);
         }
       });
@@ -314,7 +314,7 @@
         
         const descP = document.createElement('p');
         descP.style.margin = '0';
-        descP.textContent = proj.description || '';
+        descP.innerHTML = (proj.description || '').replace(/\n/g, '<br>');
         
         div.appendChild(titleP);
         if (descP.textContent) div.appendChild(descP);
@@ -369,7 +369,7 @@
         heading.style.fontWeight = 'bold';
         
         const content = document.createElement('div');
-        content.textContent = section.content || '';
+        content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
         
         wrapper.appendChild(heading);
         wrapper.appendChild(content);

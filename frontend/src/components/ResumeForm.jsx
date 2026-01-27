@@ -691,6 +691,30 @@ const ResumeForm = ({ data, updateData, template }) => {
                                 ...prev,
                                 about: { ...prev.about, content: e.target.value }
                             }))}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && e.shiftKey) {
+                                    // Allow Shift+Enter to create new line
+                                    return;
+                                }
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    // Prevent Enter from submitting form
+                                    e.preventDefault();
+                                    // Insert new line at cursor position
+                                    const target = e.target;
+                                    const start = target.selectionStart;
+                                    const end = target.selectionEnd;
+                                    const value = target.value;
+                                    const newValue = value.substring(0, start) + '\n' + value.substring(end);
+                                    updateData(prev => ({
+                                        ...prev,
+                                        about: { ...prev.about, content: newValue }
+                                    }));
+                                    // Set cursor position after the new line
+                                    setTimeout(() => {
+                                        target.selectionStart = target.selectionEnd = start + 1;
+                                    }, 0);
+                                }
+                            }}
                         />
                         <button
                             onClick={() => enhanceText(data.about?.content || '', 'summary', (val) => 
@@ -733,12 +757,38 @@ const ResumeForm = ({ data, updateData, template }) => {
                             </label>
                         </div>
                         <div className="relative">
-                            <textarea className="w-full border p-2 rounded h-20" placeholder="Job description and responsibilities" value={exp.description || ''} onChange={(e) => updateItem('experiences', index, 'description', e.target.value)} />
+                            <textarea 
+                                className="w-full border p-2 rounded h-32 focus:ring-2 focus:ring-indigo-300 outline-none" 
+                                placeholder="Job description and responsibilities" 
+                                value={exp.description || ''} 
+                                onChange={(e) => updateItem('experiences', index, 'description', e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && e.shiftKey) {
+                                        // Allow Shift+Enter to create new line
+                                        return;
+                                    }
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        // Prevent Enter from submitting form
+                                        e.preventDefault();
+                                        // Insert new line at cursor position
+                                        const target = e.target;
+                                        const start = target.selectionStart;
+                                        const end = target.selectionEnd;
+                                        const value = target.value;
+                                        const newValue = value.substring(0, start) + '\n' + value.substring(end);
+                                        updateItem('experiences', index, 'description', newValue);
+                                        // Set cursor position after the new line
+                                        setTimeout(() => {
+                                            target.selectionStart = target.selectionEnd = start + 1;
+                                        }, 0);
+                                    }
+                                }}
+                            />
                             <button
                                 onClick={() => enhanceText(exp.description || '', 'experience', (val) => updateItem('experiences', index, 'description', val))}
                                 className="absolute bottom-2 right-2 text-indigo-600 hover:text-indigo-800 text-xs flex items-center gap-1 bg-white px-2 py-1 rounded shadow"
                             >
-                                <Wand2 size={12} /> Enhance
+                                <Wand2 size={12} /> AI Enhance
                             </button>
                         </div>
                         <div className="space-y-1">
@@ -790,7 +840,33 @@ const ResumeForm = ({ data, updateData, template }) => {
                             <input className="border p-2 rounded w-full" placeholder="Start Date" value={edu.startDate || ''} onChange={(e) => updateItem('education', index, 'startDate', e.target.value)} />
                             <input className="border p-2 rounded w-full" placeholder="End Date" value={edu.endDate || ''} onChange={(e) => updateItem('education', index, 'endDate', e.target.value)} />
                         </div>
-                        <textarea className="w-full border p-2 rounded h-16" placeholder="Additional details (e.g., honors, relevant coursework)" value={edu.description || ''} onChange={(e) => updateItem('education', index, 'description', e.target.value)} />
+                        <textarea 
+                            className="w-full border p-2 rounded h-16 focus:ring-2 focus:ring-indigo-300 outline-none" 
+                            placeholder="Additional details (e.g., honors, relevant coursework)" 
+                            value={edu.description || ''} 
+                            onChange={(e) => updateItem('education', index, 'description', e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && e.shiftKey) {
+                                    // Allow Shift+Enter to create new line
+                                    return;
+                                }
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    // Prevent Enter from submitting form
+                                    e.preventDefault();
+                                    // Insert new line at cursor position
+                                    const target = e.target;
+                                    const start = target.selectionStart;
+                                    const end = target.selectionEnd;
+                                    const value = target.value;
+                                    const newValue = value.substring(0, start) + '\n' + value.substring(end);
+                                    updateItem('education', index, 'description', newValue);
+                                    // Set cursor position after the new line
+                                    setTimeout(() => {
+                                        target.selectionStart = target.selectionEnd = start + 1;
+                                    }, 0);
+                                }
+                            }}
+                        />
                     </div>
                 ))
                 }
@@ -835,7 +911,33 @@ const ResumeForm = ({ data, updateData, template }) => {
                             </button>
                             <input className="border p-2 rounded w-full" placeholder="Project Title" value={proj.title || ''} onChange={(e) => updateItem('projects', index, 'title', e.target.value)} />
                             <div className="relative">
-                                <textarea className="w-full border p-2 rounded h-16" placeholder="Project Description" value={proj.description || ''} onChange={(e) => updateItem('projects', index, 'description', e.target.value)} />
+                                <textarea 
+                                    className="w-full border p-2 rounded h-32 focus:ring-2 focus:ring-indigo-300 outline-none" 
+                                    placeholder="Describe your project, technologies used, key achievements, and impact..."
+                                    value={proj.description || ''} 
+                                    onChange={(e) => updateItem('projects', index, 'description', e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && e.shiftKey) {
+                                            // Allow Shift+Enter to create new line
+                                            return;
+                                        }
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            // Prevent Enter from submitting form
+                                            e.preventDefault();
+                                            // Insert new line at cursor position
+                                            const target = e.target;
+                                            const start = target.selectionStart;
+                                            const end = target.selectionEnd;
+                                            const value = target.value;
+                                            const newValue = value.substring(0, start) + '\n' + value.substring(end);
+                                            updateItem('projects', index, 'description', newValue);
+                                            // Set cursor position after the new line
+                                            setTimeout(() => {
+                                                target.selectionStart = target.selectionEnd = start + 1;
+                                            }, 0);
+                                        }
+                                    }}
+                                />
                                 <button
                                     onClick={() => enhanceText(proj.description || '', 'project', (val) => updateItem('projects', index, 'description', val))}
                                     className="absolute bottom-2 right-2 text-indigo-600 hover:text-indigo-800 text-xs flex items-center gap-1 bg-white px-2 py-1 rounded shadow"
@@ -948,10 +1050,31 @@ const ResumeForm = ({ data, updateData, template }) => {
                             />
                             <div className="relative">
                                 <textarea
-                                    className="w-full border p-2 rounded h-24"
-                                    placeholder="Content (e.g. List of achievements...)"
+                                    className="w-full border p-2 rounded h-32 focus:ring-2 focus:ring-indigo-300 outline-none"
+                                    placeholder="Describe your achievements, skills, experiences, or any relevant information..."
                                     value={section.content || ''}
                                     onChange={(e) => updateItem('customSections', index, 'content', e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && e.shiftKey) {
+                                            // Allow Shift+Enter to create new line
+                                            return;
+                                        }
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            // Prevent Enter from submitting form
+                                            e.preventDefault();
+                                            // Insert new line at cursor position
+                                            const target = e.target;
+                                            const start = target.selectionStart;
+                                            const end = target.selectionEnd;
+                                            const value = target.value;
+                                            const newValue = value.substring(0, start) + '\n' + value.substring(end);
+                                            updateItem('customSections', index, 'content', newValue);
+                                            // Set cursor position after the new line
+                                            setTimeout(() => {
+                                                target.selectionStart = target.selectionEnd = start + 1;
+                                            }, 0);
+                                        }
+                                    }}
                                 />
                                 <button
                                     onClick={() => enhanceText(section.content || '', 'custom', (val) => updateItem('customSections', index, 'content', val))}

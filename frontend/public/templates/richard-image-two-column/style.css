@@ -96,3 +96,14 @@ body {
 .job ul {
   padding-left: 18px;
 }
+
+/* Preserve new lines in content areas */
+#about-content,
+#experience-list p,
+#education-list p,
+#projects-list p,
+#custom-sections div {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}

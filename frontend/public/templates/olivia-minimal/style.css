@@ -179,3 +179,14 @@ p {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+
+/* Preserve new lines in content areas */
+#summary,
+#educationContainer p,
+#experienceContainer p,
+#projectsContainer p,
+#custom-sections div {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}

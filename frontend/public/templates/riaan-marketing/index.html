@@ -26,6 +26,8 @@
       <p id="location">{{location}}</p>
       <p id="website">{{website}}</p>
       <p id="email">{{email}}</p>
+      <p id="linkedin">{{linkedin}}</p>
+      <p id="github">{{github}}</p>
     </div>
   </div>
 
@@ -120,13 +122,15 @@
 
     // Personal Info
     if (payload.personalInfo) {
-      const { fullName, title, email, phone, location, website } = payload.personalInfo;
+      const { fullName, title, email, phone, location, website, linkedin, github } = payload.personalInfo;
       if (fullName) document.getElementById('fullName').textContent = fullName;
       if (title) document.getElementById('title').textContent = title;
       if (phone) document.getElementById('phone').textContent = phone;
+      if (email) document.getElementById('email').textContent = email;
       if (location) document.getElementById('location').textContent = location;
       if (website) document.getElementById('website').textContent = website;
-      if (email) document.getElementById('email').textContent = email;
+      if (linkedin) document.getElementById('linkedin').textContent = linkedin;
+      if (github) document.getElementById('github').textContent = github;
     }
 
     // About Section
@@ -140,7 +144,7 @@
       aboutSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
     }
     if (payload.about?.content) {
-      document.getElementById('summary').textContent = payload.about.content;
+      document.getElementById('summary').innerHTML = payload.about.content.replace(/\n/g, '<br>');
     }
 
     // Education Section
@@ -170,7 +174,7 @@
         
         if (edu.description) {
           const desc = document.createElement('small');
-          desc.textContent = edu.description;
+          desc.innerHTML = edu.description.replace(/\n/g, '<br>');
           div.appendChild(desc);
         }
         eduList.appendChild(div);
@@ -236,7 +240,7 @@
 
         if (exp.description) {
           const desc = document.createElement('p');
-          desc.textContent = exp.description;
+          desc.innerHTML = exp.description.replace(/\n/g, '<br>');
           div.appendChild(desc);
         }
 
@@ -276,7 +280,7 @@
         titleDiv.textContent = proj.title || proj.name || '';
 
         const desc = document.createElement('p');
-        desc.textContent = proj.description || '';
+        desc.innerHTML = (proj.description || '').replace(/\n/g, '<br>');
 
         if (titleDiv.textContent) div.appendChild(titleDiv);
         if (desc.textContent) div.appendChild(desc);
@@ -392,7 +396,7 @@
         heading.style.margin = '0 0 10px 0';
         
         const content = document.createElement('div');
-        content.textContent = section.content || '';
+        content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
         
         wrapper.appendChild(heading);
         wrapper.appendChild(content);
