@@ -6,21 +6,34 @@
   --border-color: #c8c8c8;
   --header-bg: #f2f2f2;
   --contact-bg: #e5e5e5;
+  
+  /* Font size variables */
+  --resume-font-size-xs: 11px;
+  --resume-font-size-sm: 12px;
+  --resume-font-size-base: 13px;
+  --resume-font-size-lg: 14px;
+  --resume-font-size-xl: 16px;
+  --resume-font-size-2xl: 18px;
+  --resume-font-size-3xl: 20px;
+  --resume-font-size-4xl: 28px;
+  --resume-font-size-5xl: 36px;
+  --resume-font-size-6xl: 40px;
+  --resume-font-size-7xl: 42px;
 }
 
 body{margin:0;background:var(--background-color);font-family:var(--resume-font, Arial, Helvetica, sans-serif);word-wrap:break-word;overflow-wrap:break-word}
 .template-root{font-family:var(--resume-font, Arial, Helvetica, sans-serif);word-wrap:break-word;overflow-wrap:break-word}
-.resume{width:794px;min-height:1123px;margin:0 auto;background:var(--background-color);box-sizing:border-box;word-wrap:break-word;overflow-wrap:break-word;word-break:break-word;color:var(--text-color)}
+.resume{width:794px;min-height:1123px;margin:0 auto;background:var(--background-color);box-sizing:border-box;word-wrap:break-word;overflow-wrap:break-word;word-break:break-word;color:var(--text-color);font-family:var(--resume-font, Arial, Helvetica, sans-serif);}
 .header{background:var(--header-bg);padding:40px 48px 28px}
-.name{margin:0;font-size:40px;font-weight:700;letter-spacing:.2px;color:var(--primary-color)}
-.role{margin:6px 0 0;font-size:18px;font-weight:500}
-.contact{display:flex;flex-wrap:wrap;gap:12px;background:var(--contact-bg);padding:10px 12px;margin-top:18px;font-size:14px;align-items:center}
+.name{margin:0;font-size:var(--resume-font-size-6xl);font-weight:700;letter-spacing:.2px;color:var(--primary-color)}
+.role{margin:6px 0 0;font-size:var(--resume-font-size-2xl);font-weight:500}
+.contact{display:flex;flex-wrap:wrap;gap:12px;background:var(--contact-bg);padding:10px 12px;margin-top:18px;font-size:var(--resume-font-size-lg);align-items:center}
 .contact span{display:inline-flex;align-items:center;white-space:nowrap}
 .grid{display:grid;grid-template-columns:36% 64%;gap:36px;padding:36px 48px}
 .left{border-right:1px solid var(--border-color);padding-right:24px}
 .right{padding-left:24px}
 .section{margin-bottom:24px}
-.section h3{margin:0 0 8px;font-size:14px;letter-spacing:.6px;text-transform:uppercase;color:var(--primary-color)}
+.section h3{margin:0 0 8px;font-size:var(--resume-font-size-xl);letter-spacing:.6px;text-transform:uppercase;color:var(--primary-color)}
 
 /* Preserve new lines in content areas */
 #summary,

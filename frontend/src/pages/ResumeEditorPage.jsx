@@ -58,6 +58,12 @@ const ResumeEditorPage = () => {
                 visible: true,
                 column: 'right'
             },
+            textFormatting: {
+                fontSize: 'base',
+                bold: false,
+                italic: false,
+                underline: false
+            },
             experiences: [
                 {
                     id: 'exp-1',
@@ -181,37 +187,211 @@ const ResumeEditorPage = () => {
                 }
             }
 
-            // Fallback for React templates
+            // Create a dedicated print window for true text-based PDF generation
             const element = document.getElementById('resume-preview-content');
             if (element) {
-                // Apply background color with higher priority for PDF generation
-                if (resumeData.theme && resumeData.theme.backgroundColor) {
-                    const bgColor = resumeData.theme.backgroundColor;
-                    element.style.backgroundColor = bgColor;
-                    element.style.setProperty('background-color', bgColor, 'important');
-                    
-                    // Also apply to body if needed
-                    document.body.style.backgroundColor = bgColor;
-                    document.body.style.setProperty('background-color', bgColor, 'important');
+                // Create a new window for printing
+                const printWindow = window.open('', '_blank');
+                if (!printWindow) {
+                    alert('Please allow popups for this site to generate PDF');
+                    return;
+                }
+
+                // Clone the resume content
+                const clonedContent = element.cloneNode(true);
+                
+                // Apply styles directly to the cloned content
+                if (resumeData.theme) {
+                    const theme = resumeData.theme;
+                    if (theme.backgroundColor) {
+                        clonedContent.style.backgroundColor = theme.backgroundColor;
+                    }
+                    if (theme.textColor) {
+                        clonedContent.style.color = theme.textColor;
+                    }
                 }
                 
-                // Small delay to ensure styles are applied before PDF generation
-                setTimeout(() => {
-                    const opt = {
-                        margin: 0,
-                        filename: 'resume.pdf',
-                        image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: { scale: 2 },
-                        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-                    };
-                    html2pdf().set(opt).from(element).save();
-                }, 100);
+                // Apply font family
+                if (resumeData.fontFamily) {
+                    clonedContent.style.fontFamily = `'${resumeData.fontFamily}', sans-serif`;
+                }
+
+                // Create the print document with proper print CSS
+                const printDocument = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume PDF</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm; /* Fixed margins for all pages */
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            box-sizing: border-box !important;
+        }
+        
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: ${resumeData.theme?.backgroundColor || '#ffffff'} !important;
+            font-family: '${resumeData.fontFamily || 'Inter'}', sans-serif !important;
+            font-size: 12pt !important;
+            line-height: 1.4 !important;
+            color: ${resumeData.theme?.textColor || '#1f2937'} !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        .resume-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-height: auto !important;
+            max-height: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+            background: ${resumeData.theme?.backgroundColor || '#ffffff'} !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        /* Prevent content from being cut off */
+        .resume-section, section, .section, .experience, .education, .skills, .projects, .about, .hobbies, .languages, .references {
+            page-break-inside: avoid !important;
+            page-break-after: auto !important;
+            page-break-before: auto !important;
+            margin-bottom: 1rem !important;
+            position: relative !important;
+            overflow: visible !important;
+        }
+        
+        .experience-item, .education-item, .project-item, .job, .position, .school, .degree {
+            page-break-inside: avoid !important;
+            margin-bottom: 0.8rem !important;
+            overflow: visible !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            page-break-after: avoid !important;
+            page-break-inside: avoid !important;
+            margin-top: 1em !important;
+            margin-bottom: 0.5em !important;
+            overflow: visible !important;
+        }
+        
+        p, div, span, li {
+            page-break-inside: avoid !important;
+            orphans: 3 !important;
+            widows: 3 !important;
+            overflow: visible !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            line-height: 1.4 !important;
+        }
+        
+        ul, ol, dl, .skills-list, .languages-list {
+            page-break-inside: avoid !important;
+            overflow: visible !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+        }
+        
+        li {
+            page-break-inside: avoid !important;
+            margin-bottom: 0.2em !important;
+            overflow: visible !important;
+        }
+        
+        img {
+            page-break-inside: avoid !important;
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            object-fit: contain !important;
+            overflow: visible !important;
+        }
+        
+        table {
+            page-break-inside: avoid !important;
+            overflow: visible !important;
+        }
+        
+        .columns, .grid, .flex, .container {
+            page-break-inside: avoid !important;
+            display: block !important;
+            width: 100% !important;
+            overflow: visible !important;
+        }
+        
+        /* Hide non-essential elements during print */
+        button, input, textarea, select, .no-print {
+            display: none !important;
+        }
+        
+        /* Ensure consistent template styling */
+        .header, .footer, .sidebar, .main-content {
+            page-break-inside: avoid !important;
+            overflow: visible !important;
+        }
+        
+        .text-content, .content, .description {
+            overflow: visible !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            hyphens: auto !important;
+            page-break-inside: avoid !important;
+        }
+        
+        .profile, .contact, .personal-info {
+            page-break-inside: avoid !important;
+            overflow: visible !important;
+        }
+        
+        /* Import fonts for proper rendering */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        ${clonedContent.outerHTML}
+    </div>
+    <script>
+        // Wait for content to load, then trigger print
+        window.onload = function() {
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        };
+        
+        // Close window after printing
+        window.onafterprint = function() {
+            window.close();
+        };
+    </script>
+</body>
+</html>`;
+
+                // Write the content to the print window
+                printWindow.document.write(printDocument);
+                printWindow.document.close();
+                
+                console.log('Print-based PDF generation initiated');
             } else {
                 alert('Could not find resume content to download');
             }
         } catch (error) {
             console.error('Download error:', error);
-            alert('Failed to download PDF. Please try again.');
+            alert('Failed to generate PDF. Please try again.');
         }
     };
 

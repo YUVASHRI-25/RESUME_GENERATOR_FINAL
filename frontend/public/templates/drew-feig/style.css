@@ -5,6 +5,19 @@
   --text-secondary: #6f6f6f;
   --border-color: #1aa6a6;
   --date-color: #1a6faa;
+  
+  /* Font size variables */
+  --resume-font-size-xs: 11px;
+  --resume-font-size-sm: 12px;
+  --resume-font-size-base: 13px;
+  --resume-font-size-lg: 14px;
+  --resume-font-size-xl: 16px;
+  --resume-font-size-2xl: 18px;
+  --resume-font-size-3xl: 20px;
+  --resume-font-size-4xl: 28px;
+  --resume-font-size-5xl: 36px;
+  --resume-font-size-6xl: 40px;
+  --resume-font-size-7xl: 42px;
 }
 
 /* ================= BASE ================= */
@@ -33,7 +46,8 @@ body{
   word-wrap:break-word;
   overflow-wrap:break-word;
   word-break:break-word;
-  background:var(--background-color)
+  background:var(--background-color);
+  font-family:var(--resume-font, Calibri, Arial, sans-serif);
 }
 
 /* ================= HEADER ================= */
@@ -57,7 +71,7 @@ header .header-top {
 header h1 {
   color: var(--primary-color);
   letter-spacing: 2px;
-  font-size: 28px;
+  font-size: var(--resume-font-size-4xl);
   margin: 0;
   font-weight: 600;
   text-transform: uppercase;
@@ -66,7 +80,7 @@ header h1 {
 header h2 {
   color: var(--text-color);
   font-weight: 500;
-  font-size: 16px;
+  font-size: var(--resume-font-size-xl);
   margin: 0;
   text-transform: uppercase;
   text-align: right;
@@ -78,7 +92,7 @@ header h2 {
   display: flex;
   justify-content: center;
   gap: 24px;
-  font-size: 13px;
+  font-size: var(--resume-font-size-base);
   color: var(--text-secondary);
   flex-wrap: wrap;
   width: 100%;
@@ -108,7 +122,7 @@ section h3 {
   display: inline-block;                 /* KEY FIX */
   width: 100%;
   color: var(--primary-color);
-  font-size: 16px;
+  font-size: var(--resume-font-size-xl);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -156,7 +170,7 @@ section h3[contenteditable="true"]:focus {
 /* ================= TEXT ================= */
 
 p, li {
-  font-size: 14px;
+  font-size: var(--resume-font-size-lg);
   line-height: 1.5;
   color: var(--text-color);
   margin: 0;
@@ -169,11 +183,13 @@ p, li {
 #about-content,
 .project-description,
 .custom-section-content,
-.item-description {
+.item-description,
+.award-description {
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
   overflow: visible;
+  font-family: var(--resume-font, Calibri, Arial, sans-serif);
 }
 
 /* ================= LISTS ================= */
@@ -212,12 +228,12 @@ li::marker {
 .item-title {
   font-weight: 600;
   color: var(--text-color);
-  font-size: 15px;
+  font-size: var(--resume-font-size-lg);
 }
 
 .item-subtitle {
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: var(--resume-font-size-lg);
   font-style: italic;
 }
 
@@ -225,7 +241,7 @@ li::marker {
 
 .item-date {
   color: var(--date-color);
-  font-size: 13px;
+  font-size: var(--resume-font-size-base);
   white-space: nowrap;
   font-weight: 500;
   letter-spacing: 0.6px;
@@ -234,7 +250,7 @@ li::marker {
 
 .item-description {
   margin-top: 6px;
-  font-size: 14px;
+  font-size: var(--resume-font-size-lg);
   line-height: 1.5;
 }
 

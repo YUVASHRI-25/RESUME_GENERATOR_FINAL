@@ -1,9 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Trash, Wand2, Image as ImageIcon, Upload, X } from 'lucide-react';
 import axios from 'axios';
 import { getTemplateById } from '../templates/templateRegistry';
 
 const ResumeForm = ({ data, updateData, template }) => {
+    // Function to apply text formatting to an element
+    const applyTextFormatting = (element) => {
+        if (!element || !data.textFormatting) return;
+        
+        const { fontSize, bold, italic, underline } = data.textFormatting;
+        
+        // Apply font size
+        const fontSizeMap = {
+            xs: 'text-xs',
+            sm: 'text-sm',
+            base: 'text-base',
+            lg: 'text-lg',
+            xl: 'text-xl',
+            '2xl': 'text-2xl'
+        };
+        
+        // Remove existing size classes
+        element.className = element.className.replace(/text-(xs|sm|base|lg|xl|2xl)/g, '');
+        element.className += ` ${fontSizeMap[fontSize] || 'text-base'}`;
+        
+        // Apply font weight
+        if (bold) {
+            element.style.fontWeight = 'bold';
+        } else {
+            element.style.fontWeight = 'normal';
+        }
+        
+        // Apply font style
+        if (italic) {
+            element.style.fontStyle = 'italic';
+        } else {
+            element.style.fontStyle = 'normal';
+        }
+        
+        // Apply text decoration
+        if (underline) {
+            element.style.textDecoration = 'underline';
+        } else {
+            element.style.textDecoration = 'none';
+        }
+    };
+
+    // Apply formatting to all textareas when data changes
+    useEffect(() => {
+        const textareas = document.querySelectorAll('textarea');
+        textareas.forEach(applyTextFormatting);
+    }, [data.textFormatting]);
+
+    // Function to update textarea with formatting
     const templateInfo = getTemplateById(template);
     const supportsImage = templateInfo?.supportsProfileImage || false;
     const supportsColumns = templateInfo?.supportsColumnPlacement || false;
@@ -123,6 +172,78 @@ const ResumeForm = ({ data, updateData, template }) => {
                         ))}
                     </div>
                     <p className="text-xs text-gray-500 mt-2">Selected: <strong>{data.fontFamily || 'Inter'}</strong> - Changes apply instantly to form & preview</p>
+                </div>
+
+                {/* Text Formatting Controls */}
+                <div className="bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-lg border-2 border-green-200">
+                    <p className="text-sm font-semibold text-gray-700 mb-3">Text Formatting</p>
+                    <div className="flex flex-wrap gap-2">
+                        {/* Font Size Selector */}
+                        <div className="flex items-center gap-2">
+                            <label className="text-xs font-medium text-gray-600">Size:</label>
+                            <select
+                                value={data.textFormatting?.fontSize || 'base'}
+                                onChange={(e) => updateData(prev => ({
+                                    ...prev,
+                                    textFormatting: { ...prev.textFormatting, fontSize: e.target.value }
+                                }))}
+                                className="border border-gray-300 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-green-300 outline-none"
+                            >
+                                <option value="xs">XS</option>
+                                <option value="sm">SM</option>
+                                <option value="base">Base</option>
+                                <option value="lg">LG</option>
+                                <option value="xl">XL</option>
+                                <option value="2xl">2XL</option>
+                            </select>
+                        </div>
+
+                        {/* Bold Toggle */}
+                        <button
+                            onClick={() => updateData(prev => ({
+                                ...prev,
+                                textFormatting: { ...prev.textFormatting, bold: !prev.textFormatting?.bold }
+                            }))}
+                            className={`px-3 py-1 rounded border-2 text-sm font-medium transition-all ${
+                                data.textFormatting?.bold
+                                    ? 'bg-green-600 text-white border-green-600'
+                                    : 'bg-white text-gray-700 border-gray-300 hover:border-green-400'
+                            }`}
+                        >
+                            <strong>B</strong>
+                        </button>
+
+                        {/* Italic Toggle */}
+                        <button
+                            onClick={() => updateData(prev => ({
+                                ...prev,
+                                textFormatting: { ...prev.textFormatting, italic: !prev.textFormatting?.italic }
+                            }))}
+                            className={`px-3 py-1 rounded border-2 text-sm font-medium transition-all ${
+                                data.textFormatting?.italic
+                                    ? 'bg-green-600 text-white border-green-600 italic'
+                                    : 'bg-white text-gray-700 border-gray-300 hover:border-green-400'
+                            }`}
+                        >
+                            <em>I</em>
+                        </button>
+
+                        {/* Underline Toggle */}
+                        <button
+                            onClick={() => updateData(prev => ({
+                                ...prev,
+                                textFormatting: { ...prev.textFormatting, underline: !prev.textFormatting?.underline }
+                            }))}
+                            className={`px-3 py-1 rounded border-2 text-sm font-medium transition-all ${
+                                data.textFormatting?.underline
+                                    ? 'bg-green-600 text-white border-green-600 underline'
+                                    : 'bg-white text-gray-700 border-gray-300 hover:border-green-400'
+                            }`}
+                        >
+                            <u>U</u>
+                        </button>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2">Formatting applies to all text areas</p>
                 </div>
 
                 {/* Theme Color Controls */}
@@ -684,6 +805,7 @@ const ResumeForm = ({ data, updateData, template }) => {
                     <label className="block text-sm font-semibold text-gray-700">Professional Summary</label>
                     <div className="relative">
                         <textarea
+                            ref={(el) => el && applyTextFormatting(el)}
                             className="w-full border p-2 rounded h-32 focus:ring-2 focus:ring-indigo-300 outline-none"
                             placeholder="Briefly describe your professional background, key achievements, and career goals..."
                             value={data.about?.content || ''}
@@ -758,6 +880,7 @@ const ResumeForm = ({ data, updateData, template }) => {
                         </div>
                         <div className="relative">
                             <textarea 
+                                ref={(el) => el && applyTextFormatting(el)}
                                 className="w-full border p-2 rounded h-32 focus:ring-2 focus:ring-indigo-300 outline-none" 
                                 placeholder="Job description and responsibilities" 
                                 value={exp.description || ''} 
@@ -841,7 +964,8 @@ const ResumeForm = ({ data, updateData, template }) => {
                             <input className="border p-2 rounded w-full" placeholder="End Date" value={edu.endDate || ''} onChange={(e) => updateItem('education', index, 'endDate', e.target.value)} />
                         </div>
                         <textarea 
-                            className="w-full border p-2 rounded h-16 focus:ring-2 focus:ring-indigo-300 outline-none" 
+                            ref={(el) => el && applyTextFormatting(el)}
+                            className="w-full border p-2 rounded h-32 focus:ring-2 focus:ring-indigo-300 outline-none resize-none" 
                             placeholder="Additional details (e.g., honors, relevant coursework)" 
                             value={edu.description || ''} 
                             onChange={(e) => updateItem('education', index, 'description', e.target.value)}
@@ -912,6 +1036,7 @@ const ResumeForm = ({ data, updateData, template }) => {
                             <input className="border p-2 rounded w-full" placeholder="Project Title" value={proj.title || ''} onChange={(e) => updateItem('projects', index, 'title', e.target.value)} />
                             <div className="relative">
                                 <textarea 
+                                    ref={(el) => el && applyTextFormatting(el)}
                                     className="w-full border p-2 rounded h-32 focus:ring-2 focus:ring-indigo-300 outline-none" 
                                     placeholder="Describe your project, technologies used, key achievements, and impact..."
                                     value={proj.description || ''} 
@@ -1035,7 +1160,12 @@ const ResumeForm = ({ data, updateData, template }) => {
                                 <input className="border p-2 rounded" placeholder="Issuer" value={award.issuer || ''} onChange={(e) => updateItem('awards', index, 'issuer', e.target.value)} />
                             </div>
                             <input className="border p-2 rounded w-full" placeholder="Date" value={award.date || ''} onChange={(e) => updateItem('awards', index, 'date', e.target.value)} />
-                            <textarea className="w-full border p-2 rounded h-12" placeholder="Description" value={award.description || ''} onChange={(e) => updateItem('awards', index, 'description', e.target.value)} />
+                            <textarea 
+                                ref={(el) => el && applyTextFormatting(el)}
+                                className="w-full border p-2 rounded h-32 focus:ring-2 focus:ring-indigo-300 outline-none resize-none" 
+                                placeholder="Award description" 
+                                value={award.description || ''} 
+                                onChange={(e) => updateItem('awards', index, 'description', e.target.value)} />
                         </div>
                     ))}
                 </div>
@@ -1089,6 +1219,7 @@ const ResumeForm = ({ data, updateData, template }) => {
                             />
                             <div className="relative">
                                 <textarea
+                                    ref={(el) => el && applyTextFormatting(el)}
                                     className="w-full border p-2 rounded h-32 focus:ring-2 focus:ring-indigo-300 outline-none"
                                     placeholder="Describe your achievements, skills, experiences, or any relevant information..."
                                     value={section.content || ''}

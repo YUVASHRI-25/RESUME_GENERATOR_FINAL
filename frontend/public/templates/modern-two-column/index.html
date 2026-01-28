@@ -318,56 +318,119 @@
 
     window.addEventListener('message', (event) => {
       if (event.data === 'DOWNLOAD_PDF') {
-        // Ensure theme colors are applied before PDF generation
-        if (window.currentTheme) {
-          const theme = window.currentTheme;
-          if (theme.primaryColor) {
-            document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
-          }
-          if (theme.backgroundColor) {
-            document.documentElement.style.setProperty('--background-color', theme.backgroundColor);
-          }
-          if (theme.textColor) {
-            document.documentElement.style.setProperty('--text-color', theme.textColor);
-          }
-          if (theme.textSecondary) {
-            document.documentElement.style.setProperty('--text-secondary', theme.textSecondary);
-          }
-          if (theme.borderColor) {
-            document.documentElement.style.setProperty('--border-color', theme.borderColor);
-          }
-          if (theme.headerBg) {
-            document.documentElement.style.setProperty('--header-bg', theme.headerBg);
-          }
-          if (theme.contactBg) {
-            document.documentElement.style.setProperty('--contact-bg', theme.contactBg);
-          }
-        }
-        
         const resume = document.getElementById('resume');
         
-        // Apply background color with higher priority for PDF generation
-        if (window.currentTheme && window.currentTheme.backgroundColor) {
-          const bgColor = window.currentTheme.backgroundColor;
-          resume.style.backgroundColor = bgColor;
-          resume.style.setProperty('background-color', bgColor, 'important');
-          
-          // Also apply to body if needed
-          document.body.style.backgroundColor = bgColor;
-          document.body.style.setProperty('background-color', bgColor, 'important');
+        if (!resume) {
+          console.error('Resume element not found');
+          return;
         }
         
-        // Small delay to ensure styles are applied before PDF generation
+        // Create a clone of the resume element to avoid modifying the original
+        const clonedResume = resume.cloneNode(true);
+        
+        // Apply all current styles directly to the cloned element
+        const computedStyles = window.getComputedStyle(resume);
+        const allStyles = Array.from(computedStyles);
+        
+        allStyles.forEach(property => {
+          try {
+            clonedResume.style.setProperty(property, computedStyles.getPropertyValue(property));
+          } catch (e) {
+            // Skip invalid properties
+          }
+        });
+        
+        // Apply theme colors directly
+        if (window.currentTheme) {
+          const theme = window.currentTheme;
+          if (theme.backgroundColor) {
+            clonedResume.style.backgroundColor = theme.backgroundColor;
+            clonedResume.style.setProperty('background-color', theme.backgroundColor, 'important');
+          }
+          if (theme.textColor) {
+            clonedResume.style.color = theme.textColor;
+            clonedResume.style.setProperty('color', theme.textColor, 'important');
+          }
+          if (theme.primaryColor) {
+            // Apply primary color to relevant elements
+            const primaryElements = clonedResume.querySelectorAll('h1, h2, h3, [style*="color"]');
+            primaryElements.forEach(el => {
+              if (['H1', 'H2', 'H3'].includes(el.tagName)) {
+                el.style.color = theme.primaryColor;
+              }
+            });
+          }
+          if (theme.headerBg) {
+            const headerElements = clonedResume.querySelectorAll('.header, [class*="header"]');
+            headerElements.forEach(el => {
+              el.style.backgroundColor = theme.headerBg;
+            });
+          }
+          if (theme.contactBg) {
+            const contactElements = clonedResume.querySelectorAll('.contact, [class*="contact"]');
+            contactElements.forEach(el => {
+              el.style.backgroundColor = theme.contactBg;
+            });
+          }
+        }
+        
+        // Apply font family
+        if (window.currentFont) {
+          clonedResume.style.fontFamily = `'${window.currentFont}', ${clonedResume.style.fontFamily}`;
+        }
+        
+        // Set proper dimensions for PDF
+        clonedResume.style.width = '794px'; // A4 width at 96 DPI
+        clonedResume.style.minHeight = '1123px'; // A4 height at 96 DPI
+        clonedResume.style.margin = '0';
+        clonedResume.style.padding = '0';
+        clonedResume.style.boxSizing = 'border-box';
+        clonedResume.style.overflow = 'hidden';
+        clonedResume.style.position = 'relative';
+        
+        // Temporarily add the cloned element to the body
+        clonedResume.style.position = 'absolute';
+        clonedResume.style.left = '-9999px';
+        clonedResume.style.top = '0';
+        document.body.appendChild(clonedResume);
+        
+        // Wait for styles to be applied
         setTimeout(() => {
           const opt = {
             margin: 0,
             filename: 'resume.pdf',
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            html2canvas: { 
+              scale: 2,
+              useCORS: true,
+              allowTaint: true,
+              backgroundColor: window.currentTheme?.backgroundColor || '#ffffff',
+              width: 794,
+              height: clonedResume.scrollHeight,
+              scrollX: 0,
+              scrollY: 0
+            },
+            jsPDF: { 
+              unit: 'in', 
+              format: 'a4', 
+              orientation: 'portrait',
+              compress: true
+            }
           };
-          html2pdf().set(opt).from(resume).save();
-        }, 100);
+          
+          html2pdf().set(opt).from(clonedResume).save().then(() => {
+            // Clean up
+            if (document.body.contains(clonedResume)) {
+              document.body.removeChild(clonedResume);
+            }
+          }).catch((error) => {
+            console.error('PDF generation error:', error);
+            if (document.body.contains(clonedResume)) {
+              document.body.removeChild(clonedResume);
+            }
+            alert('Failed to generate PDF. Please try again.');
+          });
+        }, 500); // Increased delay to 500ms
         return;
       }
       updateContent(event.data);

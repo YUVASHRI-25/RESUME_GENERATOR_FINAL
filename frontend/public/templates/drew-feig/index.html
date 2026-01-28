@@ -388,7 +388,7 @@
           if (award.description) {
             const desc = document.createElement('p');
             desc.style.margin = '4px 0 0 0';
-            desc.style.fontSize = '12px';
+            desc.className = 'award-description';
             desc.textContent = award.description;
             div.appendChild(desc);
           }

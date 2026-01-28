@@ -163,4 +163,214 @@ body {
   --resume-text-color: #1f2937;
   --resume-text-secondary: #6b7280;
   --resume-border-color: #e5e7eb;
+  
+  /* Font size variables for consistent sizing */
+  --resume-font-size-xs: 11px;
+  --resume-font-size-sm: 12px;
+  --resume-font-size-base: 13px;
+  --resume-font-size-lg: 14px;
+  --resume-font-size-xl: 16px;
+  --resume-font-size-2xl: 18px;
+  --resume-font-size-3xl: 20px;
+  --resume-font-size-4xl: 28px;
+  --resume-font-size-5xl: 36px;
+  --resume-font-size-6xl: 40px;
+  --resume-font-size-7xl: 42px;
+}
+
+/* Enhanced print-specific styles for true text-based PDF generation */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: var(--resume-background-color, #ffffff) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    font-size: 12pt !important;
+    line-height: 1.4 !important;
+    color: var(--resume-text-color, #1f2937) !important;
+    font-family: var(--resume-font, 'Inter'), sans-serif !important;
+  }
+  
+  #resume-preview-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    max-height: none !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    page-break-inside: avoid !important;
+    background: var(--resume-background-color, #ffffff) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+  
+  /* Resume sections - keep together with enhanced protection */
+  .resume-section, section, .section, .experience, .education, .skills, .projects, .about, .hobbies, .languages, .references {
+    page-break-inside: avoid !important;
+    page-break-after: auto !important;
+    page-break-before: auto !important;
+    margin-bottom: 1rem !important;
+    position: relative !important;
+    overflow: visible !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  /* Individual items - enhanced protection */
+  .experience-item, .education-item, .project-item, .job, .position, .school, .degree {
+    page-break-inside: avoid !important;
+    margin-bottom: 0.8rem !important;
+    overflow: visible !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  /* Headers - stay with following content */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    margin-top: 1em !important;
+    margin-bottom: 0.5em !important;
+    overflow: visible !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  /* Text content - proper flow with enhanced rules */
+  p, div, span, li {
+    page-break-inside: avoid !important;
+    orphans: 3 !important;
+    widows: 3 !important;
+    overflow: visible !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    line-height: 1.4 !important;
+    display: inline !important;
+  }
+  
+  p {
+    display: block !important;
+    margin-top: 0.5em !important;
+    margin-bottom: 0.5em !important;
+    min-height: 1em !important;
+  }
+  
+  /* Lists - keep items together */
+  ul, ol, dl, .skills-list, .languages-list {
+    page-break-inside: avoid !important;
+    overflow: visible !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  /* List items specifically */
+  li {
+    page-break-inside: avoid !important;
+    margin-bottom: 0.2em !important;
+    overflow: visible !important;
+    display: list-item !important;
+  }
+  
+  /* Images - prevent slicing with enhanced rules */
+  img {
+    page-break-inside: avoid !important;
+    max-width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: contain !important;
+    overflow: visible !important;
+    margin: 0.5em 0 !important;
+  }
+  
+  /* Tables - keep together */
+  table {
+    page-break-inside: avoid !important;
+    overflow: visible !important;
+    display: table !important;
+    width: 100% !important;
+  }
+  
+  /* Containers - proper layout */
+  .columns, .grid, .flex, .container {
+    page-break-inside: avoid !important;
+    display: block !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+  
+  /* Hide non-essential elements during print */
+  button, input, textarea, select, .no-print {
+    display: none !important;
+  }
+  
+  /* Ensure consistent template styling across pages */
+  .header, .footer, .sidebar, .main-content {
+    page-break-inside: avoid !important;
+    overflow: visible !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  /* Text content containers */
+  .text-content, .content, .description {
+    overflow: visible !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+    page-break-inside: avoid !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  /* Profile and contact sections */
+  .profile, .contact, .personal-info {
+    page-break-inside: avoid !important;
+    overflow: visible !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  /* Enhanced template consistency */
+  .template-wrapper, .resume-wrapper {
+    page-break-inside: avoid !important;
+    overflow: visible !important;
+    display: block !important;
+    width: 100% !important;
+    background: var(--resume-background-color, #ffffff) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Ensure proper spacing and flow */
+  .section-spacing {
+    page-break-inside: avoid !important;
+    margin-bottom: 1rem !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  /* Prevent content overflow */
+  .content-overflow {
+    overflow: visible !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
 }

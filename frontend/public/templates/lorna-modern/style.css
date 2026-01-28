@@ -6,17 +6,90 @@
   --border-color: #c8c8c8;
   --header-bg: #f2f2f2;
   --bar-bg: #e4e4e4;
+  
+  /* Font size variables */
+  --resume-font-size-xs: 11px;
+  --resume-font-size-sm: 12px;
+  --resume-font-size-base: 13px;
+  --resume-font-size-lg: 14px;
+  --resume-font-size-xl: 16px;
+  --resume-font-size-2xl: 18px;
+  --resume-font-size-3xl: 20px;
+  --resume-font-size-4xl: 28px;
+  --resume-font-size-5xl: 36px;
+  --resume-font-size-6xl: 40px;
+  --resume-font-size-7xl: 42px;
 }
 
 body{margin:0;background:var(--background-color);font-family:var(--resume-font, Montserrat, Arial, sans-serif);word-wrap:break-word;overflow-wrap:break-word;color:var(--text-color)}
 .template-root{font-family:var(--resume-font, Montserrat, Arial, sans-serif);word-wrap:break-word;overflow-wrap:break-word}
-.resume{width:794px;min-height:1123px;margin:0 auto;background:var(--background-color);box-sizing:border-box;word-wrap:break-word;overflow-wrap:break-word;word-break:break-word;color:var(--text-color)}
+.resume{width:794px;min-height:1123px;margin:0 auto;background:var(--background-color);box-sizing:border-box;word-wrap:break-word;overflow-wrap:break-word;word-break:break-word;color:var(--text-color);font-family:var(--resume-font, Montserrat, Arial, sans-serif);}
 .top{background:var(--header-bg);padding:44px 52px 30px}
-.top h1{margin:0;font-size:40px;font-weight:700;color:var(--primary-color)}
-.top h2{margin:6px 0 0;font-size:18px;font-weight:500}
-.bar{display:flex;gap:36px;padding:12px 52px;background:var(--bar-bg);font-size:14px}
+.top h1{margin:0;font-size:var(--resume-font-size-6xl);font-weight:700;color:var(--primary-color)}
+.top h2{margin:6px 0 0;font-size:var(--resume-font-size-2xl);font-weight:500}
+.bar{display:flex;gap:36px;padding:12px 52px;background:var(--bar-bg);font-size:var(--resume-font-size-lg)}
 .columns{display:grid;grid-template-columns:36% 64%;gap:40px;padding:36px 52px}
 .left{border-right:1px solid var(--border-color);padding-right:28px}
 .right{padding-left:28px}
 section{margin-bottom:28px}
-section h3{margin:0 0 12px;font-size:14px;text-transform:uppercase;font-weight:700;color:var(--primary-color)}
+section h3{margin:0 0 12px;font-size:var(--resume-font-size-xl);text-transform:uppercase;font-weight:700;color:var(--primary-color)}
+
+/* Print-specific styles to prevent content truncation and ensure proper PDF layout */
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--background-color) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .resume {
+    width: 100% !important;
+    max-width: 794px !important;
+    min-height: 1123px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    page-break-inside: avoid !important;
+    background: var(--background-color) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .top, .bar, section {
+    page-break-inside: avoid !important;
+    background: var(--header-bg, var(--bar-bg, transparent)) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .columns {
+    display: grid !important;
+    grid-template-columns: 36% 64% !important;
+    gap: 40px !important;
+    page-break-inside: avoid !important;
+  }
+  
+  .left, .right {
+    page-break-inside: avoid !important;
+    overflow: visible !important;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+  }
+  
+  p, ul, ol, li {
+    page-break-inside: avoid !important;
+    orphans: 3 !important;
+    widows: 3 !important;
+  }
+  
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
