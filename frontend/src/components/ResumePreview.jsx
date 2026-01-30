@@ -2,7 +2,7 @@ import React, { useEffect, useRef, forwardRef, useImperativeHandle } from 'react
 import { getTemplateById, getTemplateComponent, transformDataForTemplate } from '../templates/templateRegistry';
 import TemplateRenderer from './TemplateRenderer';
 
-const ResumePreview = forwardRef(({ data, template }, downloadRef) => {
+const ResumePreview = forwardRef(({ data, template, onIframeLoad }, downloadRef) => {
     const iframeRef = useRef(null);
     const templateMeta = getTemplateById(template);
     const isStaticTemplate = Boolean(templateMeta?.html);
@@ -49,7 +49,12 @@ const ResumePreview = forwardRef(({ data, template }, downloadRef) => {
 
         // Also send when iframe loads
         const iframe = iframeRef.current;
-        iframe.addEventListener('load', sendData);
+        iframe.addEventListener('load', () => {
+            sendData();
+            if (onIframeLoad) {
+                onIframeLoad(iframeRef.current);
+            }
+        });
 
         return () => {
             iframe?.removeEventListener('load', sendData);
@@ -58,15 +63,43 @@ const ResumePreview = forwardRef(({ data, template }, downloadRef) => {
 
     useImperativeHandle(downloadRef, () => ({
         downloadPDF: () => {
+            console.log('downloadPDF called, template:', template, 'isStaticTemplate:', isStaticTemplate);
+            
             if (isStaticTemplate && iframeRef.current?.contentWindow) {
-                console.log('Sending DOWNLOAD_PDF message to iframe');
-                iframeRef.current.contentWindow.postMessage('DOWNLOAD_PDF', '*');
-                return true;
+                console.log('Sending DOWNLOAD_PDF message to iframe for template:', template);
+                console.log('iframeRef.current:', iframeRef.current);
+                console.log('iframeRef.current.contentWindow:', iframeRef.current.contentWindow);
+                
+                try {
+                    iframeRef.current.contentWindow.postMessage('DOWNLOAD_PDF', '*');
+                    console.log('DOWNLOAD_PDF message sent successfully');
+                    return true;
+                } catch (error) {
+                    console.error('Error sending DOWNLOAD_PDF message:', error);
+                    return false;
+                }
             }
+            
             console.log('Download failed: isStaticTemplate =', isStaticTemplate, 'iframeRef =', iframeRef.current);
+            console.log('Template ID:', template);
+            console.log('Template Meta:', templateMeta);
+            
+            if (!isStaticTemplate) {
+                console.log('Template is not static, using React component fallback');
+            }
+            
+            if (!iframeRef.current) {
+                console.log('iframeRef.current is null or undefined');
+            }
+            
+            if (!iframeRef.current?.contentWindow) {
+                console.log('iframeRef.current.contentWindow is null or undefined');
+            }
+            
             return false;
-        }
-    }), [isStaticTemplate]);
+        },
+        getIframe: () => iframeRef.current
+    }), [isStaticTemplate, template, templateMeta]);
 
     // If template is a static HTML template, render via iframe
     if (isStaticTemplate) {

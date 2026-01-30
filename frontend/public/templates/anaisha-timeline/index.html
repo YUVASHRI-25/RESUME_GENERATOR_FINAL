@@ -8,7 +8,7 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
 </head>
 <body>
 
@@ -17,14 +17,14 @@
   <!-- HEADER -->
   <header class="header">
     <div class="header-left">
-      <h1 id="name">ANAISHA PARVATI</h1>
-      <h2 id="title">Office Marketing</h2>
+      <h1 id="name" contenteditable="true" data-field="name">ANAISHA PARVATI</h1>
+      <h2 id="title" contenteditable="true" data-field="title">Office Marketing</h2>
 
       <div class="contact-row">
-        <span id="phone">+123-456-7890</span>
-        <span id="location">123 Anywhere St., Any City</span>
-        <span id="email">hello@reallygreatsite.com</span>
-        <span id="website">www.reallygreatsite.com</span>
+        <span id="phone" contenteditable="true" data-field="phone">+123-456-7890</span>
+        <span id="location" contenteditable="true" data-field="location">123 Anywhere St., Any City</span>
+        <span id="email" contenteditable="true" data-field="email">hello@reallygreatsite.com</span>
+        <span id="website" contenteditable="true" data-field="website">www.reallygreatsite.com</span>
       </div>
     </div>
 
@@ -38,7 +38,7 @@
   <!-- ABOUT -->
   <section id="about-section">
     <h3 id="aboutHeading" contenteditable="true" data-field="aboutHeading">ABOUT ME</h3>
-    <p id="aboutText"></p>
+    <p id="aboutText" contenteditable="true" data-field="aboutText"></p>
   </section>
 
   <hr />
@@ -188,10 +188,10 @@
         const item = document.createElement('div');
         item.className = 'item';
         item.innerHTML = `
-          <strong>${edu.school || ''}</strong>
-          <p>${edu.degree || ''}</p>
-          <span>${edu.startDate || ''}${edu.endDate ? ' - ' + edu.endDate : ''}</span>
-          ${edu.description ? `<p>${edu.description.replace(/\n/g, '<br>')}</p>` : ''}
+          <strong contenteditable="true" data-field="educationSchool">${edu.school || ''}</strong>
+          <p contenteditable="true" data-field="educationDegree">${edu.degree || ''}</p>
+          <span contenteditable="true" data-field="educationDates">${edu.startDate || ''}${edu.endDate ? ' - ' + edu.endDate : ''}</span>
+          ${edu.description ? `<p contenteditable="true" data-field="educationDescription">${edu.description.replace(/\n/g, '<br>')}</p>` : ''}
         `;
         educationContainer.appendChild(item);
       });
@@ -214,6 +214,8 @@
       payload.skills.forEach(skill => {
         const li = document.createElement('li');
         li.textContent = typeof skill === 'string' ? skill : (skill.name || '');
+        li.contentEditable = 'true';
+        li.setAttribute('data-field', 'skillItem');
         skillsContainer.appendChild(li);
       });
     }
@@ -238,14 +240,14 @@
         const duration = proj.date || proj.year || '';
         let bulletHTML = '';
         if (proj.bullets && Array.isArray(proj.bullets)) {
-          bulletHTML = '<ul>' + proj.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>';
+          bulletHTML = '<ul>' + proj.bullets.map(b => `<li contenteditable="true" data-field="projectBullet">${b}</li>`).join('') + '</ul>';
         }
         item.innerHTML = `
           <div class="row">
-            <strong>${proj.title || proj.name || ''}</strong>
-            <span>${duration}</span>
+            <strong contenteditable="true" data-field="projectTitle">${proj.title || proj.name || ''}</strong>
+            <span contenteditable="true" data-field="projectDate">${duration}</span>
           </div>
-          ${proj.description ? `<p>${proj.description.replace(/\n/g, '<br>')}</p>` : ''}
+          ${proj.description ? `<p contenteditable="true" data-field="projectDescription">${proj.description.replace(/\n/g, '<br>')}</p>` : ''}
           ${bulletHTML}
         `;
         projectsContainer.appendChild(item);
@@ -269,6 +271,8 @@
       payload.languages.forEach(lang => {
         const li = document.createElement('li');
         li.textContent = typeof lang === 'string' ? lang : (lang.name || '');
+        li.contentEditable = 'true';
+        li.setAttribute('data-field', 'languageItem');
         languagesContainer.appendChild(li);
       });
     }
@@ -290,6 +294,8 @@
       payload.awards.forEach(award => {
         const li = document.createElement('li');
         li.textContent = `${award.title || ''}${award.year ? ` (${award.year})` : ''}`.trim();
+        li.contentEditable = 'true';
+        li.setAttribute('data-field', 'awardItem');
         awardsContainer.appendChild(li);
       });
     }
@@ -314,15 +320,15 @@
         const duration = exp.startDate ? exp.startDate + (exp.endDate ? ' - ' + exp.endDate : (exp.currentlyWorking ? ' - Present' : '')) : '';
         let bulletHTML = '';
         if (exp.bullets && Array.isArray(exp.bullets)) {
-          bulletHTML = '<ul>' + exp.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>';
+          bulletHTML = '<ul>' + exp.bullets.map(b => `<li contenteditable="true" data-field="experienceBullet">${b}</li>`).join('') + '</ul>';
         }
         item.innerHTML = `
           <div class="row">
-            <strong>${exp.company || ''}</strong>
-            <span>${duration}</span>
+            <strong contenteditable="true" data-field="experienceCompany">${exp.company || ''}</strong>
+            <span contenteditable="true" data-field="experienceDates">${duration}</span>
           </div>
-          ${exp.position ? `<p>${exp.position}</p>` : ''}
-          ${exp.description ? `<p>${exp.description.replace(/\n/g, '<br>')}</p>` : ''}
+          ${exp.position ? `<p contenteditable="true" data-field="experiencePosition">${exp.position}</p>` : ''}
+          ${exp.description ? `<p contenteditable="true" data-field="experienceDescription">${exp.description.replace(/\n/g, '<br>')}</p>` : ''}
           ${bulletHTML}
         `;
         experienceContainer.appendChild(item);
@@ -347,9 +353,9 @@
         const item = document.createElement('div');
         item.className = 'item';
         item.innerHTML = `
-          <strong>${ref.name || ''}</strong>
-          <p>${ref.title || ''}${ref.company ? ` at ${ref.company}` : ''}</p>
-          <p>${[ref.email, ref.phone].filter(Boolean).join(' • ')}</p>
+          <strong contenteditable="true" data-field="referenceName">${ref.name || ''}</strong>
+          <p contenteditable="true" data-field="referenceInfo">${ref.title || ''}${ref.company ? ` at ${ref.company}` : ''}</p>
+          <p contenteditable="true" data-field="referenceContact">${[ref.email, ref.phone].filter(Boolean).join(' • ')}</p>
         `;
         referencesContainer.appendChild(item);
       });
@@ -366,6 +372,8 @@
         const heading = document.createElement('h3');
         heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
         heading.style.margin = '0 0 10px 0';
+        heading.contentEditable = 'true';
+        heading.setAttribute('data-field', 'customSectionHeading');
         
         const content = document.createElement('div');
         
@@ -376,6 +384,8 @@
             const descDiv = document.createElement('div');
             descDiv.innerHTML = section.content.replace(/\n/g, '<br>');
             descDiv.style.marginBottom = '8px';
+            descDiv.contentEditable = 'true';
+            descDiv.setAttribute('data-field', 'customSectionContent');
             content.appendChild(descDiv);
           }
           
@@ -384,6 +394,8 @@
             if (bullet) {
               const li = document.createElement('li');
               li.textContent = bullet;
+              li.contentEditable = 'true';
+              li.setAttribute('data-field', 'customSectionBullet');
               ul.appendChild(li);
             }
           });
@@ -391,6 +403,8 @@
         } else {
           // If no bullets, render content as normal
           content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
+          content.contentEditable = 'true';
+          content.setAttribute('data-field', 'customSectionContent');
         }
         
         wrapper.appendChild(heading);
@@ -433,6 +447,61 @@
       }
     }
   }
+
+  // WYSIWYG Text Formatting Functions
+  function applyFormat(formatType, value = null) {
+    const selection = window.getSelection();
+    if (!selection.rangeCount || selection.isCollapsed) {
+      return; // No text selected
+    }
+
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+    
+    if (!selectedText.trim()) {
+      return; // No meaningful text selected
+    }
+
+    switch (formatType) {
+      case 'bold':
+        document.execCommand('bold', false, null);
+        break;
+      case 'italic':
+        document.execCommand('italic', false, null);
+        break;
+      case 'underline':
+        document.execCommand('underline', false, null);
+        break;
+      case 'fontSize':
+        document.execCommand('fontSize', false, value);
+        break;
+      case 'clear':
+        document.execCommand('removeFormat', false, null);
+        break;
+    }
+    
+    // Preserve selection after formatting
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  // Handle formatting messages from parent
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'APPLY_FORMAT') {
+      applyFormat(event.data.formatType, event.data.value);
+    }
+  });
+
+  // Notify parent when selection changes
+  document.addEventListener('selectionchange', () => {
+    const selection = window.getSelection();
+    const hasSelection = selection.rangeCount > 0 && !selection.isCollapsed && selection.toString().trim();
+    
+    window.parent.postMessage({
+      type: 'SELECTION_CHANGED',
+      hasSelection: hasSelection
+    }, '*');
+  });
 
   // Handle inline editing for headings
   document.addEventListener('input', function(e) {
@@ -510,7 +579,7 @@
           html2canvas: { scale: 2 },
           jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
         };
-        html2pdf().set(opt).from(resume).save();
+        // PDF generation now handled server-side;
       }, 100);
     }
   });

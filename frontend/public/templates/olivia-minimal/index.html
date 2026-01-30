@@ -9,7 +9,7 @@
   />
   <link rel="stylesheet" href="style.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
 </head>
 <body>
 
@@ -20,9 +20,9 @@
     <div class="line"></div>
 
     <div class="name-wrap">
-      <h1 id="name">OLIVIA WILSON</h1>
-      <div class="signature" id="signature">Olivia</div>
-      <h2 id="title">MARKETING MANAGER</h2>
+      <h1 id="name" contenteditable="true" data-field="name">OLIVIA WILSON</h1>
+      <div class="signature" id="signature" contenteditable="true" data-field="signature">Olivia</div>
+      <h2 id="title" contenteditable="true" data-field="title">MARKETING MANAGER</h2>
     </div>
 
     <div class="line"></div>
@@ -37,10 +37,10 @@
       <section>
         <span class="pill" contenteditable="true" data-field="contactHeading">CONTACT</span>
         <ul class="icon-list">
-          <li><i class="fa-solid fa-phone"></i><span id="phone"></span></li>
-          <li><i class="fa-solid fa-envelope"></i><span id="email"></span></li>
-          <li><i class="fa-solid fa-location-dot"></i><span id="address"></span></li>
-          <li><i class="fa-solid fa-globe"></i><span id="website"></span></li>
+          <li><i class="fa-solid fa-phone"></i><span id="phone" contenteditable="true" data-field="phone"></span></li>
+          <li><i class="fa-solid fa-envelope"></i><span id="email" contenteditable="true" data-field="email"></span></li>
+          <li><i class="fa-solid fa-location-dot"></i><span id="address" contenteditable="true" data-field="address"></span></li>
+          <li><i class="fa-solid fa-globe"></i><span id="website" contenteditable="true" data-field="website"></span></li>
         </ul>
       </section>
 
@@ -71,7 +71,7 @@
 
       <section id="about-section">
         <span class="pill" contenteditable="true" data-field="aboutHeading">PROFILE SUMMARY</span>
-        <p id="summary"></p>
+        <p id="summary" contenteditable="true" data-field="summary"></p>
       </section>
 
       <section id="experience-section">
@@ -174,10 +174,20 @@
       container.innerHTML = '';
       payload.education.forEach(edu => {
         const block = document.createElement('div');
+        block.className = 'job';
+        
+        const degreeInfo = [];
+        if (edu.degree) degreeInfo.push(edu.degree);
+        if (edu.field) degreeInfo.push(edu.field);
+        
         block.innerHTML = `
-          <p class="year">${edu.startDate || ''}${edu.endDate ? ' - ' + edu.endDate : ''}</p>
-          <strong>${edu.school || edu.institution || ''}</strong>
-          ${edu.bullets && Array.isArray(edu.bullets) ? '<ul>' + edu.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>' : ''}
+          <div class="job-head">
+            <strong contenteditable="true" data-field="educationSchool">${edu.school || edu.institution || ''}</strong>
+            <span class="year" contenteditable="true" data-field="educationDates">${edu.startDate || ''}${edu.endDate ? ' - ' + edu.endDate : ''}</span>
+          </div>
+          ${degreeInfo.length > 0 ? `<em contenteditable="true" data-field="educationDegree">${degreeInfo.join(' - ')}</em>` : ''}
+          ${edu.description ? `<p contenteditable="true" data-field="educationDescription">${edu.description}</p>` : ''}
+          ${edu.bullets && Array.isArray(edu.bullets) ? '<ul>' + edu.bullets.map(b => `<li contenteditable="true" data-field="educationBullet">${b}</li>`).join('') + '</ul>' : ''}
         `;
         container.appendChild(block);
       });
@@ -198,6 +208,8 @@
       payload.skills.forEach(skill => {
         const li = document.createElement('li');
         li.textContent = typeof skill === 'string' ? skill : (skill.name || '');
+        li.contentEditable = 'true';
+        li.setAttribute('data-field', 'skillItem');
         container.appendChild(li);
       });
     }
@@ -217,6 +229,8 @@
       payload.languages.forEach(lang => {
         const li = document.createElement('li');
         li.textContent = typeof lang === 'string' ? lang : (lang.name || '');
+        li.contentEditable = 'true';
+        li.setAttribute('data-field', 'languageItem');
         container.appendChild(li);
       });
     }
@@ -236,6 +250,8 @@
       payload.awards.forEach(award => {
         const li = document.createElement('li');
         li.textContent = `${award.title || ''}${award.year ? ` (${award.year})` : ''}`.trim();
+        li.contentEditable = 'true';
+        li.setAttribute('data-field', 'awardItem');
         container.appendChild(li);
       });
     }
@@ -256,13 +272,13 @@
         const job = document.createElement('div');
         job.className = 'job';
         const duration = exp.startDate ? exp.startDate + (exp.endDate ? ' - ' + exp.endDate : (exp.currentlyWorking ? ' - Present' : '')) : '';
-        const bullets = exp.bullets && Array.isArray(exp.bullets) ? '<ul>' + exp.bullets.map(b => `<li>${b}</li>`).join('') + '</ul>' : '';
+        const bullets = exp.bullets && Array.isArray(exp.bullets) ? '<ul>' + exp.bullets.map(b => `<li contenteditable="true" data-field="experienceBullet">${b}</li>`).join('') + '</ul>' : '';
         job.innerHTML = `
           <div class="job-head">
-            <strong>${exp.company || ''}</strong>
-            <span>${duration}</span>
+            <strong contenteditable="true" data-field="experienceCompany">${exp.company || ''}</strong>
+            <span contenteditable="true" data-field="experienceDates">${duration}</span>
           </div>
-          <em>${exp.position || exp.role || ''}</em>
+          <em contenteditable="true" data-field="experiencePosition">${exp.position || exp.role || ''}</em>
           ${bullets}
         `;
         container.appendChild(job);
@@ -289,10 +305,14 @@
         title.style.fontWeight = 'bold';
         title.style.margin = '0 0 4px';
         title.textContent = proj.title || proj.name || '';
+        title.contentEditable = 'true';
+        title.setAttribute('data-field', 'projectTitle');
         
         const description = document.createElement('p');
         description.style.margin = '0 0 4px';
         description.innerHTML = (proj.description || '').replace(/\n/g, '<br>');
+        description.contentEditable = 'true';
+        description.setAttribute('data-field', 'projectDescription');
         
         div.appendChild(title);
         if (description.textContent) div.appendChild(description);
@@ -303,6 +323,8 @@
           proj.bullets.forEach(bullet => {
             const li = document.createElement('li');
             li.textContent = bullet;
+            li.contentEditable = 'true';
+            li.setAttribute('data-field', 'projectBullet');
             ul.appendChild(li);
           });
           div.appendChild(ul);
@@ -332,11 +354,15 @@
         name.style.fontWeight = 'bold';
         name.style.margin = '0 0 2px';
         name.textContent = ref.name || '';
+        name.contentEditable = 'true';
+        name.setAttribute('data-field', 'referenceName');
         
         const info = document.createElement('p');
         info.style.margin = '0 0 2px';
         info.style.fontSize = '0.9em';
         info.textContent = `${ref.title || ''}${ref.company ? ` at ${ref.company}` : ''}`.trim();
+        info.contentEditable = 'true';
+        info.setAttribute('data-field', 'referenceInfo');
         
         const contact = document.createElement('p');
         contact.style.margin = '0';
@@ -344,6 +370,8 @@
         contact.style.color = '#666';
         const contactItems = [ref.email, ref.phone].filter(Boolean);
         contact.textContent = contactItems.join(' • ');
+        contact.contentEditable = 'true';
+        contact.setAttribute('data-field', 'referenceContact');
         
         div.appendChild(name);
         if (info.textContent) div.appendChild(info);
@@ -365,6 +393,8 @@
         heading.className = 'pill';
         heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
         heading.style.margin = '0 0 10px 0';
+        heading.contentEditable = 'true';
+        heading.setAttribute('data-field', 'customSectionHeading');
         
         const content = document.createElement('div');
         
@@ -375,6 +405,8 @@
             const p = document.createElement('p');
             p.textContent = section.content;
             p.style.marginBottom = '8px';
+            p.contentEditable = 'true';
+            p.setAttribute('data-field', 'customSectionContent');
             content.appendChild(p);
           }
           
@@ -383,6 +415,8 @@
             if (bullet) {
               const li = document.createElement('li');
               li.textContent = bullet;
+              li.contentEditable = 'true';
+              li.setAttribute('data-field', 'customSectionBullet');
               ul.appendChild(li);
             }
           });
@@ -393,12 +427,16 @@
           section.items.forEach(item => {
             const li = document.createElement('li');
             li.textContent = item;
+            li.contentEditable = 'true';
+            li.setAttribute('data-field', 'customSectionItem');
             ul.appendChild(li);
           });
           content.appendChild(ul);
         } else if (section.content) {
           const p = document.createElement('p');
           p.textContent = section.content;
+          p.contentEditable = 'true';
+          p.setAttribute('data-field', 'customSectionContent');
           content.appendChild(p);
         }
         
@@ -443,6 +481,61 @@
       }
     }
   }
+
+  // WYSIWYG Text Formatting Functions
+  function applyFormat(formatType, value = null) {
+    const selection = window.getSelection();
+    if (!selection.rangeCount || selection.isCollapsed) {
+      return; // No text selected
+    }
+
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+    
+    if (!selectedText.trim()) {
+      return; // No meaningful text selected
+    }
+
+    switch (formatType) {
+      case 'bold':
+        document.execCommand('bold', false, null);
+        break;
+      case 'italic':
+        document.execCommand('italic', false, null);
+        break;
+      case 'underline':
+        document.execCommand('underline', false, null);
+        break;
+      case 'fontSize':
+        document.execCommand('fontSize', false, value);
+        break;
+      case 'clear':
+        document.execCommand('removeFormat', false, null);
+        break;
+    }
+    
+    // Preserve selection after formatting
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  // Handle formatting messages from parent
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'APPLY_FORMAT') {
+      applyFormat(event.data.formatType, event.data.value);
+    }
+  });
+
+  // Notify parent when selection changes
+  document.addEventListener('selectionchange', () => {
+    const selection = window.getSelection();
+    const hasSelection = selection.rangeCount > 0 && !selection.isCollapsed && selection.toString().trim();
+    
+    window.parent.postMessage({
+      type: 'SELECTION_CHANGED',
+      hasSelection: hasSelection
+    }, '*');
+  });
 
   // Handle inline editing for headings
   document.addEventListener('input', function(e) {
@@ -490,14 +583,27 @@
       // Small delay to ensure styles are applied before PDF generation
       setTimeout(() => {
         const opt = {
-          margin: 0,
+          margin: 0.5,
           filename: 'resume.pdf',
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+          html2canvas: { 
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            letterRendering: true,
+            foreignObjectRendering: false
+          },
+          jsPDF: { 
+            unit: 'in', 
+            format: 'letter', 
+            orientation: 'portrait',
+            compress: true
+          },
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
-        html2pdf().set(opt).from(resume).save();
-      }, 100);
+        // PDF generation now handled server-side;
+      }, 200);
     }
   });
 </script>

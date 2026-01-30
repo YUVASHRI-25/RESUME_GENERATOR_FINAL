@@ -9,6 +9,136 @@
   --pill-bg: #eaeaea;
 }
 
+/* ================= FONT SIZE STYLES FOR WYSIWYG ================= */
+
+/* Font size 1 - 10px */
+font[size="1"] {
+  font-size: 10px !important;
+}
+
+/* Font size 2 - 12px */
+font[size="2"] {
+  font-size: 12px !important;
+}
+
+/* Font size 3 - 14px (default) */
+font[size="3"] {
+  font-size: 14px !important;
+}
+
+/* Font size 4 - 16px */
+font[size="4"] {
+  font-size: 16px !important;
+}
+
+/* Font size 5 - 18px */
+font[size="5"] {
+  font-size: 18px !important;
+}
+
+/* Font size 6 - 24px */
+font[size="6"] {
+  font-size: 24px !important;
+}
+
+/* Font size 7 - 32px */
+font[size="7"] {
+  font-size: 32px !important;
+}
+
+/* Ensure font tags work within all elements */
+.resume font[size] {
+  font-size: inherit !important;
+}
+
+.resume font[size="1"] {
+  font-size: 10px !important;
+}
+
+.resume font[size="2"] {
+  font-size: 12px !important;
+}
+
+.resume font[size="3"] {
+  font-size: 14px !important;
+}
+
+.resume font[size="4"] {
+  font-size: 16px !important;
+}
+
+.resume font[size="5"] {
+  font-size: 18px !important;
+}
+
+.resume font[size="6"] {
+  font-size: 24px !important;
+}
+
+.resume font[size="7"] {
+  font-size: 32px !important;
+}
+
+/* PRINT STYLES FOR PDF GENERATION */
+@media print {
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .resume {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    background: white !important;
+    box-shadow: none !important;
+  }
+  
+  .top {
+    page-break-inside: avoid;
+  }
+  
+  .grid {
+    page-break-inside: avoid;
+  }
+  
+  section {
+    page-break-inside: avoid;
+    margin-bottom: 20px;
+  }
+  
+  .pill {
+    page-break-after: avoid;
+  }
+  
+  /* Ensure text is visible in PDF */
+  * {
+    color: black !important;
+    background: transparent !important;
+  }
+  
+  .pill {
+    background: #f0f0f0 !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+  }
+  
+  .line {
+    background: black !important;
+  }
+  
+  /* Remove any potential top margin that could cause blank page */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
 * {
   box-sizing: border-box;
   word-wrap: break-word;

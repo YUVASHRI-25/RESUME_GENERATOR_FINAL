@@ -3,6 +3,7 @@ import { useSearchParams, useLocation } from 'react-router-dom';
 import ResumeForm from '../components/ResumeForm';
 import ResumePreview from '../components/ResumePreview';
 import TemplateSwitcher from '../components/TemplateSwitcher';
+import TextFormattingToolbar from '../components/TextFormattingToolbar';
 import { Download, Wand2 } from 'lucide-react';
 import { applyTemplateTheme } from '../templates/templateRegistry';
 import html2pdf from 'html2pdf.js';
@@ -120,8 +121,10 @@ const ResumeEditorPage = () => {
     };
 
     const [resumeData, setResumeData] = useState(getInitialResumeData);
+    const [hasSelection, setHasSelection] = useState(false);
 
     const previewRef = React.useRef(null);
+    const iframeRef = React.useRef(null);
 
     // Auto-save resume data to localStorage whenever it changes
     useEffect(() => {
@@ -156,8 +159,44 @@ const ResumeEditorPage = () => {
         }
     }, [resumeData.theme]);
 
+    // Handle messages from iframe
+    useEffect(() => {
+        const handleMessage = (event) => {
+            if (event.data.type === 'SELECTION_CHANGED') {
+                setHasSelection(event.data.hasSelection);
+            } else if (event.data.type === 'DOWNLOAD_SUCCESS') {
+                console.log('PDF download completed successfully');
+            } else if (event.data.type === 'DOWNLOAD_ERROR') {
+                console.error('PDF download failed:', event.data.error);
+                alert('Failed to download PDF: ' + event.data.error);
+            }
+        };
+
+        window.addEventListener('message', handleMessage);
+        return () => window.removeEventListener('message', handleMessage);
+    }, []);
+
+    // Handle formatting requests
+    const handleFormat = (formatType, value = null) => {
+        if (iframeRef.current?.contentWindow) {
+            iframeRef.current.contentWindow.postMessage({
+                type: 'APPLY_FORMAT',
+                formatType: formatType,
+                value: value
+            }, '*');
+        }
+    };
+
+    // Handle iframe load
+    const handleIframeLoad = (iframe) => {
+        iframeRef.current = iframe;
+    };
+
     const handleDownload = async () => {
         try {
+            console.log('handleDownload called for template:', templateId);
+            console.log('previewRef.current:', previewRef.current);
+            
             // Ensure theme colors are applied before PDF generation
             if (resumeData.theme) {
                 const theme = resumeData.theme;
@@ -180,14 +219,26 @@ const ResumeEditorPage = () => {
 
             // Try to download via iframe's postMessage
             if (previewRef.current?.downloadPDF) {
+                console.log('Attempting download via iframe postMessage');
                 const result = previewRef.current.downloadPDF();
+                console.log('downloadPDF result:', result);
+                
                 if (result) {
                     console.log('PDF download triggered from iframe');
                     return;
+                } else {
+                    console.log('iframe downloadPDF returned false, trying fallback');
                 }
+            } else {
+                console.log('previewRef.current.downloadPDF is not available');
             }
 
+<<<<<<< HEAD
             // Create a dedicated print window for true text-based PDF generation
+=======
+            // Fallback for React templates
+            console.log('Using fallback download method');
+>>>>>>> 376dac5 (Initial commit)
             const element = document.getElementById('resume-preview-content');
             if (element) {
                 // Create a new window for printing
@@ -387,6 +438,7 @@ const ResumeEditorPage = () => {
                 
                 console.log('Print-based PDF generation initiated');
             } else {
+                console.error('Could not find resume content to download');
                 alert('Could not find resume content to download');
             }
         } catch (error) {
@@ -429,9 +481,23 @@ const ResumeEditorPage = () => {
                 </div>
                 
                 {/* Right: Preview - Full Height with Scrolling */}
-                <div className="w-1/2 overflow-y-auto bg-gray-300 flex items-start justify-center pt-4">
+                <div className="w-1/2 overflow-y-auto bg-gray-300 flex flex-col items-start pt-4">
+                    {/* Formatting Toolbar */}
+                    <div className="w-full max-w-[8.5in] px-4 mb-4">
+                        <TextFormattingToolbar 
+                            onFormat={handleFormat} 
+                            disabled={!hasSelection}
+                        />
+                    </div>
+                    
+                    {/* Preview Content */}
                     <div style={{ width: '8.5in', flexShrink: 0 }}>
-                        <ResumePreview ref={previewRef} data={resumeData} template={templateId} />
+                        <ResumePreview 
+                            ref={previewRef} 
+                            data={resumeData} 
+                            template={templateId}
+                            onIframeLoad={handleIframeLoad}
+                        />
                     </div>
                 </div>
             </div>

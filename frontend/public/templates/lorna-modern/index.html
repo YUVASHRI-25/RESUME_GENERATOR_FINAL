@@ -14,14 +14,14 @@
 <body>
   <div id="resume" class="resume template-root">
     <header class="top">
-      <h1 id="name">Lorna Alvarado</h1>
-      <h2 id="title">Marketing Manager</h2>
+      <h1 id="name" contenteditable="true" data-field="name">Lorna Alvarado</h1>
+      <h2 id="title" contenteditable="true" data-field="title">Marketing Manager</h2>
     </header>
     <div class="bar">
-      <span id="email">{{email}}</span>
-      <span id="phone">{{phone}}</span>
-      <span id="location">{{location}}</span>
-      <span id="website">{{website}}</span>
+      <span id="email" contenteditable="true" data-field="email">{{email}}</span>
+      <span id="phone" contenteditable="true" data-field="phone">{{phone}}</span>
+      <span id="location" contenteditable="true" data-field="location">{{location}}</span>
+      <span id="website" contenteditable="true" data-field="website">{{website}}</span>
     </div>
 
     <div class="columns">
@@ -43,7 +43,7 @@
       <main class="right">
         <section>
           <h3 id="profile-heading" contenteditable="true" data-field="aboutHeading">Profile</h3>
-          <p id="summary">Professional summary</p>
+          <p id="summary" contenteditable="true" data-field="summary">Professional summary</p>
         </section>
         <section>
           <h3 id="experience-heading" contenteditable="true" data-field="experienceHeading">Experience</h3>
@@ -192,23 +192,32 @@
           title.style.fontWeight = 'bold';
           title.style.margin = '0';
           title.textContent = `${edu.degree || ''} ${edu.field ? `in ${edu.field}` : ''}`.trim() || 'Education';
+          title.contentEditable = 'true';
+          title.setAttribute('data-field', 'educationTitle');
           
           const school = document.createElement('p');
           school.style.margin = '0';
           school.textContent = edu.school || '';
+          school.contentEditable = 'true';
+          school.setAttribute('data-field', 'educationSchool');
           
           const dates = document.createElement('p');
           dates.style.fontSize = '12px';
           dates.style.margin = '0';
           dates.textContent = `${edu.startDate || ''} ${edu.endDate ? `- ${edu.endDate}` : ''}`.trim();
+          dates.contentEditable = 'true';
+          dates.setAttribute('data-field', 'educationDates');
           
           if (title.textContent) div.appendChild(title);
           if (school.textContent) div.appendChild(school);
           if (dates.textContent) div.appendChild(dates);
           if (edu.description) {
             const desc = document.createElement('p');
+            desc.style.fontSize = '12px';
             desc.style.margin = '4px 0 0 0';
             desc.innerHTML = edu.description.replace(/\n/g, '<br>');
+            desc.contentEditable = 'true';
+            desc.setAttribute('data-field', 'educationDescription');
             div.appendChild(desc);
           }
           content.appendChild(div);
@@ -231,6 +240,8 @@
         payload.skills.forEach(skill => {
           const li = document.createElement('li');
           li.textContent = skill.name || skill;
+          li.contentEditable = 'true';
+          li.setAttribute('data-field', 'skillItem');
           list.appendChild(li);
         });
       }
@@ -246,6 +257,8 @@
         payload.languages.forEach(lang => {
           const li = document.createElement('li');
           li.textContent = `${lang.name || 'Language'} – ${lang.level || 'Fluent'}`;
+          li.contentEditable = 'true';
+          li.setAttribute('data-field', 'languageItem');
           list.appendChild(li);
         });
       }
@@ -271,16 +284,22 @@
           title.style.fontWeight = 'bold';
           title.style.margin = '0 0 4px';
           title.textContent = exp.company || '';
+          title.contentEditable = 'true';
+          title.setAttribute('data-field', 'experienceCompany');
           
           const role = document.createElement('p');
           role.style.margin = '0 0 4px';
           role.style.fontStyle = 'italic';
           role.textContent = exp.position || '';
+          role.contentEditable = 'true';
+          role.setAttribute('data-field', 'experiencePosition');
           
           const dates = document.createElement('p');
           dates.style.margin = '0 0 6px';
           dates.style.fontSize = '12px';
           dates.textContent = `${exp.startDate || ''} ${exp.endDate ? `- ${exp.endDate}` : exp.currentlyWorking ? '- Present' : ''}`.trim();
+          dates.contentEditable = 'true';
+          dates.setAttribute('data-field', 'experienceDates');
           
           div.appendChild(title);
           if (role.textContent) div.appendChild(role);
@@ -290,6 +309,8 @@
             const desc = document.createElement('p');
             desc.style.margin = '0';
             desc.innerHTML = exp.description.replace(/\n/g, '<br>');
+            desc.contentEditable = 'true';
+            desc.setAttribute('data-field', 'experienceDescription');
             div.appendChild(desc);
           }
           
@@ -300,6 +321,8 @@
             exp.bullets.forEach(bullet => {
               const li = document.createElement('li');
               li.textContent = bullet;
+              li.contentEditable = 'true';
+              li.setAttribute('data-field', 'experienceBullet');
               ul.appendChild(li);
             });
             div.appendChild(ul);
@@ -330,10 +353,14 @@
           title.style.fontWeight = 'bold';
           title.style.margin = '0 0 4px';
           title.textContent = proj.title || 'Project';
+          title.contentEditable = 'true';
+          title.setAttribute('data-field', 'projectTitle');
           
           const desc = document.createElement('p');
           desc.style.margin = '0';
           desc.innerHTML = (proj.description || '').replace(/\n/g, '<br>');
+          desc.contentEditable = 'true';
+          desc.setAttribute('data-field', 'projectDescription');
           
           if (title.textContent) div.appendChild(title);
           if (desc.textContent) div.appendChild(desc);
@@ -345,6 +372,8 @@
               if (bullet) {
                 const li = document.createElement('li');
                 li.textContent = bullet;
+                li.contentEditable = 'true';
+                li.setAttribute('data-field', 'projectBullet');
                 ul.appendChild(li);
               }
             });
@@ -376,17 +405,23 @@
           title.style.fontWeight = 'bold';
           title.style.margin = '0 0 4px';
           title.textContent = award.title || award.name || '';
+          title.contentEditable = 'true';
+          title.setAttribute('data-field', 'awardTitle');
           
           const issuer = document.createElement('p');
           issuer.style.margin = '0 0 2px';
           issuer.style.fontSize = '0.9em';
           issuer.textContent = award.issuer || award.organization || '';
+          issuer.contentEditable = 'true';
+          issuer.setAttribute('data-field', 'awardIssuer');
           
           const date = document.createElement('p');
           date.style.margin = '0';
           date.style.fontSize = '0.85em';
           date.style.color = '#666';
           date.textContent = award.date || award.year || '';
+          date.contentEditable = 'true';
+          date.setAttribute('data-field', 'awardDate');
           
           if (title.textContent) div.appendChild(title);
           if (issuer.textContent) div.appendChild(issuer);
@@ -416,16 +451,22 @@
           name.style.fontWeight = 'bold';
           name.style.margin = '0 0 4px';
           name.textContent = ref.name || '';
+          name.contentEditable = 'true';
+          name.setAttribute('data-field', 'referenceName');
           
           const title = document.createElement('p');
           title.style.margin = '0 0 2px';
           title.style.fontSize = '0.9em';
           title.textContent = ref.title || '';
+          title.contentEditable = 'true';
+          title.setAttribute('data-field', 'referenceTitle');
           
           const company = document.createElement('p');
           company.style.margin = '0 0 2px';
           company.style.fontSize = '0.9em';
           company.textContent = ref.company || '';
+          company.contentEditable = 'true';
+          company.setAttribute('data-field', 'referenceCompany');
           
           const contact = document.createElement('p');
           contact.style.margin = '0';
@@ -435,6 +476,8 @@
           if (ref.email) contactItems.push(ref.email);
           if (ref.phone) contactItems.push(ref.phone);
           contact.textContent = contactItems.join(' • ');
+          contact.contentEditable = 'true';
+          contact.setAttribute('data-field', 'referenceContact');
           
           if (name.textContent) div.appendChild(name);
           if (title.textContent) div.appendChild(title);
@@ -444,53 +487,137 @@
         });
       }
 
-      // Custom Sections
-    const customContainer = document.getElementById('custom-section');
-    customContainer.innerHTML = '';
-    if (Array.isArray(payload.customSections)) {
-      payload.customSections.forEach(section => {
-        const wrapper = document.createElement('section');
-        wrapper.style.marginTop = '16px';
-        
-        const heading = document.createElement('h3');
-        heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
-        heading.style.margin = '0 0 10px 0';
-        
-        const content = document.createElement('div');
-        
-        // Handle content with bullets
-        if (section.bullets && section.bullets.length > 0) {
-          // If bullets exist, render description first (if any), then bullets
-          if (section.content) {
-            const descDiv = document.createElement('div');
-            descDiv.innerHTML = section.content.replace(/\n/g, '<br>');
-            descDiv.style.marginBottom = '8px';
-            content.appendChild(descDiv);
+      // Custom Sections (using Drew Feig template logic)
+      const customContainer = document.getElementById('custom-section');
+      customContainer.innerHTML = '';
+      if (Array.isArray(payload.customSections)) {
+        payload.customSections.forEach(section => {
+          const wrapper = document.createElement('section');
+          wrapper.style.marginTop = '16px';
+          
+          const heading = document.createElement('h3');
+          heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
+          heading.style.margin = '0 0 10px 0';
+          heading.contentEditable = 'true';
+          heading.setAttribute('data-field', 'customSectionHeading');
+          
+          const content = document.createElement('div');
+          content.className = 'custom-section-content';
+          
+          // Handle content with bullets
+          if (section.bullets && section.bullets.length > 0) {
+            // If bullets exist, render description first (if any), then bullets
+            if (section.content) {
+              const descDiv = document.createElement('div');
+              descDiv.innerHTML = section.content.replace(/\n/g, '<br>');
+              descDiv.style.marginBottom = '8px';
+              descDiv.contentEditable = 'true';
+              descDiv.setAttribute('data-field', 'customSectionContent');
+              content.appendChild(descDiv);
+            }
+            
+            const ul = document.createElement('ul');
+            section.bullets.forEach(bullet => {
+              if (bullet) {
+                const li = document.createElement('li');
+                li.textContent = bullet;
+                li.contentEditable = 'true';
+                li.setAttribute('data-field', 'customSectionBullet');
+                ul.appendChild(li);
+              }
+            });
+            content.appendChild(ul);
+          } else {
+            // If no bullets, render content as normal
+            content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
+            content.contentEditable = 'true';
+            content.setAttribute('data-field', 'customSectionContent');
           }
           
-          const ul = document.createElement('ul');
-          section.bullets.forEach(bullet => {
-            if (bullet) {
-              const li = document.createElement('li');
-              li.textContent = bullet;
-              ul.appendChild(li);
-            }
-          });
-          content.appendChild(ul);
-        } else {
-          // If no bullets, render content as normal
-          content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
-        }
-        
-        wrapper.appendChild(heading);
-        wrapper.appendChild(content);
-        customContainer.appendChild(wrapper);
-      });
-    }
+          wrapper.appendChild(heading);
+          wrapper.appendChild(content);
+          customContainer.appendChild(wrapper);
+        });
+      }
+      
+      // Custom Sections visibility
+      if (customContainer) {
+        customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
+      }
     
-    // Custom Sections visibility
-    if (customContainer) {
-      customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
+    // Column placement for two-column templates
+    const leftCol = document.querySelector('.left');
+    const rightCol = document.querySelector('.right');
+    if (leftCol && rightCol) {
+      const moveBlock = (id, col) => {
+        const el = document.getElementById(id);
+        if (!el || !el.closest('section')) return;
+        const section = el.closest('section');
+        
+        if (col === 'left') {
+          leftCol.appendChild(section);
+        } else {
+          // For right column, maintain specific order: Profile → Education → Skills → others
+          const profileSection = document.getElementById('profile-heading')?.closest('section');
+          const educationSection = document.getElementById('education-heading')?.closest('section');
+          const skillsSection = document.getElementById('skills-heading')?.closest('section');
+          
+          if (el.id === 'profile-heading') {
+            // Profile always goes first
+            rightCol.appendChild(section);
+          } else if (el.id === 'education-heading') {
+            // Education goes after Profile
+            if (profileSection) {
+              rightCol.insertBefore(section, profileSection.nextSibling);
+            } else {
+              rightCol.appendChild(section);
+            }
+          } else if (el.id === 'skills-heading') {
+            // Skills goes after Education (if Education is in right column) or after Profile
+            let insertAfter = profileSection;
+            if (educationSection && educationSection.parentElement === rightCol) {
+              insertAfter = educationSection;
+            }
+            if (insertAfter && insertAfter.nextSibling) {
+              rightCol.insertBefore(section, insertAfter.nextSibling);
+            } else {
+              rightCol.appendChild(section);
+            }
+          } else {
+            // Other sections go after Skills (if Skills is in right column) or at the end
+            let insertAfter = profileSection;
+            if (educationSection && educationSection.parentElement === rightCol) {
+              insertAfter = educationSection;
+            }
+            if (skillsSection && skillsSection.parentElement === rightCol) {
+              insertAfter = skillsSection;
+            }
+            if (insertAfter && insertAfter.nextSibling) {
+              rightCol.insertBefore(section, insertAfter.nextSibling);
+            } else {
+              rightCol.appendChild(section);
+            }
+          }
+        }
+      };
+      
+      // Move sections in the correct order to maintain positioning
+      moveBlock('profile-heading', settings.about?.column === 'left' ? 'left' : 'right');
+      moveBlock('education-heading', settings.education?.column === 'left' ? 'left' : 'right');
+      moveBlock('skills-heading', settings.skills?.column === 'left' ? 'left' : 'right');
+      moveBlock('experience-heading', settings.experience?.column === 'left' ? 'left' : 'right');
+      moveBlock('projects-heading', settings.projects?.column === 'left' ? 'left' : 'right');
+      moveBlock('languages-heading', settings.languages?.column === 'left' ? 'left' : 'right');
+      moveBlock('awards-heading', settings.awards?.column === 'left' ? 'left' : 'right');
+      moveBlock('references-heading', settings.references?.column === 'left' ? 'left' : 'right');
+      
+      // Position custom sections as the last section in the appropriate column (Jyoti template logic)
+      if (customContainer && settings.custom?.visible !== false) {
+        const targetColumn = settings.custom?.column === 'left' ? leftCol : rightCol;
+        if (targetColumn) {
+          targetColumn.appendChild(customContainer);
+        }
+      }
     }
     }
 
@@ -511,6 +638,61 @@
       }, '*');
     }
   });
+
+  // WYSIWYG Text Formatting Functions
+    function applyFormat(formatType, value = null) {
+      const selection = window.getSelection();
+      if (!selection.rangeCount || selection.isCollapsed) {
+        return; // No text selected
+      }
+
+      const range = selection.getRangeAt(0);
+      const selectedText = range.toString();
+      
+      if (!selectedText.trim()) {
+        return; // No meaningful text selected
+      }
+
+      switch (formatType) {
+        case 'bold':
+          document.execCommand('bold', false, null);
+          break;
+        case 'italic':
+          document.execCommand('italic', false, null);
+          break;
+        case 'underline':
+          document.execCommand('underline', false, null);
+          break;
+        case 'fontSize':
+          document.execCommand('fontSize', false, value);
+          break;
+        case 'clear':
+          document.execCommand('removeFormat', false, null);
+          break;
+      }
+      
+      // Preserve selection after formatting
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+
+    // Handle formatting messages from parent
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'APPLY_FORMAT') {
+        applyFormat(event.data.formatType, event.data.value);
+      }
+    });
+
+    // Notify parent when selection changes
+    document.addEventListener('selectionchange', () => {
+      const selection = window.getSelection();
+      const hasSelection = selection.rangeCount > 0 && !selection.isCollapsed && selection.toString().trim();
+      
+      window.parent.postMessage({
+        type: 'SELECTION_CHANGED',
+        hasSelection: hasSelection
+      }, '*');
+    });
 
   // Prevent Enter key from creating new lines in headings
   document.addEventListener('keydown', function(e) {

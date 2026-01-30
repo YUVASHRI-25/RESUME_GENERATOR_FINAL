@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 </head>
 
 <body>
@@ -26,10 +26,10 @@
             <h2 id="title" contenteditable="true">Professional Title</h2>
 
             <div class="contact" id="contact-info">
-                <span id="contact-phone">📞 123-456-7890</span>
-                <span id="contact-email">✉ hello@example.com</span>
-                <span id="contact-location">📍 City, Country</span>
-                <span id="contact-website">🌐 www.example.com</span>
+                <span id="contact-phone" contenteditable="true" data-field="contactPhone">📞 123-456-7890</span>
+                <span id="contact-email" contenteditable="true" data-field="contactEmail">✉ hello@example.com</span>
+                <span id="contact-location" contenteditable="true" data-field="contactLocation">📍 City, Country</span>
+                <span id="contact-website" contenteditable="true" data-field="contactWebsite">🌐 www.example.com</span>
             </div>
         </div>
     </div>
@@ -182,10 +182,10 @@
             const contactInfo = document.getElementById("contact-info");
             if (contactInfo) {
                 let contactHtml = '';
-                if (phone) contactHtml += `<span id="contact-phone">📞 ${phone}</span>`;
-                if (email) contactHtml += `<span id="contact-email">✉ ${email}</span>`;
-                if (location) contactHtml += `<span id="contact-location">📍 ${location}</span>`;
-                if (website) contactHtml += `<span id="contact-website">🌐 ${website}</span>`;
+                if (phone) contactHtml += `<span id="contact-phone" contenteditable="true" data-field="contactPhone">📞 ${phone}</span>`;
+                if (email) contactHtml += `<span id="contact-email" contenteditable="true" data-field="contactEmail">✉ ${email}</span>`;
+                if (location) contactHtml += `<span id="contact-location" contenteditable="true" data-field="contactLocation">📍 ${location}</span>`;
+                if (website) contactHtml += `<span id="contact-website" contenteditable="true" data-field="contactWebsite">🌐 ${website}</span>`;
                 if (contactHtml) contactInfo.innerHTML = contactHtml;
             }
         }
@@ -281,6 +281,8 @@
                 if (edu.startDate || edu.endDate) {
                     dateDiv.textContent = `${edu.startDate || ''} ${edu.endDate ? `– ${edu.endDate}` : ''}`.trim();
                 }
+                dateDiv.contentEditable = 'true';
+                dateDiv.setAttribute('data-field', 'educationDates');
                 row.appendChild(dateDiv);
 
                 const contentDiv = document.createElement("div");
@@ -292,11 +294,15 @@
                 if (edu.degree) parts.push(edu.degree);
                 if (edu.field) parts.push(`${edu.field}`);
                 title.textContent = parts.join(" | ");
+                title.contentEditable = 'true';
+                title.setAttribute('data-field', 'educationTitle');
                 contentDiv.appendChild(title);
 
                 if (edu.description) {
                     const p = document.createElement("p");
                     p.innerHTML = edu.description.replace(/\n/g, '<br>');
+                    p.contentEditable = 'true';
+                    p.setAttribute('data-field', 'educationDescription');
                     contentDiv.appendChild(p);
                 }
 
@@ -318,6 +324,8 @@
                 if (exp.startDate || exp.endDate || exp.currentlyWorking) {
                     dateDiv.textContent = `${exp.startDate || ''} ${exp.endDate ? `– ${exp.endDate}` : exp.currentlyWorking ? '– Present' : ''}`.trim();
                 }
+                dateDiv.contentEditable = 'true';
+                dateDiv.setAttribute('data-field', 'experienceDates');
                 row.appendChild(dateDiv);
 
                 const contentDiv = document.createElement("div");
@@ -328,11 +336,15 @@
                 if (exp.company) parts.push(exp.company);
                 if (exp.position) parts.push(exp.position);
                 title.textContent = parts.join(" | ");
+                title.contentEditable = 'true';
+                title.setAttribute('data-field', 'experienceTitle');
                 contentDiv.appendChild(title);
 
                 if (exp.description) {
                     const p = document.createElement("p");
                     p.innerHTML = exp.description.replace(/\n/g, '<br>');
+                    p.contentEditable = 'true';
+                    p.setAttribute('data-field', 'experienceDescription');
                     contentDiv.appendChild(p);
                 }
 
@@ -341,6 +353,8 @@
                     exp.bullets.forEach(bullet => {
                         const li = document.createElement("li");
                         li.textContent = bullet;
+                        li.contentEditable = 'true';
+                        li.setAttribute('data-field', 'experienceBullet');
                         ul.appendChild(li);
                     });
                     contentDiv.appendChild(ul);
@@ -358,6 +372,8 @@
             payload.skills.forEach(skill => {
                 const li = document.createElement("li");
                 li.textContent = skill.name || skill;
+                li.contentEditable = 'true';
+                li.setAttribute('data-field', 'skillItem');
                 skillsList.appendChild(li);
             });
         }
@@ -369,6 +385,8 @@
             payload.languages.forEach(lang => {
                 const li = document.createElement("li");
                 li.textContent = lang.name || lang;
+                li.contentEditable = 'true';
+                li.setAttribute('data-field', 'languageItem');
                 languagesList.appendChild(li);
             });
         }
@@ -379,7 +397,9 @@
             awardsList.innerHTML = "";
             payload.awards.forEach(award => {
                 const li = document.createElement("li");
-                li.textContent = `${award.title || ''}${award.year ? ` (${award.year})` : ''}`.trim();
+                li.textContent = award.title || award.name || award;
+                li.contentEditable = 'true';
+                li.setAttribute('data-field', 'awardItem');
                 awardsList.appendChild(li);
             });
         }
@@ -395,6 +415,8 @@
                 const dateDiv = document.createElement("div");
                 dateDiv.className = "date";
                 dateDiv.textContent = proj.date || proj.year || '';
+                dateDiv.contentEditable = 'true';
+                dateDiv.setAttribute('data-field', 'projectDate');
                 row.appendChild(dateDiv);
 
                 const contentDiv = document.createElement("div");
@@ -402,11 +424,15 @@
 
                 const title = document.createElement("h4");
                 title.textContent = proj.title || proj.name || '';
+                title.contentEditable = 'true';
+                title.setAttribute('data-field', 'projectTitle');
                 contentDiv.appendChild(title);
 
                 if (proj.description) {
                     const p = document.createElement("p");
                     p.innerHTML = proj.description.replace(/\n/g, '<br>');
+                    p.contentEditable = 'true';
+                    p.setAttribute('data-field', 'projectDescription');
                     contentDiv.appendChild(p);
                 }
 
@@ -415,6 +441,8 @@
                     proj.bullets.forEach(bullet => {
                         const li = document.createElement("li");
                         li.textContent = bullet;
+                        li.contentEditable = 'true';
+                        li.setAttribute('data-field', 'projectBullet');
                         ul.appendChild(li);
                     });
                     contentDiv.appendChild(ul);
@@ -438,15 +466,21 @@
 
                 const name = document.createElement("h4");
                 name.textContent = ref.name || '';
+                name.contentEditable = 'true';
+                name.setAttribute('data-field', 'referenceName');
                 contentDiv.appendChild(name);
 
                 const info = document.createElement("p");
                 info.textContent = `${ref.title || ''}${ref.company ? ` at ${ref.company}` : ''}`.trim();
+                info.contentEditable = 'true';
+                info.setAttribute('data-field', 'referenceInfo');
                 contentDiv.appendChild(info);
 
                 const contact = document.createElement("p");
                 const contactItems = [ref.email, ref.phone].filter(Boolean);
                 contact.textContent = contactItems.join(' | ');
+                contact.contentEditable = 'true';
+                contact.setAttribute('data-field', 'referenceContact');
                 contentDiv.appendChild(contact);
 
                 row.appendChild(contentDiv);
@@ -466,6 +500,8 @@
                 const heading = document.createElement('div');
                 heading.className = 'section-title';
                 heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
+                heading.contentEditable = 'true';
+                heading.setAttribute('data-field', 'customSectionHeading');
                 
                 const content = document.createElement('div');
                 
@@ -476,6 +512,8 @@
                         const descDiv = document.createElement('div');
                         descDiv.innerHTML = section.content.replace(/\n/g, '<br>');
                         descDiv.style.marginBottom = '8px';
+                        descDiv.contentEditable = 'true';
+                        descDiv.setAttribute('data-field', 'customSectionContent');
                         content.appendChild(descDiv);
                     }
                     
@@ -484,6 +522,8 @@
                         if (bullet) {
                             const li = document.createElement('li');
                             li.textContent = bullet;
+                            li.contentEditable = 'true';
+                            li.setAttribute('data-field', 'customSectionBullet');
                             ul.appendChild(li);
                         }
                     });
@@ -491,6 +531,8 @@
                 } else {
                     // If no bullets, render content as normal
                     content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
+                    content.contentEditable = 'true';
+                    content.setAttribute('data-field', 'customSectionContent');
                 }
                 
                 wrapper.appendChild(heading);
@@ -504,6 +546,119 @@
             customWrap.style.display = settings.custom?.visible !== false ? "block" : "none";
         }
     }
+
+    // WYSIWYG Text Formatting Functions
+    function applyFormat(formatType, value = null) {
+        const selection = window.getSelection();
+        if (!selection.rangeCount || selection.isCollapsed) {
+            return; // No text selected
+        }
+
+        const range = selection.getRangeAt(0);
+        const selectedText = range.toString();
+        
+        if (!selectedText.trim()) {
+            return; // No meaningful text selected
+        }
+
+        switch (formatType) {
+            case 'bold':
+                wrapSelection('strong');
+                break;
+            case 'italic':
+                wrapSelection('em');
+                break;
+            case 'underline':
+                wrapSelection('u');
+                break;
+            case 'fontSize':
+                wrapSelection('span', { style: `font-size: ${value}px` });
+                break;
+            case 'clear':
+                clearFormatting();
+                break;
+        }
+        
+        // Preserve selection after formatting
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+    function wrapSelection(tagName, attributes = {}) {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+        const element = document.createElement(tagName);
+        
+        // Set attributes
+        Object.entries(attributes).forEach(([key, value]) => {
+            element.setAttribute(key, value);
+        });
+        
+        try {
+            range.surroundContents(element);
+        } catch (e) {
+            // Handle complex selections
+            const contents = range.extractContents();
+            element.appendChild(contents);
+            range.insertNode(element);
+        }
+    }
+
+    function clearFormatting() {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+        const contents = range.extractContents();
+        const textNode = document.createTextNode(contents.textContent || '');
+        range.insertNode(textNode);
+    }
+
+    // Handle formatting messages from parent
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'APPLY_FORMAT') {
+            applyFormat(event.data.formatType, event.data.value);
+        }
+    });
+
+    // Notify parent when selection changes
+    document.addEventListener('selectionchange', () => {
+        const selection = window.getSelection();
+        const hasSelection = selection.rangeCount > 0 && !selection.isCollapsed && selection.toString().trim();
+        
+        window.parent.postMessage({
+            type: 'SELECTION_CHANGED',
+            hasSelection: hasSelection
+        }, '*');
+    });
+
+    // Handle inline editing for headings
+    document.addEventListener('input', function(e) {
+        if (e.target.hasAttribute('contenteditable') && e.target.hasAttribute('data-field')) {
+            const field = e.target.getAttribute('data-field');
+            const value = e.target.textContent.trim();
+            
+            // Mark this heading as customized
+            e.target.setAttribute('data-customized', 'true');
+            
+            // Send updated heading to parent
+            window.parent.postMessage({
+                type: 'heading-update',
+                field: field,
+                value: value
+            }, '*');
+        }
+    });
+
+    // Prevent Enter key from creating new lines in headings
+    document.addEventListener('keydown', function(e) {
+        if (e.target.hasAttribute('contenteditable') && e.key === 'Enter') {
+            e.preventDefault();
+            e.target.blur();
+        }
+    });
 
     window.addEventListener("message", (event) => {
         if (event.data === 'DOWNLOAD_PDF') {
@@ -524,10 +679,22 @@
             setTimeout(() => {
               // Add PDF-specific styles to fill page width
             const originalStyle = resume.getAttribute('style') || '';
+            const originalBodyStyle = document.body.getAttribute('style') || '';
+            
+            // Add PDF mode class for CSS targeting
+            resume.classList.add('pdf-mode');
+            
             resume.style.width = '100%';
-            resume.style.maxWidth = '8in'; // Use inches for letter page
+            resume.style.maxWidth = '8in';
             resume.style.margin = '0 auto';
-            resume.style.padding = '0';
+            resume.style.padding = '20px';
+            resume.style.boxSizing = 'border-box';
+            resume.style.overflow = 'visible';
+            
+            // Ensure body doesn't interfere
+            document.body.style.margin = '0';
+            document.body.style.padding = '0';
+            document.body.style.overflow = 'visible';
             
             // Calculate actual content height
             const contentHeight = Math.max(
@@ -537,34 +704,43 @@
             );
             
             const opt = {
-                margin: 0.25, // Small margins to fill page better
+                margin: 0.2, // Smaller margins for better space usage
                 filename: 'resume.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { 
-                    scale: 2,
+                    scale: 3, // Higher scale for better quality
                     useCORS: true,
                     logging: false,
-                    width: 816, // 8 inches at 102 DPI (letter width - margins)
-                    height: contentHeight, // Use actual content height
+                    width: 792, // 8 inches at 99 DPI (letter width - margins)
+                    height: Math.max(contentHeight, 1056), // Minimum letter height
                     windowWidth: resume.scrollWidth,
-                    windowHeight: contentHeight
+                    windowHeight: contentHeight,
+                    letterRendering: true,
+                    allowTaint: true
                 },
                 jsPDF: { 
                     unit: 'in', 
                     format: 'letter', 
                     orientation: 'portrait',
-                    compress: true
+                    compress: true,
+                    precision: 16
                 }
             };
             
-            html2pdf().set(opt).from(resume).save().then(() => {
+            // PDF generation now handled server-side
+            
+            // Small delay to ensure styles are applied before PDF generation
+            setTimeout(() => {
                 // Restore original styles
+                resume.classList.remove('pdf-mode');
                 resume.setAttribute('style', originalStyle);
-            });
+                document.body.setAttribute('style', originalBodyStyle);
+            }, 100);
             }, 100);
             return;
+        } else {
+            updateContent(event.data);
         }
-        updateContent(event.data);
     });
 
     // Signal that the iframe is ready

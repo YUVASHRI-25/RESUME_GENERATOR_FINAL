@@ -9,7 +9,7 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
 </head>
 <body>
 
@@ -18,14 +18,14 @@
   <!-- LEFT SIDEBAR -->
   <aside class="sidebar">
 
-    <h1 id="name">{{name}}</h1>
-    <h2 id="title">{{title}}</h2>
+    <h1 id="name" contenteditable="true" data-field="name">{{name}}</h1>
+    <h2 id="title" contenteditable="true" data-field="title">{{title}}</h2>
 
     <ul class="contact">
-      <li id="phone">{{phone}}</li>
-      <li id="email">{{email}}</li>
-      <li id="location">{{location}}</li>
-      <li id="website">{{website}}</li>
+      <li id="phone" contenteditable="true" data-field="phone">{{phone}}</li>
+      <li id="email" contenteditable="true" data-field="email">{{email}}</li>
+      <li id="location" contenteditable="true" data-field="location">{{location}}</li>
+      <li id="website" contenteditable="true" data-field="website">{{website}}</li>
     </ul>
 
     <div id="sidebar-sections">
@@ -53,7 +53,7 @@
     <div id="content-sections">
       <section id="about-section">
         <h3 id="about-heading" contenteditable="true" data-field="aboutHeading">{{section.about.heading}}</h3>
-        <p id="summary">{{section.about.content}}</p>
+        <p id="summary" contenteditable="true" data-field="summary">{{section.about.content}}</p>
       </section>
 
       <section id="education-section">
@@ -153,12 +153,17 @@
       list.innerHTML = '';
       payload.education.forEach(edu => {
         const div = document.createElement('p');
+        div.contentEditable = 'true';
+        div.setAttribute('data-field', 'educationItem');
+        
         const parts = [`${edu.degree || ''}${edu.field ? ` in ${edu.field}` : ''}`.trim(), edu.school, `${edu.startDate || ''}${edu.endDate ? ` - ${edu.endDate}` : ''}`.trim()].filter(Boolean);
         div.innerHTML = `<strong>${parts[0] || ''}</strong>${parts[1] ? ' — ' + parts[1] : ''}${parts[2] ? ' (' + parts[2] + ')' : ''}`;
         if (edu.description) {
           const desc = document.createElement('small');
           desc.style.display = 'block';
           desc.innerHTML = edu.description.replace(/\n/g, '<br>');
+          desc.contentEditable = 'true';
+          desc.setAttribute('data-field', 'educationDescription');
           div.appendChild(desc);
         }
         list.appendChild(div);
@@ -182,10 +187,14 @@
         title.style.fontWeight = 'bold';
         title.style.margin = '0 0 4px';
         title.textContent = proj.title || proj.name || '';
+        title.contentEditable = 'true';
+        title.setAttribute('data-field', 'projectTitle');
         
         const description = document.createElement('p');
         description.style.margin = '0 0 4px';
         description.innerHTML = (proj.description || '').replace(/\n/g, '<br>');
+        description.contentEditable = 'true';
+        description.setAttribute('data-field', 'projectDescription');
         
         div.appendChild(title);
         if (description.textContent) div.appendChild(description);
@@ -196,6 +205,8 @@
           proj.bullets.forEach(bullet => {
             const li = document.createElement('li');
             li.textContent = bullet;
+            li.contentEditable = 'true';
+            li.setAttribute('data-field', 'projectBullet');
             ul.appendChild(li);
           });
           div.appendChild(ul);
@@ -223,14 +234,22 @@
         const titleSpan = document.createElement('span');
         titleSpan.className = 'job-title';
         titleSpan.textContent = `${exp.position || ''} at ${exp.company || ''}`.trim() || 'Position';
+        titleSpan.contentEditable = 'true';
+        titleSpan.setAttribute('data-field', 'experienceTitle');
+        
         const dateSpan = document.createElement('span');
         dateSpan.className = 'job-date';
         dateSpan.textContent = `${exp.startDate || ''}${exp.endDate ? ` - ${exp.endDate}` : exp.currentlyWorking ? ' - Present' : ''}`.trim();
+        dateSpan.contentEditable = 'true';
+        dateSpan.setAttribute('data-field', 'experienceDates');
+        
         titleDiv.appendChild(titleSpan);
         titleDiv.appendChild(dateSpan);
         
         const desc = document.createElement('p');
         desc.innerHTML = (exp.description || '').replace(/\n/g, '<br>');
+        desc.contentEditable = 'true';
+        desc.setAttribute('data-field', 'experienceDescription');
         
         div.appendChild(titleDiv);
         if (desc.textContent) div.appendChild(desc);
@@ -241,6 +260,8 @@
           exp.bullets.forEach(bullet => {
             const li = document.createElement('li');
             li.textContent = bullet;
+            li.contentEditable = 'true';
+            li.setAttribute('data-field', 'experienceBullet');
             ul.appendChild(li);
           });
           div.appendChild(ul);
@@ -262,6 +283,8 @@
       payload.skills.forEach(skill => {
         const li = document.createElement('li');
         li.textContent = skill.name || skill;
+        li.contentEditable = 'true';
+        li.setAttribute('data-field', 'skillItem');
         list.appendChild(li);
       });
     }
@@ -278,6 +301,8 @@
       payload.languages.forEach(lang => {
         const li = document.createElement('li');
         li.textContent = `${lang.name || 'Language'} – ${lang.level || 'Fluent'}`;
+        li.contentEditable = 'true';
+        li.setAttribute('data-field', 'languageItem');
         list.appendChild(li);
       });
     }
@@ -294,6 +319,8 @@
       payload.awards.forEach(award => {
         const li = document.createElement('li');
         li.textContent = `${award.title || 'Award'} ${award.issuer ? `- ${award.issuer}` : ''}${award.date ? ` (${award.date})` : ''}`;
+        li.contentEditable = 'true';
+        li.setAttribute('data-field', 'awardItem');
         list.appendChild(li);
       });
     }
@@ -314,10 +341,14 @@
         const nameP = document.createElement('p');
         nameP.className = 'reference-name';
         nameP.innerHTML = `<strong>${ref.name || 'Reference'}</strong>`;
+        nameP.contentEditable = 'true';
+        nameP.setAttribute('data-field', 'referenceName');
         
         const infoP = document.createElement('p');
         infoP.className = 'reference-info';
         infoP.textContent = `${ref.title || ''}${ref.company ? ` at ${ref.company}` : ''}`.trim();
+        infoP.contentEditable = 'true';
+        infoP.setAttribute('data-field', 'referenceInfo');
         
         const contactP = document.createElement('p');
         contactP.className = 'reference-contact';
@@ -325,6 +356,8 @@
         if (ref.email) contactItems.push(ref.email);
         if (ref.phone) contactItems.push(ref.phone);
         contactP.textContent = contactItems.join(' • ');
+        contactP.contentEditable = 'true';
+        contactP.setAttribute('data-field', 'referenceContact');
         
         div.appendChild(nameP);
         if (infoP.textContent) div.appendChild(infoP);
@@ -344,6 +377,8 @@
         const heading = document.createElement('h3');
         heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
         heading.style.margin = '0 0 10px 0';
+        heading.contentEditable = 'true';
+        heading.setAttribute('data-field', 'customSectionHeading');
         
         const content = document.createElement('div');
         
@@ -354,6 +389,8 @@
             const descDiv = document.createElement('div');
             descDiv.innerHTML = section.content.replace(/\n/g, '<br>');
             descDiv.style.marginBottom = '8px';
+            descDiv.contentEditable = 'true';
+            descDiv.setAttribute('data-field', 'customSectionContent');
             content.appendChild(descDiv);
           }
           
@@ -362,6 +399,8 @@
             if (bullet) {
               const li = document.createElement('li');
               li.textContent = bullet;
+              li.contentEditable = 'true';
+              li.setAttribute('data-field', 'customSectionBullet');
               ul.appendChild(li);
             }
           });
@@ -369,6 +408,8 @@
         } else {
           // If no bullets, render content as normal
           content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
+          content.contentEditable = 'true';
+          content.setAttribute('data-field', 'customSectionContent');
         }
         
         wrapper.appendChild(heading);
@@ -442,6 +483,103 @@
     }
   });
 
+  // WYSIWYG Text Formatting Functions
+  function applyFormat(formatType, value = null) {
+    const selection = window.getSelection();
+    if (!selection.rangeCount || selection.isCollapsed) {
+      return; // No text selected
+    }
+
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+    
+    if (!selectedText.trim()) {
+      return; // No meaningful text selected
+    }
+
+    switch (formatType) {
+      case 'bold':
+        wrapSelection('strong');
+        break;
+      case 'italic':
+        wrapSelection('em');
+        break;
+      case 'underline':
+        wrapSelection('u');
+        break;
+      case 'fontSize':
+        const fontSizeMap = {
+          '1': '10px',
+          '2': '12px', 
+          '3': '14px',
+          '4': '16px',
+          '5': '18px',
+          '6': '24px',
+          '7': '32px'
+        };
+        const actualSize = fontSizeMap[value] || value + 'px';
+        wrapSelection('span', { style: `font-size: ${actualSize}` });
+        break;
+      case 'clear':
+        clearFormatting();
+        break;
+    }
+    
+    // Preserve selection after formatting
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  function wrapSelection(tagName, attributes = {}) {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+    const element = document.createElement(tagName);
+    
+    // Set attributes
+    Object.entries(attributes).forEach(([key, value]) => {
+      element.setAttribute(key, value);
+    });
+    
+    try {
+      range.surroundContents(element);
+    } catch (e) {
+      // Handle complex selections
+      const contents = range.extractContents();
+      element.appendChild(contents);
+      range.insertNode(element);
+    }
+  }
+
+  function clearFormatting() {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+    const contents = range.extractContents();
+    const textNode = document.createTextNode(contents.textContent || '');
+    range.insertNode(textNode);
+  }
+
+  // Handle formatting messages from parent
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'APPLY_FORMAT') {
+      applyFormat(event.data.formatType, event.data.value);
+    }
+  });
+
+  // Notify parent when selection changes
+  document.addEventListener('selectionchange', () => {
+    const selection = window.getSelection();
+    const hasSelection = selection.rangeCount > 0 && !selection.isCollapsed && selection.toString().trim();
+    
+    window.parent.postMessage({
+      type: 'SELECTION_CHANGED',
+      hasSelection: hasSelection
+    }, '*');
+  });
+
   // Prevent Enter key from creating new lines in headings
   document.addEventListener('keydown', function(e) {
     if (e.target.hasAttribute('contenteditable') && e.key === 'Enter') {
@@ -454,6 +592,9 @@
     if (event.data === 'DOWNLOAD_PDF') {
       const resume = document.getElementById('resume');
       
+      // Add PDF mode class for CSS targeting
+      resume.classList.add('pdf-mode');
+      
       // Apply background color directly to sidebar for PDF generation
       if (window.currentTheme && window.currentTheme.backgroundColor) {
         const sidebar = document.querySelector('.sidebar');
@@ -462,14 +603,44 @@
         }
       }
       
+      // Apply PDF-specific styles
+      const originalStyle = resume.getAttribute('style') || '';
+      resume.style.width = '100%';
+      resume.style.maxWidth = '8in';
+      resume.style.margin = '0 auto';
+      resume.style.display = 'flex';
+      resume.style.boxSizing = 'border-box';
+      
       const opt = {
-        margin: 0,
+        margin: 0.2,
         filename: 'resume.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        html2canvas: { 
+          scale: 3,
+          useCORS: true,
+          logging: false,
+          width: 792,
+          height: Math.max(resume.scrollHeight, 1056),
+          windowWidth: resume.scrollWidth,
+          windowHeight: resume.scrollHeight
+        },
+        jsPDF: { 
+          unit: 'in', 
+          format: 'letter', 
+          orientation: 'portrait',
+          compress: true,
+          precision: 16
+        }
       };
-      html2pdf().set(opt).from(resume).save();
+      
+      // PDF generation now handled server-side
+      
+      // Small delay to ensure styles are applied before PDF generation
+      setTimeout(() => {
+        // Restore original styles
+        resume.classList.remove('pdf-mode');
+        resume.setAttribute('style', originalStyle);
+      }, 100);
       return;
     }
     updateContent(event.data);

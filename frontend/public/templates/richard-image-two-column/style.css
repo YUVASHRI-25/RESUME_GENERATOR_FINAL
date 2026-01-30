@@ -14,6 +14,76 @@
   --sidebar-bg: #ffffff;
 }
 
+/* ================= FONT SIZE STYLES FOR WYSIWYG ================= */
+
+/* Font size 1 - 10px */
+font[size="1"] {
+  font-size: 10px !important;
+}
+
+/* Font size 2 - 12px */
+font[size="2"] {
+  font-size: 12px !important;
+}
+
+/* Font size 3 - 14px (default) */
+font[size="3"] {
+  font-size: 14px !important;
+}
+
+/* Font size 4 - 16px */
+font[size="4"] {
+  font-size: 16px !important;
+}
+
+/* Font size 5 - 18px */
+font[size="5"] {
+  font-size: 18px !important;
+}
+
+/* Font size 6 - 24px */
+font[size="6"] {
+  font-size: 24px !important;
+}
+
+/* Font size 7 - 32px */
+font[size="7"] {
+  font-size: 32px !important;
+}
+
+/* Ensure font tags work within all elements */
+.template-root font[size] {
+  font-size: inherit !important;
+}
+
+.template-root font[size="1"] {
+  font-size: 10px !important;
+}
+
+.template-root font[size="2"] {
+  font-size: 12px !important;
+}
+
+.template-root font[size="3"] {
+  font-size: 14px !important;
+}
+
+.template-root font[size="4"] {
+  font-size: 16px !important;
+}
+
+.template-root font[size="5"] {
+  font-size: 18px !important;
+}
+
+.template-root font[size="6"] {
+  font-size: 24px !important;
+}
+
+.template-root font[size="7"] {
+  font-size: 32px !important;
+}
+
 body {
   background: var(--background-color);
   margin: 0;

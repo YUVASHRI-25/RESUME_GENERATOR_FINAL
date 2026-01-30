@@ -128,20 +128,6 @@ const LandingPage = () => {
                         </div>
 
                         {/* Trust badges */}
-                        <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-600">
-                            <div className="flex items-center gap-2">
-                                <Check className="w-5 h-5 text-green-500" />
-                                <span>100% Free</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Check className="w-5 h-5 text-green-500" />
-                                <span>No Sign Up Required</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Check className="w-5 h-5 text-green-500" />
-                                <span>Instant Download</span>
-                            </div>
-                        </div>
                     </div>
 
                     {/* Floating cards decoration */}

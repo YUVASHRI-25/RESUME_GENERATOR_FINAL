@@ -8,7 +8,7 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
 </head>
 <body>
 
@@ -19,11 +19,11 @@
       <img src="https://via.placeholder.com/120" alt="Profile" id="profile-image" />
     </div>
 
-    <h2 class="name" id="name">Your Name</h2>
-    <p class="role" id="title">Your Title</p>
+    <h2 class="name" id="name" contenteditable="true" data-field="name">Your Name</h2>
+    <p class="role" id="title" contenteditable="true" data-field="title">Your Title</p>
 
     <section id="contact-section">
-      <h3>CONTACT</h3>
+      <h3 id="contact-heading" contenteditable="true" data-field="contactHeading">CONTACT</h3>
       <div id="contact-info"></div>
     </section>
 
@@ -49,7 +49,7 @@
   <main class="content">
     <section id="about-section">
       <h3 id="about-heading" contenteditable="true" data-field="aboutHeading">PROFILE</h3>
-      <p id="about-content"></p>
+      <p id="about-content" contenteditable="true" data-field="aboutContent"></p>
     </section>
 
     <section id="experience-section">
@@ -126,10 +126,10 @@
 
       const contactInfo = document.getElementById('contact-info');
       contactInfo.innerHTML = '';
-      if (email) contactInfo.innerHTML += `<p>✉ ${email}</p>`;
-      if (phone) contactInfo.innerHTML += `<p>📞 ${phone}</p>`;
-      if (location) contactInfo.innerHTML += `<p>📍 ${location}</p>`;
-      if (website) contactInfo.innerHTML += `<p>🌐 ${website}</p>`;
+      if (email) contactInfo.innerHTML += `<p contenteditable="true" data-field="contactEmail">✉ ${email}</p>`;
+      if (phone) contactInfo.innerHTML += `<p contenteditable="true" data-field="contactPhone">📞 ${phone}</p>`;
+      if (location) contactInfo.innerHTML += `<p contenteditable="true" data-field="contactLocation">📍 ${location}</p>`;
+      if (website) contactInfo.innerHTML += `<p contenteditable="true" data-field="contactWebsite">🌐 ${website}</p>`;
     }
 
     // Skills Section
@@ -144,6 +144,8 @@
       payload.skills.forEach(skill => {
         const li = document.createElement('li');
         li.textContent = skill.name || skill;
+        li.contentEditable = 'true';
+        li.setAttribute('data-field', 'skillItem');
         list.appendChild(li);
       });
     }
@@ -160,6 +162,8 @@
       payload.languages.forEach(lang => {
         const li = document.createElement('li');
         li.textContent = `${lang.name || 'Language'} (${lang.level || 'Fluent'})`;
+        li.contentEditable = 'true';
+        li.setAttribute('data-field', 'languageItem');
         list.appendChild(li);
       });
     }
@@ -176,12 +180,12 @@
       payload.references.forEach(ref => {
         const div = document.createElement('div');
         div.style.marginBottom = '10px';
-        div.innerHTML = `<p><strong>${ref.name || 'Reference'}</strong></p>`;
+        div.innerHTML = `<p contenteditable="true" data-field="referenceName"><strong>${ref.name || 'Reference'}</strong></p>`;
         if (ref.title || ref.company) {
-          div.innerHTML += `<p>${ref.title || ''}${ref.company ? ` at ${ref.company}` : ''}</p>`;
+          div.innerHTML += `<p contenteditable="true" data-field="referenceInfo">${ref.title || ''}${ref.company ? ` at ${ref.company}` : ''}</p>`;
         }
         if (ref.email || ref.phone) {
-          div.innerHTML += `<p style="font-size: 12px;">${ref.email || ''}${ref.phone ? ` / ${ref.phone}` : ''}</p>`;
+          div.innerHTML += `<p contenteditable="true" data-field="referenceContact" style="font-size: 12px;">${ref.email || ''}${ref.phone ? ` / ${ref.phone}` : ''}</p>`;
         }
         list.appendChild(div);
       });
@@ -219,9 +223,13 @@
         
         const company = document.createElement('strong');
         company.textContent = exp.company || '';
+        company.contentEditable = 'true';
+        company.setAttribute('data-field', 'experienceCompany');
         
         const dates = document.createElement('span');
         dates.textContent = `${exp.startDate || ''}${exp.endDate ? ` – ${exp.endDate}` : exp.currentlyWorking ? ' – Present' : ''}`;
+        dates.contentEditable = 'true';
+        dates.setAttribute('data-field', 'experienceDates');
         
         header.appendChild(company);
         header.appendChild(dates);
@@ -229,6 +237,8 @@
         const position = document.createElement('p');
         position.style.margin = '0 0 6px 0';
         position.textContent = exp.position || '';
+        position.contentEditable = 'true';
+        position.setAttribute('data-field', 'experiencePosition');
         
         div.appendChild(header);
         if (position.textContent) div.appendChild(position);
@@ -237,6 +247,8 @@
           const desc = document.createElement('p');
           desc.style.margin = '4px 0 0 0';
           desc.innerHTML = exp.description.replace(/\n/g, '<br>');
+          desc.contentEditable = 'true';
+          desc.setAttribute('data-field', 'experienceDescription');
           div.appendChild(desc);
         }
         
@@ -247,6 +259,8 @@
           exp.bullets.forEach(bullet => {
             const li = document.createElement('li');
             li.textContent = bullet;
+            li.contentEditable = 'true';
+            li.setAttribute('data-field', 'experienceBullet');
             ul.appendChild(li);
           });
           div.appendChild(ul);
@@ -270,15 +284,21 @@
         degreeP.style.fontWeight = 'bold';
         degreeP.style.margin = '0 0 2px 0';
         degreeP.textContent = `${edu.degree || ''}${edu.field ? ` in ${edu.field}` : ''}`.trim() || 'Education';
+        degreeP.contentEditable = 'true';
+        degreeP.setAttribute('data-field', 'educationDegree');
         
         const schoolP = document.createElement('p');
         schoolP.style.margin = '0 0 4px 0';
         schoolP.textContent = edu.school || '';
+        schoolP.contentEditable = 'true';
+        schoolP.setAttribute('data-field', 'educationSchool');
         
         const datesP = document.createElement('p');
         datesP.style.margin = '0 0 10px 0';
         datesP.style.fontSize = '12px';
         datesP.textContent = `${edu.startDate || ''}${edu.endDate ? ` – ${edu.endDate}` : ''}`;
+        datesP.contentEditable = 'true';
+        datesP.setAttribute('data-field', 'educationDates');
         
         if (degreeP.textContent) list.appendChild(degreeP);
         if (schoolP.textContent) list.appendChild(schoolP);
@@ -289,6 +309,8 @@
           descP.style.margin = '0 0 10px 0';
           descP.style.fontSize = '12px';
           descP.innerHTML = edu.description.replace(/\n/g, '<br>');
+          descP.contentEditable = 'true';
+          descP.setAttribute('data-field', 'educationDescription');
           list.appendChild(descP);
         }
       });
@@ -311,10 +333,14 @@
         titleP.style.fontWeight = 'bold';
         titleP.style.margin = '0 0 4px 0';
         titleP.textContent = proj.title || 'Project';
+        titleP.contentEditable = 'true';
+        titleP.setAttribute('data-field', 'projectTitle');
         
         const descP = document.createElement('p');
         descP.style.margin = '0';
         descP.innerHTML = (proj.description || '').replace(/\n/g, '<br>');
+        descP.contentEditable = 'true';
+        descP.setAttribute('data-field', 'projectDescription');
         
         div.appendChild(titleP);
         if (descP.textContent) div.appendChild(descP);
@@ -326,6 +352,8 @@
             if (bullet) {
               const li = document.createElement('li');
               li.textContent = bullet;
+              li.contentEditable = 'true';
+              li.setAttribute('data-field', 'projectBullet');
               ul.appendChild(li);
             }
           });
@@ -353,11 +381,15 @@
         titleP.style.fontWeight = 'bold';
         titleP.style.margin = '0 0 2px 0';
         titleP.textContent = award.title || 'Award';
+        titleP.contentEditable = 'true';
+        titleP.setAttribute('data-field', 'awardTitle');
         
         const infoP = document.createElement('p');
         infoP.style.margin = '0';
         infoP.style.fontSize = '12px';
         infoP.textContent = `${award.issuer || ''}${award.date ? ` (${award.date})` : ''}`;
+        infoP.contentEditable = 'true';
+        infoP.setAttribute('data-field', 'awardInfo');
         
         div.appendChild(titleP);
         if (infoP.textContent) div.appendChild(infoP);
@@ -381,6 +413,8 @@
         heading.style.textTransform = 'uppercase';
         heading.style.fontSize = '14px';
         heading.style.fontWeight = 'bold';
+        heading.contentEditable = 'true';
+        heading.setAttribute('data-field', 'customSectionHeading');
         
         const content = document.createElement('div');
         
@@ -391,6 +425,8 @@
             const descDiv = document.createElement('div');
             descDiv.innerHTML = section.content.replace(/\n/g, '<br>');
             descDiv.style.marginBottom = '8px';
+            descDiv.contentEditable = 'true';
+            descDiv.setAttribute('data-field', 'customSectionContent');
             content.appendChild(descDiv);
           }
           
@@ -399,6 +435,8 @@
             if (bullet) {
               const li = document.createElement('li');
               li.textContent = bullet;
+              li.contentEditable = 'true';
+              li.setAttribute('data-field', 'customSectionBullet');
               ul.appendChild(li);
             }
           });
@@ -406,6 +444,8 @@
         } else {
           // If no bullets, render content as normal
           content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
+          content.contentEditable = 'true';
+          content.setAttribute('data-field', 'customSectionContent');
         }
         
         wrapper.appendChild(heading);
@@ -420,6 +460,61 @@
       });
     }
   }
+
+  // WYSIWYG Text Formatting Functions
+  function applyFormat(formatType, value = null) {
+    const selection = window.getSelection();
+    if (!selection.rangeCount || selection.isCollapsed) {
+      return; // No text selected
+    }
+
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+    
+    if (!selectedText.trim()) {
+      return; // No meaningful text selected
+    }
+
+    switch (formatType) {
+      case 'bold':
+        document.execCommand('bold', false, null);
+        break;
+      case 'italic':
+        document.execCommand('italic', false, null);
+        break;
+      case 'underline':
+        document.execCommand('underline', false, null);
+        break;
+      case 'fontSize':
+        document.execCommand('fontSize', false, value);
+        break;
+      case 'clear':
+        document.execCommand('removeFormat', false, null);
+        break;
+    }
+    
+    // Preserve selection after formatting
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  // Handle formatting messages from parent
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'APPLY_FORMAT') {
+      applyFormat(event.data.formatType, event.data.value);
+    }
+  });
+
+  // Notify parent when selection changes
+  document.addEventListener('selectionchange', () => {
+    const selection = window.getSelection();
+    const hasSelection = selection.rangeCount > 0 && !selection.isCollapsed && selection.toString().trim();
+    
+    window.parent.postMessage({
+      type: 'SELECTION_CHANGED',
+      hasSelection: hasSelection
+    }, '*');
+  });
 
   // Handle inline editing for headings
   document.addEventListener('input', function(e) {
@@ -457,7 +552,7 @@
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
       };
-      html2pdf().set(opt).from(resume).save();
+      // PDF generation now handled server-side;
       return;
     }
     updateContent(event.data);

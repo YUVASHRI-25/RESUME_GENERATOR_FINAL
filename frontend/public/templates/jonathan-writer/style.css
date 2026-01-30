@@ -8,14 +8,92 @@
   --border-color: #cccccc;
 }
 
+/* ================= FONT SIZE STYLES FOR WYSIWYG ================= */
+
+/* Font size 1 - 10px */
+font[size="1"] {
+  font-size: 10px !important;
+}
+
+/* Font size 2 - 12px */
+font[size="2"] {
+  font-size: 12px !important;
+}
+
+/* Font size 3 - 14px (default) */
+font[size="3"] {
+  font-size: 14px !important;
+}
+
+/* Font size 4 - 16px */
+font[size="4"] {
+  font-size: 16px !important;
+}
+
+/* Font size 5 - 18px */
+font[size="5"] {
+  font-size: 18px !important;
+}
+
+/* Font size 6 - 24px */
+font[size="6"] {
+  font-size: 24px !important;
+}
+
+/* Font size 7 - 32px */
+font[size="7"] {
+  font-size: 32px !important;
+}
+
+/* Ensure font tags work within all elements */
+.template-root font[size] {
+  font-size: inherit !important;
+}
+
+.template-root font[size="1"] {
+  font-size: 10px !important;
+}
+
+.template-root font[size="2"] {
+  font-size: 12px !important;
+}
+
+.template-root font[size="3"] {
+  font-size: 14px !important;
+}
+
+.template-root font[size="4"] {
+  font-size: 16px !important;
+}
+
+.template-root font[size="5"] {
+  font-size: 18px !important;
+}
+
+.template-root font[size="6"] {
+  font-size: 24px !important;
+}
+
+.template-root font[size="7"] {
+  font-size: 32px !important;
+}
+
 body {
   font-family: var(--resume-font, "Arial", sans-serif);
-  margin: 40px;
+  margin: 0;
+  padding: 0;
   color: var(--text-color);
   background: var(--background-color);
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-word;
+}
+
+.template-root {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 40px;
+  background: var(--background-color);
 }
 
 .header {
@@ -72,4 +150,74 @@ h3 {
 
 ul {
   margin-left: 20px;
+}
+
+/* PRINT STYLES FOR PDF GENERATION */
+@media print {
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .template-root {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    background: white !important;
+    box-shadow: none !important;
+  }
+  
+  .header {
+    page-break-inside: avoid;
+    margin-top: 0 !important;
+  }
+  
+  section {
+    page-break-inside: avoid;
+    margin-bottom: 20px;
+  }
+  
+  h3 {
+    page-break-after: avoid;
+  }
+  
+  .skills {
+    page-break-inside: avoid;
+  }
+  
+  .job, .edu {
+    page-break-inside: avoid;
+    margin-bottom: 15px;
+  }
+  
+  .contact {
+    page-break-inside: avoid;
+  }
+  
+  /* Ensure text is visible in PDF */
+  * {
+    color: black !important;
+    background: transparent !important;
+  }
+  
+  .header h1, .header h2, h3 {
+    color: black !important;
+  }
+  
+  .skills span {
+    background: #f0f0f0 !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+  }
+  
+  /* Remove any potential top margin that could cause blank page */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 }
