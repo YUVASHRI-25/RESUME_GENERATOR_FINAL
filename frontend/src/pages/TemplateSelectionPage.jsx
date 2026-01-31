@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { templates, applyTemplateTheme } from '../templates/templateRegistry';
 import { Sparkles, ArrowRight, FileText, Palette, Layout } from 'lucide-react';
+import Navigation from '../components/Navigation';
 
 const TemplateSelectionPage = () => {
     const navigate = useNavigate();
@@ -116,6 +117,7 @@ const TemplateSelectionPage = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+            <Navigation />
             {/* Header */}
             <div className="bg-white border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-6 py-6">

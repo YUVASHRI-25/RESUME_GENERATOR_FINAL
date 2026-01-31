@@ -142,13 +142,7 @@
     }
 
     function clearFormatting() {
-      const selection = window.getSelection();
-      if (!selection.rangeCount) return;
-
-      const range = selection.getRangeAt(0);
-      const contents = range.extractContents();
-      const textNode = document.createTextNode(contents.textContent || '');
-      range.insertNode(textNode);
+      document.execCommand('removeFormat', false, null);
     }
 
     // Handle formatting messages from parent

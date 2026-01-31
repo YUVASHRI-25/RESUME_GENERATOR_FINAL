@@ -6,8 +6,6 @@ Personal details, About Me, Skills, Languages, and other sections were not displ
 ## Root Cause
 The Lorna Modern template was registered as a static HTML template in the template registry, but it actually uses a React component with a custom data transformation schema. Additionally, the schema was expecting different data structures than what the application provides.
 
-## Solution Implemented
-
 ### 1. Updated templateRegistry.js
 - Added imports for the Lorna Modern template component and schema:
   ```javascript
@@ -78,7 +76,6 @@ The Lorna Modern template was registered as a static HTML template in the templa
 - ✅ Added: Filters out empty bullet points
 - ✅ Added: Creates proper content structure for bullets display
 
-## How It Works Now
 
 1. When the Lorna Alvarado template is selected, the system recognizes it as a React component template
 2. The `transformDataForTemplate()` function applies the updated Lorna-specific schema transformation

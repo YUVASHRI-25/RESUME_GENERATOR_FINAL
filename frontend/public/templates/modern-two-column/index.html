@@ -1,587 +1,989 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
+
   <meta charset="utf-8" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <link
+
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Montserrat:wght@300;400;600;700&display=swap"
+
     rel="stylesheet"
+
   />
+
   <link rel="stylesheet" href="style.css" />
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
   
+
   <title>Modern Two Column</title>
+
 </head>
+
 <body>
+
   <div id="resume" class="resume template-root">
+
     <header class="header">
+
       <h1 id="name" class="name" contenteditable="true" data-field="name">YOUR NAME</h1>
+
       <h2 id="title" class="role" contenteditable="true" data-field="title">YOUR TITLE</h2>
+
       <div class="contact" contenteditable="true" data-field="contact">
+
         <span id="email">email@example.com</span>
+
         <span id="phone">+123-456-7890</span>
+
         <span id="location">City, Country</span>
+
         <span id="website">www.example.com</span>
+
       </div>
+
     </header>
 
+
+
     <main class="grid">
+
       <aside class="left">
+
         <section class="section" id="education-block">
+
           <h3 id="education-heading" contenteditable="true" data-field="educationHeading">Education</h3>
+
           <ul id="education-list"></ul>
+
         </section>
+
         <section class="section" id="skills-block">
+
           <h3 id="skills-heading" contenteditable="true" data-field="skillsHeading">Skills</h3>
+
           <ul id="skills-list"></ul>
+
         </section>
+
       </aside>
 
+
+
       <section class="right">
+
         <section class="section" id="profile-block">
+
           <h3 id="profile-heading" contenteditable="true" data-field="aboutHeading">Professional Summary</h3>
+
           <p id="summary" contenteditable="true" data-field="summary">Lorem ipsum dolor sit amet.</p>
+
         </section>
+
         <section class="section" id="experience-block">
+
           <h3 id="experience-heading" contenteditable="true" data-field="experienceHeading">Work Experience</h3>
+
           <div id="experience-section" contenteditable="true" data-field="experiences"></div>
+
         </section>
+
         <section class="section" id="projects-block">
+
           <h3 id="projects-heading" contenteditable="true" data-field="projectsHeading">Projects</h3>
+
           <div id="projects-section" contenteditable="true" data-field="projects"></div>
+
         </section>
+
         <section class="section" id="custom-container">
+
           <div id="custom-section" contenteditable="true" data-field="customSections"></div>
+
         </section>
+
       </section>
+
     </main>
+
   </div>
 
+
+
   <script>
+
     function updateContent(data) {
+
       if (!data || !data.payload) return;
 
+
+
       const payload = data.payload;
+
       const settings = payload.sectionSettings || {};
 
+
+
       // Apply font
+
       const font = payload.fontFamily || 'Inter';
+
       const fontValue = `'${font}', sans-serif`;
+
       document.documentElement.style.setProperty('--resume-font', fontValue);
+
       document.body.style.fontFamily = fontValue;
 
+
+
       // Apply theme colors
+
       if (payload.theme) {
+
         window.currentTheme = payload.theme; // Store for PDF generation
+
         const theme = payload.theme;
+
         if (theme.primaryColor) {
+
           document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
+
         }
+
         if (theme.backgroundColor) {
+
           document.documentElement.style.setProperty('--background-color', theme.backgroundColor);
+
         }
+
         if (theme.textColor) {
+
           document.documentElement.style.setProperty('--text-color', theme.textColor);
+
         }
+
         if (theme.textSecondary) {
+
           document.documentElement.style.setProperty('--text-secondary', theme.textSecondary);
+
         }
+
         if (theme.borderColor) {
+
           document.documentElement.style.setProperty('--border-color', theme.borderColor);
+
         }
+
         if (theme.headerBg) {
+
           document.documentElement.style.setProperty('--header-bg', theme.headerBg);
+
         }
+
         if (theme.contactBg) {
+
           document.documentElement.style.setProperty('--contact-bg', theme.contactBg);
+
         }
+
       }
+
+
 
       // Personal Info Header
+
       if (payload.personalInfo) {
+
         const { fullName, title, email, phone, location, website } = payload.personalInfo;
+
         if (fullName) document.getElementById('name').textContent = fullName;
+
         if (title) document.getElementById('title').textContent = title;
+
         if (email) document.getElementById('email').textContent = email;
+
         if (phone) document.getElementById('phone').textContent = phone;
+
         if (location) document.getElementById('location').textContent = location;
+
         if (website) document.getElementById('website').textContent = website;
+
       }
+
+
 
       // Profile/About section
+
       const profileHeading = document.getElementById('profile-heading');
+
       const profileSection = profileHeading?.closest('.section');
+
       if (profileHeading && settings.about?.heading) profileHeading.textContent = settings.about.heading;
+
       if (profileSection) profileSection.style.display = settings.about?.visible !== false ? 'block' : 'none';
+
       if (payload.about?.content) {
+
         document.getElementById('summary').innerHTML = payload.about.content.replace(/\n/g, '<br>');
+
       }
+
+
 
       // Education section
+
       const eduHeading = document.getElementById('education-heading');
+
       const eduSection = eduHeading?.closest('.section');
+
       if (eduHeading && settings.education?.heading) eduHeading.textContent = settings.education.heading;
+
       if (eduSection) eduSection.style.display = settings.education?.visible !== false ? 'block' : 'none';
+
       if (Array.isArray(payload.education)) {
+
         const list = document.getElementById('education-list');
+
         list.innerHTML = '';
+
         payload.education.forEach(item => {
+
           const li = document.createElement('li');
+
           li.contentEditable = 'true';
+
           li.setAttribute('data-field', 'educationItem');
+
           
+
           const degree = `${item.degree || ''}${item.field ? ` in ${item.field}` : ''}`.trim();
+
           const school = item.school || '';
+
           const dates = `${item.startDate || ''}${item.endDate ? ` - ${item.endDate}` : ''}`.trim();
+
           
+
           li.textContent = [degree, school, dates].filter(Boolean).join(' – ');
+
           if (item.description) {
+
             const desc = document.createElement('span');
+
             desc.style.display = 'block';
+
             desc.style.fontSize = '12px';
+
             desc.style.marginTop = '4px';
+
             desc.innerHTML = item.description.replace(/\n/g, '<br>');
+
             desc.contentEditable = 'true';
+
             desc.setAttribute('data-field', 'educationDescription');
+
             li.appendChild(desc);
+
           }
+
           list.appendChild(li);
+
         });
+
       }
+
+
 
       // Skills section
+
       const skillsHeading = document.getElementById('skills-heading');
+
       const skillsSection = skillsHeading?.closest('.section');
+
       if (skillsHeading && settings.skills?.heading) skillsHeading.textContent = settings.skills.heading;
+
       if (skillsSection) skillsSection.style.display = settings.skills?.visible !== false ? 'block' : 'none';
+
       if (Array.isArray(payload.skills)) {
+
         const list = document.getElementById('skills-list');
+
         list.innerHTML = '';
+
         payload.skills.forEach(skill => {
+
           const li = document.createElement('li');
+
           li.textContent = skill.name || skill;
+
           li.contentEditable = 'true';
+
           li.setAttribute('data-field', 'skillItem');
+
           list.appendChild(li);
+
         });
+
       }
+
+
 
       // Experience section
+
       const expHeading = document.getElementById('experience-heading');
+
       const expSection = expHeading?.closest('.section');
+
       if (expHeading && settings.experience?.heading) expHeading.textContent = settings.experience.heading;
+
       if (expSection) expSection.style.display = settings.experience?.visible !== false ? 'block' : 'none';
+
       if (Array.isArray(payload.experiences)) {
+
         const wrap = document.getElementById('experience-section');
+
         wrap.innerHTML = '';
+
         payload.experiences.forEach(exp => {
+
           const div = document.createElement('div');
+
           
+
           const title = document.createElement('p');
+
           title.style.fontWeight = '600';
+
           title.style.margin = '0 0 4px';
+
           title.textContent = `${exp.position || ''} at ${exp.company || ''}`.trim() || 'Position';
+
           title.contentEditable = 'true';
+
           title.setAttribute('data-field', 'experienceTitle');
 
+
+
           const dates = document.createElement('p');
+
           dates.style.margin = '0 0 6px';
+
           dates.textContent = `${exp.startDate || ''}${exp.endDate ? ` - ${exp.endDate}` : exp.currentlyWorking ? ' - Present' : ''}`.trim();
+
           dates.contentEditable = 'true';
+
           dates.setAttribute('data-field', 'experienceDates');
 
+
+
           const desc = document.createElement('p');
+
           desc.style.margin = '0 0 10px';
+
           desc.innerHTML = (exp.description || '').replace(/\n/g, '<br>');
+
           desc.contentEditable = 'true';
+
           desc.setAttribute('data-field', 'experienceDescription');
 
+
+
           if (title.textContent) div.appendChild(title);
+
           if (dates.textContent) div.appendChild(dates);
+
           if (desc.textContent) div.appendChild(desc);
+
           
+
           if (Array.isArray(exp.bullets)) {
+
             const ul = document.createElement('ul');
+
             ul.style.margin = '4px 0 0 0';
+
             ul.style.paddingLeft = '20px';
+
             exp.bullets.forEach(bullet => {
+
               const li = document.createElement('li');
+
               li.textContent = bullet;
+
               li.contentEditable = 'true';
+
               li.setAttribute('data-field', 'experienceBullet');
+
               ul.appendChild(li);
+
             });
+
             div.appendChild(ul);
+
           }
+
           
+
           wrap.appendChild(div);
+
         });
+
       }
+
+
 
       // Projects section
+
       const projHeading = document.getElementById('projects-heading');
+
       const projSection = projHeading?.closest('.section');
+
       if (projHeading && settings.projects?.heading) projHeading.textContent = settings.projects.heading;
+
       if (projSection) projSection.style.display = settings.projects?.visible !== false ? 'block' : 'none';
+
       if (Array.isArray(payload.projects)) {
+
         const wrap = document.getElementById('projects-section');
+
         wrap.innerHTML = '';
+
         payload.projects.forEach(proj => {
+
           const div = document.createElement('div');
+
           
+
           const title = document.createElement('p');
+
           title.style.fontWeight = '600';
+
           title.style.margin = '0 0 4px';
+
           title.textContent = proj.title || 'Project';
+
           title.contentEditable = 'true';
+
           title.setAttribute('data-field', 'projectTitle');
 
+
+
           const desc = document.createElement('p');
+
           desc.style.margin = '0 0 10px';
+
           desc.innerHTML = (proj.description || '').replace(/\n/g, '<br>');
+
           desc.contentEditable = 'true';
+
           desc.setAttribute('data-field', 'projectDescription');
 
+
+
           if (title.textContent) div.appendChild(title);
+
           if (desc.textContent) div.appendChild(desc);
+
           
+
           // Add bullets if they exist
+
           if (proj.bullets && proj.bullets.length > 0) {
+
             const ul = document.createElement('ul');
+
             proj.bullets.forEach(bullet => {
+
               if (bullet) {
+
                 const li = document.createElement('li');
+
                 li.textContent = bullet;
+
                 li.contentEditable = 'true';
+
                 li.setAttribute('data-field', 'projectBullet');
+
                 ul.appendChild(li);
+
               }
+
             });
+
             div.appendChild(ul);
+
           }
+
           
+
           wrap.appendChild(div);
+
         });
+
       }
+
+
 
       // Custom sections (using Drew Feig template logic)
+
       const customWrap = document.getElementById('custom-section');
+
       const customContainer = customWrap?.closest('.section');
+
       
+
       // Clear and rebuild custom sections
+
       customWrap.innerHTML = '';
+
       if (Array.isArray(payload.customSections)) {
+
         payload.customSections.forEach(section => {
+
           const wrapper = document.createElement('section');
+
           wrapper.style.marginTop = '16px';
+
           
+
           const heading = document.createElement('h3');
+
           heading.textContent = settings.custom?.heading || section.heading || 'Custom Section';
+
           heading.style.margin = '0 0 10px 0';
+
           heading.contentEditable = 'true';
+
           heading.setAttribute('data-field', 'customSectionHeading');
+
           
+
           const content = document.createElement('div');
+
           content.className = 'custom-section-content';
+
           
+
           // Handle content with bullets
+
           if (section.bullets && section.bullets.length > 0) {
+
             // If bullets exist, render description first (if any), then bullets
+
             if (section.content) {
+
               const descDiv = document.createElement('div');
+
               descDiv.innerHTML = section.content.replace(/\n/g, '<br>');
+
               descDiv.style.marginBottom = '8px';
+
               descDiv.contentEditable = 'true';
+
               descDiv.setAttribute('data-field', 'customSectionContent');
+
               content.appendChild(descDiv);
+
             }
+
             
+
             const ul = document.createElement('ul');
+
             section.bullets.forEach(bullet => {
+
               if (bullet) {
+
                 const li = document.createElement('li');
+
                 li.textContent = bullet;
+
                 li.contentEditable = 'true';
+
                 li.setAttribute('data-field', 'customSectionBullet');
+
                 ul.appendChild(li);
+
               }
+
             });
+
             content.appendChild(ul);
+
           } else {
+
             // If no bullets, render content as normal
+
             content.innerHTML = (section.content || '').replace(/\n/g, '<br>');
+
             content.contentEditable = 'true';
+
             content.setAttribute('data-field', 'customSectionContent');
+
           }
+
           
+
           wrapper.appendChild(heading);
+
           wrapper.appendChild(content);
+
           customWrap.appendChild(wrapper);
+
         });
+
       }
+
       
+
       // Custom Sections visibility
+
       if (customContainer) {
+
         customContainer.style.display = settings.custom?.visible !== false ? 'block' : 'none';
+
       }
+
+
 
       // Column placement for two-column templates
+
       const leftCol = document.querySelector('.left');
+
       const rightCol = document.querySelector('.right');
+
       if (leftCol && rightCol) {
+
         const moveBlock = (id, col) => {
+
           const el = document.getElementById(id);
+
           if (!el || !el.closest('.section')) return;
+
           const section = el.closest('.section');
+
           
+
           if (col === 'left') {
+
             leftCol.appendChild(section);
+
           } else {
+
             // For right column, maintain specific order: Professional Summary → Education → Projects → others
+
             const profileSection = document.getElementById('profile-heading')?.closest('.section');
+
             const educationSection = document.getElementById('education-heading')?.closest('.section');
+
             const projectsSection = document.getElementById('projects-heading')?.closest('.section');
+
             
+
             if (el.id === 'profile-heading') {
+
               // Professional Summary always goes first
+
               rightCol.appendChild(section);
+
             } else if (el.id === 'education-heading') {
+
               // Education goes after Professional Summary
+
               if (profileSection) {
+
                 rightCol.insertBefore(section, profileSection.nextSibling);
+
               } else {
+
                 rightCol.appendChild(section);
+
               }
+
             } else if (el.id === 'projects-heading') {
+
               // Projects goes after Education (if Education is in right column) or after Professional Summary
+
               let insertAfter = profileSection;
+
               if (educationSection && educationSection.parentElement === rightCol) {
+
                 insertAfter = educationSection;
+
               }
+
               if (insertAfter && insertAfter.nextSibling) {
+
                 rightCol.insertBefore(section, insertAfter.nextSibling);
+
               } else {
+
                 rightCol.appendChild(section);
+
               }
+
             } else {
+
               // Other sections go after Projects (if Projects is in right column) or at the end
+
               let insertAfter = profileSection;
+
               if (educationSection && educationSection.parentElement === rightCol) {
+
                 insertAfter = educationSection;
+
               }
+
               if (projectsSection && projectsSection.parentElement === rightCol) {
+
                 insertAfter = projectsSection;
+
               }
+
               if (insertAfter && insertAfter.nextSibling) {
+
                 rightCol.insertBefore(section, insertAfter.nextSibling);
+
               } else {
+
                 rightCol.appendChild(section);
+
               }
+
             }
+
           }
+
         };
+
         
+
         // Move sections in the correct order to maintain positioning
+
         moveBlock('profile-heading', settings.about?.column === 'left' ? 'left' : 'right');
+
         moveBlock('education-heading', settings.education?.column === 'left' ? 'left' : 'right');
+
         moveBlock('projects-heading', settings.projects?.column === 'left' ? 'left' : 'right');
+
         moveBlock('skills-heading', settings.skills?.column === 'left' ? 'left' : 'right');
+
         moveBlock('experience-heading', settings.experience?.column === 'left' ? 'left' : 'right');
+
         
+
         // Position custom sections as the last section in the appropriate column (Jyoti template logic)
+
         if (customContainer && settings.custom?.visible !== false) {
+
           const targetColumn = settings.custom?.column === 'left' ? leftCol : rightCol;
+
           if (targetColumn) {
+
             targetColumn.appendChild(customContainer);
+
           }
+
         }
+
       }
+
     }
+
+
 
     // WYSIWYG Text Formatting Functions
+
     function applyFormat(formatType, value = null) {
+
       const selection = window.getSelection();
+
       if (!selection.rangeCount || selection.isCollapsed) {
+
         return; // No text selected
+
       }
+
+
 
       const range = selection.getRangeAt(0);
+
       const selectedText = range.toString();
+
       
+
       if (!selectedText.trim()) {
+
         return; // No meaningful text selected
+
       }
+
+
 
       switch (formatType) {
+
         case 'bold':
+
           document.execCommand('bold', false, null);
+
           break;
+
         case 'italic':
+
           document.execCommand('italic', false, null);
+
           break;
+
         case 'underline':
+
           document.execCommand('underline', false, null);
+
           break;
+
         case 'fontSize':
+
           document.execCommand('fontSize', false, value);
+
           break;
+
         case 'clear':
+
           document.execCommand('removeFormat', false, null);
+
           break;
+
       }
+
       
+
       // Preserve selection after formatting
+
       selection.removeAllRanges();
+
       selection.addRange(range);
+
     }
 
+
+
     // Handle formatting messages from parent
+
     window.addEventListener('message', (event) => {
+
       if (event.data.type === 'APPLY_FORMAT') {
+
         applyFormat(event.data.formatType, event.data.value);
+
       }
+
     });
+
+
 
     // Notify parent when selection changes
+
     document.addEventListener('selectionchange', () => {
+
       const selection = window.getSelection();
+
       const hasSelection = selection.rangeCount > 0 && !selection.isCollapsed && selection.toString().trim();
+
       
+
       window.parent.postMessage({
+
         type: 'SELECTION_CHANGED',
+
         hasSelection: hasSelection
+
       }, '*');
+
     });
+
+
 
     // Prevent Enter key from creating new lines in headings
+
     document.addEventListener('keydown', function(e) {
+
       if (e.target.hasAttribute('contenteditable') && e.key === 'Enter') {
+
         e.preventDefault();
+
         e.target.blur();
+
       }
+
     });
 
+
+
     window.addEventListener('message', (event) => {
+      
       if (event.data === 'DOWNLOAD_PDF') {
-        const resume = document.getElementById('resume');
+        console.log('Modern Two Column template processing DOWNLOAD_PDF');
         
+        const resume = document.getElementById('resume');
         if (!resume) {
           console.error('Resume element not found');
+          window.parent.postMessage({ type: 'DOWNLOAD_ERROR', error: 'Resume element not found' }, '*');
           return;
         }
         
-        // Create a clone of the resume element to avoid modifying the original
-        const clonedResume = resume.cloneNode(true);
-        
-        // Apply all current styles directly to the cloned element
-        const computedStyles = window.getComputedStyle(resume);
-        const allStyles = Array.from(computedStyles);
-        
-        allStyles.forEach(property => {
-          try {
-            clonedResume.style.setProperty(property, computedStyles.getPropertyValue(property));
-          } catch (e) {
-            // Skip invalid properties
-          }
-        });
-        
-        // Apply theme colors directly
-        if (window.currentTheme) {
-          const theme = window.currentTheme;
-          if (theme.backgroundColor) {
-            clonedResume.style.backgroundColor = theme.backgroundColor;
-            clonedResume.style.setProperty('background-color', theme.backgroundColor, 'important');
-          }
-          if (theme.textColor) {
-            clonedResume.style.color = theme.textColor;
-            clonedResume.style.setProperty('color', theme.textColor, 'important');
-          }
-          if (theme.primaryColor) {
-            // Apply primary color to relevant elements
-            const primaryElements = clonedResume.querySelectorAll('h1, h2, h3, [style*="color"]');
-            primaryElements.forEach(el => {
-              if (['H1', 'H2', 'H3'].includes(el.tagName)) {
-                el.style.color = theme.primaryColor;
-              }
-            });
-          }
-          if (theme.headerBg) {
-            const headerElements = clonedResume.querySelectorAll('.header, [class*="header"]');
-            headerElements.forEach(el => {
-              el.style.backgroundColor = theme.headerBg;
-            });
-          }
-          if (theme.contactBg) {
-            const contactElements = clonedResume.querySelectorAll('.contact, [class*="contact"]');
-            contactElements.forEach(el => {
-              el.style.backgroundColor = theme.contactBg;
-            });
-          }
-        }
-        
-        // Apply font family
-        if (window.currentFont) {
-          clonedResume.style.fontFamily = `'${window.currentFont}', ${clonedResume.style.fontFamily}`;
-        }
-        
-        // Set proper dimensions for PDF
-        clonedResume.style.width = '794px'; // A4 width at 96 DPI
-        clonedResume.style.minHeight = '1123px'; // A4 height at 96 DPI
-        clonedResume.style.margin = '0';
-        clonedResume.style.padding = '0';
-        clonedResume.style.boxSizing = 'border-box';
-        clonedResume.style.overflow = 'hidden';
-        clonedResume.style.position = 'relative';
-        
-        // Temporarily add the cloned element to the body
-        clonedResume.style.position = 'absolute';
-        clonedResume.style.left = '-9999px';
-        clonedResume.style.top = '0';
-        document.body.appendChild(clonedResume);
-        
-        // Wait for styles to be applied
-        setTimeout(() => {
-          const opt = {
-            margin: 0,
-            filename: 'resume.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { 
-              scale: 2,
-              useCORS: true,
-              allowTaint: true,
-              backgroundColor: window.currentTheme?.backgroundColor || '#ffffff',
-              width: 794,
-              height: clonedResume.scrollHeight,
-              scrollX: 0,
-              scrollY: 0
-            },
-            jsPDF: { 
-              unit: 'in', 
-              format: 'a4', 
-              orientation: 'portrait',
-              compress: true
-            }
-          };
+        // Apply background color with higher priority for PDF generation
+        if (window.currentTheme && window.currentTheme.backgroundColor) {
+          const bgColor = window.currentTheme.backgroundColor;
+          console.log('Applying background color:', bgColor);
+          resume.style.backgroundColor = bgColor;
+          resume.style.setProperty('background-color', bgColor, 'important');
           
-          html2pdf().set(opt).from(clonedResume).save().then(() => {
-            // Clean up
-            if (document.body.contains(clonedResume)) {
-              document.body.removeChild(clonedResume);
-            }
-          }).catch((error) => {
-            console.error('PDF generation error:', error);
-            if (document.body.contains(clonedResume)) {
-              document.body.removeChild(clonedResume);
-            }
-            alert('Failed to generate PDF. Please try again.');
-          });
-        }, 500); // Increased delay to 500ms
+          // Also apply to body if needed
+          document.body.style.backgroundColor = bgColor;
+          document.body.style.setProperty('background-color', bgColor, 'important');
+        }
+        
+        // Small delay to ensure styles are applied before PDF generation
+        setTimeout(() => {
+          try {
+            console.log('Starting PDF generation for Modern Two Column template');
+            const opt = {
+              margin: 0,
+              filename: 'resume.pdf',
+              image: { type: 'jpeg', quality: 0.98 },
+              html2canvas: { scale: 2 },
+              jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            
+            html2pdf().set(opt).from(resume).save().then(() => {
+              console.log('PDF generated successfully');
+              window.parent.postMessage({ type: 'DOWNLOAD_SUCCESS' }, '*');
+            }).catch((error) => {
+              console.error('PDF generation error:', error);
+              window.parent.postMessage({ type: 'DOWNLOAD_ERROR', error: error.message }, '*');
+            });
+          } catch (error) {
+            console.error('Error during PDF generation:', error);
+            window.parent.postMessage({ type: 'DOWNLOAD_ERROR', error: error.message }, '*');
+          }
+        }, 100);
         return;
       }
       updateContent(event.data);
     });
 
+
+
     window.parent.postMessage({ type: 'template-ready' }, '*');
+
   </script>
+
 </body>
+
 </html>
+
