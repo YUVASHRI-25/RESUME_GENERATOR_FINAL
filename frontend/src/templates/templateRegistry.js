@@ -3,6 +3,9 @@
  * Central registry for all resume templates
  * Static templates provide an `html` path; React templates can supply a `component`.
  */
+import LornaModernTemplate from './lorna-modern/Template.jsx';
+import { transformDataToLornaFormat } from './lorna-modern/schema.js';
+
 export const templates = [
   {
     id: "modern-two-column",
@@ -38,8 +41,9 @@ export const templates = [
     id: "lorna-modern",
     name: "Lorna Alvarado",
     preview: "/templates/lorna-modern/preview.png",
-    html: "/templates/lorna-modern/index.html",
+    component: LornaModernTemplate,
     supportsColumnPlacement: true,
+    transformData: transformDataToLornaFormat,
     defaultTheme: {
       fontFamily: "Helvetica",
       primaryColor: "#7c3aed",

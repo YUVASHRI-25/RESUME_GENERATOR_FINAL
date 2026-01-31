@@ -8,6 +8,7 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   
 </head>
 <body>
@@ -552,7 +553,14 @@
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
       };
-      // PDF generation now handled server-side;
+      
+      html2pdf().set(opt).from(resume).save().then(() => {
+        console.log('PDF generated successfully');
+        window.parent.postMessage({ type: 'DOWNLOAD_SUCCESS' }, '*');
+      }).catch((error) => {
+        console.error('PDF generation error:', error);
+        window.parent.postMessage({ type: 'DOWNLOAD_ERROR', error: error.message }, '*');
+      });
       return;
     }
     updateContent(event.data);

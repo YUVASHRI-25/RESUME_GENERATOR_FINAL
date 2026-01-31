@@ -114,7 +114,11 @@ const ResumePreview = forwardRef(({ data, template, onIframeLoad }, downloadRef)
     const TemplateComponent = getTemplateComponent(template);
     if (TemplateComponent) {
         const transformedData = transformDataForTemplate(template, data);
-        return <TemplateComponent data={transformedData} />;
+        return (
+            <div id="resume-preview-content">
+                <TemplateComponent data={transformedData} />
+            </div>
+        );
     }
 
     // Classic Template

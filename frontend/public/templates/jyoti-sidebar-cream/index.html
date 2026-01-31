@@ -9,6 +9,7 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   
 </head>
 <body>
@@ -633,14 +634,17 @@
         }
       };
       
-      // PDF generation now handled server-side
-      
-      // Small delay to ensure styles are applied before PDF generation
-      setTimeout(() => {
+      html2pdf().set(opt).from(resume).save().then(() => {
+        console.log('PDF generated successfully');
+        window.parent.postMessage({ type: 'DOWNLOAD_SUCCESS' }, '*');
+      }).catch((error) => {
+        console.error('PDF generation error:', error);
+        window.parent.postMessage({ type: 'DOWNLOAD_ERROR', error: error.message }, '*');
+      }).finally(() => {
         // Restore original styles
         resume.classList.remove('pdf-mode');
         resume.setAttribute('style', originalStyle);
-      }, 100);
+      });
       return;
     }
     updateContent(event.data);

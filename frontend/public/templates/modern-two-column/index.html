@@ -8,6 +8,7 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   
   <title>Modern Two Column</title>
 </head>
@@ -561,7 +562,6 @@
               compress: true
             }
           };
-<<<<<<< HEAD
           
           html2pdf().set(opt).from(clonedResume).save().then(() => {
             // Clean up
@@ -576,10 +576,6 @@
             alert('Failed to generate PDF. Please try again.');
           });
         }, 500); // Increased delay to 500ms
-=======
-          // PDF generation now handled server-side;
-        }, 100);
->>>>>>> 376dac5 (Initial commit)
         return;
       }
       updateContent(event.data);
